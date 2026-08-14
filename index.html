@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BREGMA — Tech & Modern Apparel</title>
+  <title>Carlos Online Shopping</title>
   <style>
-    /* CSS Variables & Theme Setup */
+    /* SHEIN-Inspired Vibrant Aesthetic & Variables */
     :root {
-      --bg-primary: #0f172a;
-      --bg-surface: #1e293b;
-      --bg-card: rgba(30, 41, 59, 0.7);
-      --accent: #6366f1;
-      --accent-hover: #4f46e5;
-      --accent-pink: #ec4899;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: rgba(255, 255, 255, 0.1);
-      --radius: 16px;
+      --bg-primary: #ffffff;
+      --bg-surface: #f9f9f9;
+      --bg-card: #ffffff;
+      --accent: #222222;
+      --accent-hover: #000000;
+      --accent-pink: #ff3b6b; /* Classic SHEIN bright pink/coral tag color */
+      --text-main: #222222;
+      --text-muted: #777777;
+      --border: #e5e5e5;
+      --radius: 8px;
     }
 
     * {
@@ -33,48 +33,56 @@
       padding-bottom: 60px;
     }
 
+    /* Top Announcement Banner */
+    .top-banner {
+      background: var(--accent);
+      color: white;
+      text-align: center;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
     /* Navigation Header */
     header {
       position: sticky;
       top: 0;
       z-index: 100;
-      backdrop-filter: blur(12px);
-      background: rgba(15, 23, 42, 0.8);
+      background: white;
       border-bottom: 1px solid var(--border);
-      padding: 18px 8%;
+      padding: 15px 5%;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .logo {
-      font-size: 1.8rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #000;
     }
 
     .header-actions {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       align-items: center;
     }
 
-    .admin-toggle-btn, .bin-btn, .currency-select, .account-btn {
+    .admin-toggle-btn, .bin-btn, .currency-select, .account-btn, .settings-btn {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-main);
-      padding: 10px 16px;
-      border-radius: 30px;
+      padding: 8px 14px;
+      border-radius: 20px;
       cursor: pointer;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
+      gap: 6px;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
     }
 
     .currency-select {
@@ -82,49 +90,64 @@
     }
 
     .currency-select option {
-      background: var(--bg-surface);
+      background: white;
       color: var(--text-main);
     }
 
-    .admin-toggle-btn:hover, .bin-btn:hover, .currency-select:hover, .account-btn:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
+    .admin-toggle-btn:hover, .bin-btn:hover, .currency-select:hover, .account-btn:hover, .settings-btn:hover {
+      border-color: #000;
     }
 
     .bin-count {
       background: var(--accent-pink);
       color: white;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: bold;
       border-radius: 50%;
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Hero Banner */
+    /* SHEIN Style Hero Promo Carousel Banner */
     .hero {
+      background: linear-gradient(135deg, #fff0f3, #ffe3ec);
       text-align: center;
-      padding: 50px 20px 30px;
+      padding: 40px 20px;
+      border-bottom: 1px solid var(--border);
     }
 
     .hero h1 {
-      font-size: 2.8rem;
-      margin-bottom: 10px;
+      font-size: 2.4rem;
+      margin-bottom: 8px;
       font-weight: 800;
+      color: #111;
     }
 
     .hero p {
       color: var(--text-muted);
-      font-size: 1.1rem;
+      font-size: 1rem;
+    }
+
+    .flash-sale-tag {
+      display: inline-block;
+      background: var(--accent-pink);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
     }
 
     /* Filters & Search Bar Section */
     .filter-section {
-      max-width: 1200px;
-      margin: 0 auto 30px auto;
+      max-width: 1300px;
+      margin: 25px auto;
       padding: 0 20px;
       display: flex;
       flex-wrap: wrap;
@@ -135,9 +158,9 @@
 
     .search-input {
       flex: 1;
-      min-width: 240px;
+      min-width: 260px;
       padding: 12px 18px;
-      border-radius: 30px;
+      border-radius: 20px;
       border: 1px solid var(--border);
       background: var(--bg-surface);
       color: var(--text-main);
@@ -146,7 +169,7 @@
 
     .search-input:focus {
       outline: none;
-      border-color: var(--accent);
+      border-color: #000;
     }
 
     .category-filters {
@@ -168,21 +191,21 @@
     }
 
     .filter-chip.active, .filter-chip:hover {
-      background: var(--accent);
+      background: #000;
       color: white;
-      border-color: var(--accent);
+      border-color: #000;
     }
 
     /* Admin Panel */
     .admin-panel {
       max-width: 900px;
       margin: 0 auto 30px auto;
-      background: var(--bg-surface);
-      border: 1px solid var(--accent);
+      background: white;
+      border: 2px solid #000;
       border-radius: var(--radius);
       padding: 24px;
       display: none;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
 
     .admin-panel.active {
@@ -217,14 +240,14 @@
       padding: 10px 14px;
       border-radius: 8px;
       border: 1px solid var(--border);
-      background: var(--bg-primary);
+      background: var(--bg-surface);
       color: var(--text-main);
       font-size: 0.95rem;
     }
 
     .admin-submit-btn {
       grid-column: span 2;
-      background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+      background: #000;
       color: white;
       border: none;
       padding: 12px;
@@ -236,15 +259,15 @@
 
     /* Products Grid */
     .container {
-      max-width: 1200px;
+      max-width: 1300px;
       margin: 0 auto;
       padding: 0 20px;
     }
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 28px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
     }
 
     .product-card {
@@ -254,67 +277,97 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: transform 0.3s ease, border-color 0.3s ease;
+      transition: all 0.2s ease;
       cursor: pointer;
+      position: relative;
     }
 
     .product-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      border-color: #bbb;
+    }
+
+    .discount-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--accent-pink);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 3px 6px;
+      border-radius: 4px;
+      z-index: 2;
     }
 
     .product-img {
       width: 100%;
-      height: 280px;
+      height: 260px;
       object-fit: cover;
+      background: #f0f0f0;
     }
 
     .product-info {
-      padding: 20px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
     }
 
     .product-category {
-      font-size: 0.75rem;
-      color: var(--accent);
+      font-size: 0.7rem;
+      color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
     }
 
     .product-title {
-      font-size: 1.15rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 500;
       margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     .product-price {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      margin-bottom: 16px;
-      color: #38bdf8;
+      color: var(--accent-pink);
+    }
+
+    .product-original-price {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: line-through;
     }
 
     .delete-item-btn {
-      background: rgba(244, 63, 94, 0.15);
+      background: rgba(244, 63, 94, 0.1);
       border: 1px solid rgba(244, 63, 94, 0.3);
       color: #f43f5e;
-      padding: 8px 12px;
-      border-radius: 10px;
+      padding: 6px 10px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
       margin-top: auto;
+      font-size: 0.8rem;
     }
 
     /* Slide-out Bin (Cart) Drawer */
     .bin-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.5);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
@@ -333,7 +386,7 @@
       width: 100%;
       max-width: 400px;
       height: 100%;
-      background: var(--bg-surface);
+      background: white;
       border-left: 1px solid var(--border);
       z-index: 201;
       display: flex;
@@ -350,7 +403,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 20px;
+      padding-bottom: 16px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -359,7 +412,7 @@
       align-items: stretch;
       border-top: 1px solid var(--border);
       border-bottom: none;
-      padding-top: 20px;
+      padding-top: 16px;
     }
 
     .close-btn {
@@ -370,31 +423,31 @@
       cursor: pointer;
     }
 
-    .close-btn:hover { color: white; }
+    .close-btn:hover { color: black; }
 
     .bin-items {
       flex-grow: 1;
       overflow-y: auto;
-      margin: 20px 0;
+      margin: 16px 0;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
     .bin-item {
       display: flex;
       align-items: center;
-      gap: 14px;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 12px;
-      border-radius: 12px;
+      gap: 12px;
+      background: var(--bg-surface);
+      padding: 10px;
+      border-radius: 8px;
       border: 1px solid var(--border);
     }
 
     .bin-item img {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
+      width: 55px;
+      height: 55px;
+      border-radius: 6px;
       object-fit: cover;
     }
 
@@ -407,27 +460,28 @@
       border: none;
       color: #f43f5e;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
 
-    /* Modals (Product Details & Checkout) */
+    /* Modals */
     .modal {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0.9);
-      background: var(--bg-surface);
+      background: white;
       border: 1px solid var(--border);
       padding: 30px;
       border-radius: var(--radius);
       z-index: 300;
       opacity: 0;
       pointer-events: none;
-      transition: all 0.3s ease;
-      max-width: 480px;
+      transition: all 0.2s ease;
+      max-width: 460px;
       width: 90%;
       max-height: 90vh;
       overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
 
     .modal.active {
@@ -440,56 +494,61 @@
       width: 100%;
       height: 240px;
       object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 16px;
+      border-radius: 8px;
+      margin-bottom: 14px;
     }
 
     .size-selector {
       display: flex;
-      gap: 10px;
-      margin: 15px 0;
+      gap: 8px;
+      margin: 12px 0;
     }
 
     .size-btn {
       flex: 1;
       padding: 8px;
-      background: var(--bg-primary);
+      background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-main);
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
     }
 
     .size-btn.selected {
-      border-color: var(--accent);
-      background: rgba(99, 102, 241, 0.2);
+      border-color: #000;
+      background: #000;
+      color: white;
     }
 
     .action-btn {
       width: 100%;
-      background: var(--accent);
+      background: #000;
       color: white;
       border: none;
       padding: 12px;
-      border-radius: 10px;
+      border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
     }
 
-    /* Checkout Modal & Payment Tabs */
+    .action-btn:hover {
+      background: #333;
+    }
+
+    /* Checkout & Settings Forms */
     .checkout-form {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-top: 15px;
+      margin-top: 14px;
     }
 
     .checkout-input {
       padding: 12px;
       border-radius: 8px;
       border: 1px solid var(--border);
-      background: var(--bg-primary);
+      background: var(--bg-surface);
       color: var(--text-main);
       font-size: 0.95rem;
       width: 100%;
@@ -504,27 +563,27 @@
     .payment-tabs {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 15px 0 5px 0;
+      gap: 6px;
+      margin: 10px 0 4px 0;
     }
 
     .payment-tab {
-      background: var(--bg-primary);
+      background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 10px 6px;
-      border-radius: 8px;
+      padding: 8px 4px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-align: center;
       transition: all 0.2s;
     }
 
     .payment-tab.active {
-      border-color: var(--accent);
-      background: rgba(99, 102, 241, 0.2);
-      color: var(--text-main);
+      border-color: #000;
+      background: #000;
+      color: white;
     }
 
     .payment-fields {
@@ -534,69 +593,88 @@
     .payment-fields.active {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .payment-instructions {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--bg-surface);
       padding: 10px;
-      border-radius: 8px;
+      border-radius: 6px;
       border: 1px solid var(--border);
       line-height: 1.4;
     }
 
     .payment-gateway-link {
       display: inline-block;
-      margin-top: 6px;
-      font-size: 0.85rem;
-      color: #38bdf8;
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: #0066cc;
       text-decoration: underline;
     }
 
-    /* Registered Accounts & Purchases Sections inside Owner Dashboard */
+    /* Dashboard & Admin Sections */
     .dashboard-section {
-      margin-top: 25px;
+      margin-top: 20px;
       border-top: 1px solid var(--border);
-      padding-top: 20px;
+      padding-top: 16px;
     }
 
     .account-row-item, .purchase-row-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--bg-primary);
-      padding: 10px 14px;
-      border-radius: 8px;
+      background: var(--bg-surface);
+      padding: 10px 12px;
+      border-radius: 6px;
       border: 1px solid var(--border);
-      margin-bottom: 8px;
-      font-size: 0.9rem;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+
+    /* Settings Modal Styles */
+    .settings-group {
+      margin-bottom: 16px;
+    }
+
+    .settings-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-main);
     }
   </style>
 </head>
 <body>
 
+  <div class="top-banner">
+    FLASH SALE 🔥 UP TO 80% OFF NEW TREND STYLES & TECH GEAR • FREE SHIPPING OVER $49
+  </div>
+
   <header>
-    <div class="logo">BREGMA</div>
+    <div class="logo">CARLOS</div>
     <div class="header-actions">
+      <button class="settings-btn" id="open-settings-modal">⚙️ Settings</button>
       <button class="account-btn" id="open-account-modal">👤 <span id="account-status-text">Create Account</span></button>
       <select id="currency-selector" class="currency-select" onchange="changeCurrency(this.value)">
         <option value="USD">USD ($)</option>
         <option value="HTG">HTG (G)</option>
       </select>
-      <button class="admin-toggle-btn" id="toggle-admin">⚙️ Owner Dashboard</button>
-      <button class="bin-btn" id="open-bin">🛍️ My Bin <span class="bin-count" id="bin-count">0</span></button>
+      <button class="admin-toggle-btn" id="toggle-admin">🛡️ Owner Dashboard</button>
+      <button class="bin-btn" id="open-bin">🛍️ Cart <span class="bin-count" id="bin-count">0</span></button>
     </div>
   </header>
 
   <section class="hero">
-    <h1>Tech & Modern Apparel</h1>
-    <p>Discover innovative wearables and apparel crafted for the future.</p>
+    <div class="flash-sale-tag">MEGA SALE EVENT</div>
+    <h1>Trend-Setting Fashion & Tech</h1>
+    <p>Discover thousands of new arrivals updated daily.</p>
   </section>
 
   <div class="filter-section">
-    <input type="text" id="search-input" class="search-input" placeholder="Search gear or apparel..." oninput="filterProducts()" />
+    <input type="text" id="search-input" class="search-input" placeholder="Search dress, top, smart hoodie..." oninput="filterProducts()" />
     <div class="category-filters" id="category-filters">
       <button class="filter-chip active" onclick="setCategory('All', this)">All</button>
       <button class="filter-chip" onclick="setCategory('Technology', this)">Technology</button>
@@ -610,51 +688,49 @@
   <div class="container">
     <div class="admin-panel" id="admin-panel">
       <h3>
-        <span>🛠️ Site Owner Management Panel</span>
+        <span>🛡️ Site Owner Management Panel</span>
         <button class="close-btn" id="close-admin" style="font-size: 1.2rem;">&times;</button>
       </h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Use this control panel to publish new products directly to the Bregma catalog or remove obsolete catalog records.</p>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">Manage catalog inventory, inspect user accounts, and track fulfilled purchases.</p>
       <form id="add-product-form" onsubmit="handleAddNewProduct(event)">
         <div class="admin-form-grid">
           <div class="admin-form-group full-width">
-            <label style="font-size: 0.85rem; color: var(--text-muted);">Product Name</label>
-            <input type="text" id="new-name" class="admin-input" placeholder="e.g. Smart Thermal Hoodie" required />
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Product Name</label>
+            <input type="text" id="new-name" class="admin-input" placeholder="e.g. SHEIN-style Aesthetic Crop Top" required />
           </div>
           <div class="admin-form-group">
-            <label style="font-size: 0.85rem; color: var(--text-muted);">Base Price ($ USD)</label>
-            <input type="number" step="0.01" id="new-price" class="admin-input" placeholder="125.00" required />
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Base Price ($ USD)</label>
+            <input type="number" step="0.01" id="new-price" class="admin-input" placeholder="24.99" required />
           </div>
           <div class="admin-form-group">
-            <label style="font-size: 0.85rem; color: var(--text-muted);">Category</label>
-            <input type="text" id="new-category" class="admin-input" placeholder="Technology, Outerwear, etc." required />
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Category</label>
+            <input type="text" id="new-category" class="admin-input" placeholder="Technology, Tops, etc." required />
           </div>
           <div class="admin-form-group full-width">
-            <label style="font-size: 0.85rem; color: var(--text-muted);">Select Image from Computer</label>
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Upload Product Image</label>
             <input type="file" id="new-image-file" class="admin-input" accept="image/*" required />
           </div>
-          <button type="submit" class="admin-submit-btn">Publish Product to Bregma Catalog</button>
+          <button type="submit" class="admin-submit-btn">Publish Product to Catalog</button>
         </div>
       </form>
 
       <div class="dashboard-section">
-        <h4 style="margin-bottom: 12px; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center;">
+        <h4 style="margin-bottom: 10px; font-size: 1rem; display: flex; justify-content: space-between; align-items: center;">
           <span>📦 Completed Purchases & Orders</span>
-          <span id="purchase-total-count" style="font-size: 0.85rem; background: var(--accent); padding: 2px 8px; border-radius: 10px;">0 orders</span>
+          <span id="purchase-total-count" style="font-size: 0.75rem; background: #000; color: #fff; padding: 2px 8px; border-radius: 10px;">0 orders</span>
         </h4>
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 14px;">All successful payments made through Visa, MonCash, and NatCash are saved here.</p>
         <div id="owner-purchases-list">
-          <p style="color: var(--text-muted); text-align: center; padding: 15px;">No purchases recorded yet.</p>
+          <p style="color: var(--text-muted); text-align: center; padding: 10px;">No purchases recorded yet.</p>
         </div>
       </div>
 
       <div class="dashboard-section">
-        <h4 style="margin-bottom: 12px; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center;">
+        <h4 style="margin-bottom: 10px; font-size: 1rem; display: flex; justify-content: space-between; align-items: center;">
           <span>📋 Registered User Accounts</span>
-          <span id="account-total-count" style="font-size: 0.85rem; background: var(--accent); padding: 2px 8px; border-radius: 10px;">0 accounts</span>
+          <span id="account-total-count" style="font-size: 0.75rem; background: #000; color: #fff; padding: 2px 8px; border-radius: 10px;">0 accounts</span>
         </h4>
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 14px;">All customer profiles created prior to checkout are securely saved below.</p>
         <div id="owner-accounts-list">
-          <p style="color: var(--text-muted); text-align: center; padding: 15px;">No accounts registered yet.</p>
+          <p style="color: var(--text-muted); text-align: center; padding: 10px;">No accounts registered yet.</p>
         </div>
       </div>
     </div>
@@ -667,34 +743,71 @@
   <div class="bin-overlay" id="bin-overlay"></div>
   <aside class="bin-drawer" id="bin-drawer">
     <div class="bin-header">
-      <h2>Your Shopping Bin</h2>
+      <h2>Shopping Cart</h2>
       <button class="close-btn" id="close-bin">&times;</button>
     </div>
     <div class="bin-items" id="bin-items">
-      <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your bin is currently empty.</p>
+      <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your cart is currently empty.</p>
     </div>
     <div class="bin-footer">
-      <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; width: 100%; margin-bottom: 15px;">
-        <span>Total</span>
+      <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700; width: 100%; margin-bottom: 12px;">
+        <span>Subtotal</span>
         <span id="bin-total">$0.00</span>
       </div>
       <button class="action-btn" onclick="openCheckoutModal()">Proceed to Checkout</button>
     </div>
   </aside>
 
+  <div class="modal" id="settings-modal">
+    <span class="close-btn" onclick="closeSettingsModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
+    <h2 style="margin-bottom: 12px;">⚙️ Site Settings</h2>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Customize your browsing preferences and regional settings.</p>
+    
+    <div class="settings-group">
+      <label>Default Currency</label>
+      <select id="settings-currency" class="checkout-input" onchange="changeCurrency(this.value)">
+        <option value="USD">USD ($)</option>
+        <option value="HTG">HTG (G)</option>
+      </select>
+    </div>
+
+    <div class="settings-group">
+      <label>Display Language</label>
+      <select class="checkout-input">
+        <option value="en">English (US)</option>
+        <option value="fr">Français (Haïti)</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
+
+    <div class="settings-group">
+      <label>Theme Mode</label>
+      <select class="checkout-input" onchange="alert('Light mode optimized for modern SHEIN catalog look.')">
+        <option value="light">SHEIN Bright Light Mode</option>
+      </select>
+    </div>
+
+    <div class="settings-group" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+      <span style="font-size: 0.85rem; font-weight: 600;">Enable Promotional Push Alerts</span>
+      <input type="checkbox" checked style="width: 18px; height: 18px; cursor: pointer;" />
+    </div>
+
+    <button class="action-btn" style="margin-top: 15px;" onclick="closeSettingsModal()">Save & Apply Settings</button>
+  </div>
+
   <div class="modal" id="account-modal">
     <span class="close-btn" onclick="closeAccountModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
-    <h2 id="account-modal-title" style="margin-bottom: 5px;">👤 Create Account</h2>
-    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Create a user account before completing your purchases.</p>
+    <h2 id="account-modal-title" style="margin-bottom: 4px;">👤 Create Account</h2>
+    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Sign up to enjoy personalized recommendations and faster checkout.</p>
     
     <form class="checkout-form" id="account-form" onsubmit="handleAccountSubmit(event)">
       <input type="text" id="acc-name" class="checkout-input" placeholder="Full Name" required />
       <input type="email" id="acc-email" class="checkout-input" placeholder="Email Address" required />
       <input type="password" id="acc-pass" class="checkout-input" placeholder="Create Password" required />
-      <button type="submit" class="action-btn" style="margin-top: 5px;" id="account-submit-btn">Create Account</button>
+      <button type="submit" class="action-btn" style="margin-top: 4px;" id="account-submit-btn">Create Account</button>
     </form>
-    <div style="text-align: center; margin-top: 15px;">
-      <button id="toggle-auth-mode" style="background: none; border: none; color: var(--accent); cursor: pointer; font-size: 0.85rem;" onclick="toggleAuthMode()">Already have an account? Sign In</button>
+    <div style="text-align: center; margin-top: 12px;">
+      <button id="toggle-auth-mode" style="background: none; border: none; color: #0066cc; cursor: pointer; font-size: 0.8rem;" onclick="toggleAuthMode()">Already have an account? Sign In</button>
     </div>
   </div>
 
@@ -702,29 +815,29 @@
     <span class="close-btn" onclick="closeModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
     <img id="modal-product-img" class="modal-img" src="" alt="" />
     <span id="modal-product-category" class="product-category"></span>
-    <h2 id="modal-product-title" style="margin: 5px 0 8px 0;"></h2>
+    <h2 id="modal-product-title" style="margin: 4px 0 6px 0; font-size: 1.1rem;"></h2>
     <div id="modal-product-price" class="product-price"></div>
-    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px;">Select Size:</p>
+    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Select Size:</p>
     <div class="size-selector">
       <button class="size-btn selected" onclick="selectSize('S', this)">S</button>
       <button class="size-btn" onclick="selectSize('M', this)">M</button>
       <button class="size-btn" onclick="selectSize('L', this)">L</button>
       <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
     </div>
-    <button class="action-btn" id="modal-add-btn">Add to Bin</button>
+    <button class="action-btn" id="modal-add-btn">Add to Cart</button>
   </div>
 
   <div class="modal" id="checkout-modal">
     <span class="close-btn" onclick="closeCheckoutModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
-    <h2 style="margin-bottom: 5px;">🔒 Secure Checkout</h2>
-    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Enter your delivery and payment details.</p>
+    <h2 style="margin-bottom: 4px;">🔒 Secure Checkout</h2>
+    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Enter your delivery address and payment details.</p>
     
     <form class="checkout-form" onsubmit="processPayment(event)">
       <input type="text" id="chk-name" class="checkout-input" placeholder="Full Name" required />
       <input type="email" id="chk-email" class="checkout-input" placeholder="Email Address" required />
       <input type="text" id="chk-address" class="checkout-input" placeholder="Shipping Address / City" required />
 
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">Select Payment Method:</p>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Select Payment Method:</p>
       <div class="payment-tabs">
         <button type="button" class="payment-tab active" onclick="switchPayment('visa', this)">Visa / Card</button>
         <button type="button" class="payment-tab" onclick="switchPayment('moncash', this)">MonCash</button>
@@ -733,10 +846,10 @@
 
       <div id="payment-visa" class="payment-fields active">
         <div class="payment-instructions">
-          💳 <strong>Visa Payment Gateway:</strong> Complete your payment securely via card network.
+          💳 <strong>Visa Gateway:</strong> Complete payment securely via international card network.
           <br><a href="https://usa.visa.com" target="_blank" class="payment-gateway-link">Open Official Visa Portal ↗</a>
         </div>
-        <input type="text" id="visa-card-number" class="checkout-input" placeholder="Visa Card Number (e.g. 4000 1234 5678 9010)" maxlength="19" />
+        <input type="text" id="visa-card-number" class="checkout-input" placeholder="Card Number (4000 1234...)" maxlength="19" />
         <div class="checkout-row">
           <input type="text" id="visa-exp" class="checkout-input" placeholder="MM / YY" maxlength="5" />
           <input type="password" id="visa-cvc" class="checkout-input" placeholder="CVC" maxlength="4" />
@@ -745,40 +858,40 @@
 
       <div id="payment-moncash" class="payment-fields">
         <div class="payment-instructions">
-          📱 <strong>MonCash Direct Pay:</strong> Authorize your transfer through Digicel MonCash services.
+          📱 <strong>MonCash Direct Pay:</strong> Fast mobile wallet payment service.
           <br><a href="https://moncashbutton.digicelgroup.com" target="_blank" class="payment-gateway-link">Open Official MonCash Portal ↗</a>
         </div>
-        <input type="tel" id="moncash-phone" class="checkout-input" placeholder="MonCash Phone Number (e.g. +509 ...)" />
-        <input type="password" id="moncash-pin" class="checkout-input" placeholder="MonCash 4-digit PIN" maxlength="4" />
+        <input type="tel" id="moncash-phone" class="checkout-input" placeholder="MonCash Phone Number (+509 ...)" />
+        <input type="password" id="moncash-pin" class="checkout-input" placeholder="4-digit PIN" maxlength="4" />
       </div>
 
       <div id="payment-natcash" class="payment-fields">
         <div class="payment-instructions">
-          💳 <strong>NatCash Instant Transfer:</strong> Secure digital wallet payment settlement.
-          <br><a href="https://www.natcom.ht" target="_blank" class="payment-gateway-link">Open Official Natcom / NatCash Portal ↗</a>
+          💳 <strong>NatCash Instant Transfer:</strong> Secure mobile settlement.
+          <br><a href="https://www.natcom.ht" target="_blank" class="payment-gateway-link">Open Official Natcom Portal ↗</a>
         </div>
-        <input type="tel" id="natcash-account" class="checkout-input" placeholder="NatCash Account / Phone Number" />
+        <input type="tel" id="natcash-account" class="checkout-input" placeholder="NatCash Account / Phone" />
         <input type="password" id="natcash-pin" class="checkout-input" placeholder="NatCash PIN" maxlength="6" />
       </div>
 
-      <button type="submit" class="action-btn" style="margin-top: 10px;">Pay <span id="checkout-btn-total">$0.00</span></button>
+      <button type="submit" class="action-btn" style="margin-top: 8px;">Pay <span id="checkout-btn-total">$0.00</span></button>
     </form>
   </div>
 
   <script>
     const defaultProducts = [
-      { id: 1, name: "Neural-Link Smart Tech Fleece", price: 145.00, category: "Technology", image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80" },
-      { id: 2, name: "Cyberpunk LED Visor System", price: 199.00, category: "Technology", image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=600&q=80" },
-      { id: 3, name: "Minimalist Linen Jacket", price: 110.00, category: "Outerwear", image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=600&q=80" },
-      { id: 4, name: "Structured Tailored Trousers", price: 95.00, category: "Pants", image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80" },
-      { id: 5, name: "Organic Cotton Essential Tee", price: 42.00, category: "Tops", image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80" },
-      { id: 6, name: "Monochrome Knit Sweater", price: 88.00, category: "Knitwear", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80" }
+      { id: 1, name: "Neural-Link Smart Tech Fleece Hoodie", price: 34.99, originalPrice: 65.00, discount: "-46%", category: "Technology", image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80" },
+      { id: 2, name: "Cyberpunk LED Futuristic Visor System", price: 22.50, originalPrice: 45.00, discount: "-50%", category: "Technology", image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=600&q=80" },
+      { id: 3, name: "Minimalist Aesthetic Linen Jacket", price: 28.99, originalPrice: 55.00, discount: "-47%", category: "Outerwear", image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=600&q=80" },
+      { id: 4, name: "High-Waist Structured Tailored Trousers", price: 19.99, originalPrice: 38.00, discount: "-48%", category: "Pants", image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80" },
+      { id: 5, name: "Organic Cotton Casual Essential Tee", price: 11.50, originalPrice: 22.00, discount: "-52%", category: "Tops", image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80" },
+      { id: 6, name: "Cozy Monochrome Knit Ribbed Sweater", price: 21.99, originalPrice: 42.00, discount: "-48%", category: "Knitwear", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80" }
     ];
 
-    let products = JSON.parse(localStorage.getItem('bregma_products')) || defaultProducts;
-    let accounts = JSON.parse(localStorage.getItem('bregma_accounts')) || [];
-    let purchases = JSON.parse(localStorage.getItem('bregma_purchases')) || [];
-    let loggedInUser = JSON.parse(localStorage.getItem('bregma_logged_in_user')) || null;
+    let products = JSON.parse(localStorage.getItem('carlos_products')) || defaultProducts;
+    let accounts = JSON.parse(localStorage.getItem('carlos_accounts')) || [];
+    let purchases = JSON.parse(localStorage.getItem('carlos_purchases')) || [];
+    let loggedInUser = JSON.parse(localStorage.getItem('carlos_logged_in_user')) || null;
     let bin = [];
     let selectedCategory = 'All';
     let selectedSize = 'S';
@@ -788,7 +901,7 @@
     let currentCurrency = 'USD';
     let isLoginMode = false;
     const USD_TO_HTG_RATE = 132.50;
-    const OWNER_PASSCODE = "bregma2026";
+    const OWNER_PASSCODE = "carlos2026";
 
     const productGrid = document.getElementById('product-grid');
 
@@ -803,6 +916,8 @@
 
     function changeCurrency(currency) {
       currentCurrency = currency;
+      document.getElementById('currency-selector').value = currency;
+      document.getElementById('settings-currency').value = currency;
       renderProducts();
       updateBinUI();
       if (activeModalProduct) {
@@ -826,12 +941,16 @@
 
       productGrid.innerHTML = filtered.map(product => `
         <div class="product-card" onclick="openProductModal(${product.id})">
+          ${product.discount ? `<div class="discount-badge">${product.discount}</div>` : ''}
           <img src="${product.image}" alt="${product.name}" class="product-img">
           <div class="product-info">
             <span class="product-category">${product.category}</span>
             <h3 class="product-title">${product.name}</h3>
-            <div class="product-price">${formatPrice(product.price)}</div>
-            ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove from Database</button>` : ''}
+            <div class="product-price-row">
+              <div class="product-price">${formatPrice(product.price)}</div>
+              ${product.originalPrice ? `<div class="product-original-price">${formatPrice(product.originalPrice)}</div>` : ''}
+            </div>
+            ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove</button>` : ''}
           </div>
         </div>
       `).join('');
@@ -870,7 +989,7 @@
 
     function closeModal() {
       document.getElementById('product-detail-modal').classList.remove('active');
-      if (!document.getElementById('checkout-modal').classList.contains('active') && !document.getElementById('account-modal').classList.contains('active')) {
+      if (!document.getElementById('checkout-modal').classList.contains('active') && !document.getElementById('account-modal').classList.contains('active') && !document.getElementById('settings-modal').classList.contains('active')) {
         document.getElementById('bin-overlay').classList.remove('open');
       }
     }
@@ -882,31 +1001,43 @@
     }
 
     function saveProducts() {
-      localStorage.setItem('bregma_products', JSON.stringify(products));
+      localStorage.setItem('carlos_products', JSON.stringify(products));
     }
 
     function saveAccounts() {
-      localStorage.setItem('bregma_accounts', JSON.stringify(accounts));
+      localStorage.setItem('carlos_accounts', JSON.stringify(accounts));
       updateOwnerAccountsUI();
     }
 
     function savePurchases() {
-      localStorage.setItem('bregma_purchases', JSON.stringify(purchases));
+      localStorage.setItem('carlos_purchases', JSON.stringify(purchases));
       updateOwnerPurchasesUI();
+    }
+
+    // Settings Modal Logic
+    const settingsModal = document.getElementById('settings-modal');
+    document.getElementById('open-settings-modal').addEventListener('click', () => {
+      document.getElementById('bin-overlay').classList.add('open');
+      settingsModal.classList.add('active');
+    });
+
+    function closeSettingsModal() {
+      settingsModal.classList.remove('active');
+      if (!document.getElementById('checkout-modal').classList.contains('active') && !document.getElementById('bin-drawer').classList.contains('open') && !document.getElementById('product-detail-modal').classList.contains('active') && !document.getElementById('account-modal').classList.contains('active')) {
+        document.getElementById('bin-overlay').classList.remove('open');
+      }
     }
 
     // Account Management Logic
     const accountModal = document.getElementById('account-modal');
-    const openAccountModalBtn = document.getElementById('open-account-modal');
-
-    openAccountModalBtn.addEventListener('click', () => {
+    document.getElementById('open-account-modal').addEventListener('click', () => {
       document.getElementById('bin-overlay').classList.add('open');
       accountModal.classList.add('active');
     });
 
     function closeAccountModal() {
       accountModal.classList.remove('active');
-      if (!document.getElementById('checkout-modal').classList.contains('active') && !document.getElementById('bin-drawer').classList.contains('open') && !document.getElementById('product-detail-modal').classList.contains('active')) {
+      if (!document.getElementById('checkout-modal').classList.contains('active') && !document.getElementById('bin-drawer').classList.contains('open') && !document.getElementById('product-detail-modal').classList.contains('active') && !document.getElementById('settings-modal').classList.contains('active')) {
         document.getElementById('bin-overlay').classList.remove('open');
       }
     }
@@ -942,7 +1073,7 @@
         const found = accounts.find(acc => acc.email === email && acc.password === password);
         if (found) {
           loggedInUser = found;
-          localStorage.setItem('bregma_logged_in_user', JSON.stringify(loggedInUser));
+          localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
           updateAccountUIStatus();
           alert(`Welcome back, ${found.name}!`);
           closeAccountModal();
@@ -962,7 +1093,7 @@
         saveAccounts();
 
         loggedInUser = newAccount;
-        localStorage.setItem('bregma_logged_in_user', JSON.stringify(loggedInUser));
+        localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
         updateAccountUIStatus();
 
         alert("Account created and saved successfully!");
@@ -987,7 +1118,7 @@
       countLabel.textContent = `${accounts.length} accounts`;
 
       if (accounts.length === 0) {
-        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 15px;">No accounts registered yet.</p>';
+        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 10px;">No accounts registered yet.</p>';
         return;
       }
 
@@ -995,7 +1126,7 @@
         <div class="account-row-item">
           <div>
             <strong>${acc.name}</strong><br>
-            <span style="color: var(--text-muted); font-size: 0.8rem;">${acc.email} — Registered: ${acc.date || 'Recent'}</span>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">${acc.email} — Registered: ${acc.date || 'Recent'}</span>
           </div>
           <button class="remove-btn" onclick="deleteAccount(${acc.id})">Delete</button>
         </div>
@@ -1009,16 +1140,16 @@
       countLabel.textContent = `${purchases.length} orders`;
 
       if (purchases.length === 0) {
-        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 15px;">No purchases recorded yet.</p>';
+        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 10px;">No purchases recorded yet.</p>';
         return;
       }
 
       listContainer.innerHTML = purchases.map((order) => `
         <div class="purchase-row-item">
           <div>
-            <strong>Order #${order.id}</strong> - <span style="color: #38bdf8;">${formatPrice(order.total)}</span><br>
-            <span style="color: var(--text-muted); font-size: 0.8rem;">Customer: ${order.name} (${order.email}) | Method: ${order.method.toUpperCase()} | Date: ${order.date}</span><br>
-            <span style="color: var(--text-muted); font-size: 0.75rem;">Items: ${order.itemsSummary}</span>
+            <strong>Order #${order.id}</strong> - <span style="color: var(--accent-pink);">${formatPrice(order.total)}</span><br>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">Customer: ${order.name} (${order.email}) | Method: ${order.method.toUpperCase()} | Date: ${order.date}</span><br>
+            <span style="color: var(--text-muted); font-size: 0.7rem;">Items: ${order.itemsSummary}</span>
           </div>
           <button class="remove-btn" onclick="deletePurchase(${order.id})">Remove</button>
         </div>
@@ -1030,7 +1161,7 @@
         accounts = accounts.filter(a => a.id !== id);
         if (loggedInUser && loggedInUser.id === id) {
           loggedInUser = null;
-          localStorage.removeItem('bregma_logged_in_user');
+          localStorage.removeItem('carlos_logged_in_user');
           updateAccountUIStatus();
         }
         saveAccounts();
@@ -1049,7 +1180,7 @@
     const adminPanel = document.getElementById('admin-panel');
     toggleAdminBtn.addEventListener('click', () => {
       if (!isOwnerAuthenticated) {
-        const pass = prompt("Enter Owner Passcode (bregma2026):");
+        const pass = prompt("Enter Owner Passcode (carlos2026):");
         if (pass === OWNER_PASSCODE) {
           isOwnerAuthenticated = true;
           alert("Owner Access Granted! You can now manage inventory, user accounts, and customer purchases.");
@@ -1077,7 +1208,7 @@
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          products.unshift({ id: Date.now(), name, price, category, image: e.target.result });
+          products.unshift({ id: Date.now(), name, price, originalPrice: +(price * 1.8).toFixed(2), discount: "-45%", category, image: e.target.result });
           saveProducts();
           renderProducts();
           document.getElementById('add-product-form').reset();
@@ -1106,7 +1237,7 @@
       const binItems = document.getElementById('bin-items');
       
       if (bin.length === 0) {
-        binItems.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your bin is currently empty.</p>';
+        binItems.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your cart is currently empty.</p>';
         document.getElementById('bin-total').textContent = formatPrice(0);
         return;
       }
@@ -1115,9 +1246,9 @@
         <div class="bin-item">
           <img src="${item.image}" alt="${item.name}">
           <div class="bin-item-details">
-            <div style="font-size: 0.9rem; font-weight: 600;">${item.name}</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Size: ${item.size}</div>
-            <div style="font-size: 0.85rem; color: #38bdf8;">${formatPrice(item.price)}</div>
+            <div style="font-size: 0.85rem; font-weight: 500;">${item.name}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Size: ${item.size}</div>
+            <div style="font-size: 0.85rem; color: var(--accent-pink); font-weight: 700;">${formatPrice(item.price)}</div>
           </div>
           <button class="remove-btn" onclick="removeFromBin(${index})">Remove</button>
         </div>
@@ -1141,7 +1272,7 @@
     // Checkout Flow Logic
     function openCheckoutModal() {
       if (bin.length === 0) {
-        alert("Your shopping bin is empty.");
+        alert("Your shopping cart is empty.");
         return;
       }
       if (!loggedInUser) {
@@ -1172,36 +1303,33 @@
       const email = document.getElementById('chk-email').value.trim();
       const address = document.getElementById('chk-address').value.trim();
 
-      // Detailed validation for Visa, MonCash, and NatCash parameters
       if (selectedPaymentMethod === 'visa') {
         const cardNum = document.getElementById('visa-card-number').value.trim();
         const exp = document.getElementById('visa-exp').value.trim();
         const cvc = document.getElementById('visa-cvc').value.trim();
         if (!cardNum || !exp || !cvc) {
-          alert("Please fill out all Visa / Card payment fields securely.");
+          alert("Please fill out all Visa payment fields securely.");
           return;
         }
       } else if (selectedPaymentMethod === 'moncash') {
         const phone = document.getElementById('moncash-phone').value.trim();
         const pin = document.getElementById('moncash-pin').value.trim();
         if (!phone || !pin) {
-          alert("Please enter your MonCash phone number and 4-digit PIN authorization code.");
+          alert("Please enter your MonCash phone number and PIN.");
           return;
         }
       } else if (selectedPaymentMethod === 'natcash') {
         const account = document.getElementById('natcash-account').value.trim();
         const pin = document.getElementById('natcash-pin').value.trim();
         if (!account || !pin) {
-          alert("Please enter your NatCash account info and confirmation PIN.");
+          alert("Please enter your NatCash account info and PIN.");
           return;
         }
       }
 
-      // Calculate total and compile order items summary
       const totalAmount = bin.reduce((sum, item) => sum + item.price, 0);
       const itemsSummary = bin.map(item => `${item.name} (${item.size})`).join(', ');
 
-      // Save order to owner purchases records
       const newPurchase = {
         id: Date.now().toString().slice(-6),
         name,
@@ -1217,7 +1345,7 @@
       savePurchases();
 
       let methodText = selectedPaymentMethod === 'visa' ? 'Visa / Card' : selectedPaymentMethod.toUpperCase();
-      alert(`🎉 Payment successful via ${methodText}! Thank you for your order with BREGMA. Your purchase has been securely saved to the owner dashboard.`);
+      alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS. Your order has been saved to the owner dashboard.`);
       
       bin = [];
       updateBinUI();
@@ -1247,6 +1375,7 @@
       closeModal();
       closeCheckoutModal();
       closeAccountModal();
+      closeSettingsModal();
     });
 
     renderProducts();
