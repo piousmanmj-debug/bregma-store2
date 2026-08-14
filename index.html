@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Carlos Online Shopping</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     /* SHEIN-Inspired Vibrant Aesthetic & Variables */
     :root {
@@ -633,7 +634,6 @@
       font-size: 0.85rem;
     }
 
-    /* Settings Modal Styles */
     .settings-group {
       margin-bottom: 16px;
     }
@@ -780,18 +780,6 @@
       </select>
     </div>
 
-    <div class="settings-group">
-      <label>Theme Mode</label>
-      <select class="checkout-input" onchange="alert('Light mode optimized for modern SHEIN catalog look.')">
-        <option value="light">SHEIN Bright Light Mode</option>
-      </select>
-    </div>
-
-    <div class="settings-group" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-      <span style="font-size: 0.85rem; font-weight: 600;">Enable Promotional Push Alerts</span>
-      <input type="checkbox" checked style="width: 18px; height: 18px; cursor: pointer;" />
-    </div>
-
     <button class="action-btn" style="margin-top: 15px;" onclick="closeSettingsModal()">Save & Apply Settings</button>
   </div>
 
@@ -807,7 +795,7 @@
       <button type="submit" class="action-btn" style="margin-top: 4px;" id="account-submit-btn">Create Account</button>
     </form>
     <div style="text-align: center; margin-top: 12px;">
-      <button id="toggle-auth-mode" style="background: none; border: none; color: #0066cc; cursor: pointer; font-size: 0.8rem;" onclick="toggleAuthMode()">Already have an account? Sign In</button>
+      <button id="toggle-auth-mode" type="button" style="background: none; border: none; color: #0066cc; cursor: pointer; font-size: 0.8rem;" onclick="toggleAuthMode()">Already have an account? Sign In</button>
     </div>
   </div>
 
@@ -819,10 +807,10 @@
     <div id="modal-product-price" class="product-price"></div>
     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Select Size:</p>
     <div class="size-selector">
-      <button class="size-btn selected" onclick="selectSize('S', this)">S</button>
-      <button class="size-btn" onclick="selectSize('M', this)">M</button>
-      <button class="size-btn" onclick="selectSize('L', this)">L</button>
-      <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
+      <button type="button" class="size-btn selected" onclick="selectSize('S', this)">S</button>
+      <button type="button" class="size-btn" onclick="selectSize('M', this)">M</button>
+      <button type="button" class="size-btn" onclick="selectSize('L', this)">L</button>
+      <button type="button" class="size-btn" onclick="selectSize('XL', this)">XL</button>
     </div>
     <button class="action-btn" id="modal-add-btn">Add to Cart</button>
   </div>
@@ -879,6 +867,13 @@
   </div>
 
   <script>
+    // --- SUPABASE CLIENT INITIALIZATION ---
+    const SUPABASE_URL = 'https://unhaxejnqwtzymsfswlgs.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuaAXNqZWpxd3p5bXNmc3dsZ3MiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc4NjcyODU4NSwiZXhwIjoyMTAyMzA0NTg1fQ.KxSDPDRDe1RwjOQVkixVfjahCqEslYrDCUu6KECv1uw'; // Your provided Supabase token
+    
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const defaultProducts = [
       { id: 1, name: "Neural-Link Smart Tech Fleece Hoodie", price: 34.99, originalPrice: 65.00, discount: "-46%", category: "Technology", image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80" },
       { id: 2, name: "Cyberpunk LED Futuristic Visor System", price: 22.50, originalPrice: 45.00, discount: "-50%", category: "Technology", image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=600&q=80" },
@@ -887,86 +882,6 @@
       { id: 5, name: "Organic Cotton Casual Essential Tee", price: 11.50, originalPrice: 22.00, discount: "-52%", category: "Tops", image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80" },
       { id: 6, name: "Cozy Monochrome Knit Ribbed Sweater", price: 21.99, originalPrice: 42.00, discount: "-48%", category: "Knitwear", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80" }
     ];
-
-    // --- BUILT-IN MOCK BACKEND SERVER (LOCALSTORAGE PERSISTENCE) ---
-    // This intercepts all fetch() calls so everything saves live in your browser permanently!
-    const originalFetch = window.fetch;
-    window.fetch = async function(url, options = {}) {
-      let productsDB = JSON.parse(localStorage.getItem('carlos_db_products')) || defaultProducts;
-      let accountsDB = JSON.parse(localStorage.getItem('carlos_db_accounts')) || [];
-      let purchasesDB = JSON.parse(localStorage.getItem('carlos_db_purchases')) || [];
-
-      // GET /api/products
-      if (url === '/api/products' && (!options.method || options.method === 'GET')) {
-        return new Response(JSON.stringify(productsDB), { status: 200, headers: { 'Content-Type': 'application/json' } });
-      }
-      // POST /api/products
-      if (url === '/api/products' && options.method === 'POST') {
-        const newProd = JSON.parse(options.body);
-        productsDB.unshift(newProd);
-        localStorage.setItem('carlos_db_products', JSON.stringify(productsDB));
-        return new Response(JSON.stringify(newProd), { status: 200, headers: { 'Content-Type': 'application/json' } });
-      }
-      // DELETE /api/products/:id
-      if (url.startsWith('/api/products/') && options.method === 'DELETE') {
-        const id = Number(url.split('/').pop());
-        productsDB = productsDB.filter(p => p.id !== id && p._id !== id);
-        localStorage.setItem('carlos_db_products', JSON.stringify(productsDB));
-        return new Response(JSON.stringify({ success: true }), { status: 200 });
-      }
-
-      // GET /api/accounts
-      if (url === '/api/accounts' && (!options.method || options.method === 'GET')) {
-        return new Response(JSON.stringify(accountsDB), { status: 200, headers: { 'Content-Type': 'application/json' } });
-      }
-      // POST /api/accounts
-      if (url === '/api/accounts' && options.method === 'POST') {
-        const newAcc = JSON.parse(options.body);
-        newAcc.id = 'acc_' + Date.now();
-        accountsDB.unshift(newAcc);
-        localStorage.setItem('carlos_db_accounts', JSON.stringify(accountsDB));
-        return new Response(JSON.stringify(newAcc), { status: 200, headers: { 'Content-Type': 'application/json' } });
-      }
-      // DELETE /api/accounts/:id
-      if (url.startsWith('/api/accounts/') && options.method === 'DELETE') {
-        const id = url.split('/').pop();
-        accountsDB = accountsDB.filter(a => a.id !== id && a._id !== id);
-        localStorage.setItem('carlos_db_accounts', JSON.stringify(accountsDB));
-        return new Response(JSON.stringify({ success: true }), { status: 200 });
-      }
-
-      // POST /api/login
-      if (url === '/api/login' && options.method === 'POST') {
-        const { email, password } = JSON.parse(options.body);
-        const found = accountsDB.find(a => a.email === email && a.password === password);
-        if (found) {
-          return new Response(JSON.stringify(found), { status: 200, headers: { 'Content-Type': 'application/json' } });
-        } else {
-          return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-        }
-      }
-
-      // GET /api/purchases
-      if (url === '/api/purchases' && (!options.method || options.method === 'GET')) {
-        return new Response(JSON.stringify(purchasesDB), { status: 200, headers: { 'Content-Type': 'application/json' } });
-      }
-      // POST /api/purchases
-      if (url === '/api/purchases' && options.method === 'POST') {
-        const newPur = JSON.parse(options.body);
-        purchasesDB.unshift(newPur);
-        localStorage.setItem('carlos_db_purchases', JSON.stringify(purchasesDB));
-        return new Response(JSON.stringify(newPur), { status: 200, headers: { 'Content-Type': 'application/json' } });
-      }
-      // DELETE /api/purchases/:id
-      if (url.startsWith('/api/purchases/') && options.method === 'DELETE') {
-        const id = url.split('/').pop();
-        purchasesDB = purchasesDB.filter(p => String(p.id) !== String(id) && String(p._id) !== String(id));
-        localStorage.setItem('carlos_db_purchases', JSON.stringify(purchasesDB));
-        return new Response(JSON.stringify({ success: true }), { status: 200 });
-      }
-
-      return originalFetch(url, options);
-    };
 
     let products = [];
     let accounts = [];
@@ -985,24 +900,27 @@
 
     const productGrid = document.getElementById('product-grid');
 
-    // Fetch initial data from cloud database API endpoints on startup
+    // Load data from Supabase Cloud on startup
     async function initializeApp() {
       try {
         const [prodRes, accRes, purRes] = await Promise.all([
-          fetch('/api/products'),
-          fetch('/api/accounts'),
-          fetch('/api/purchases')
+          db.from('products').select('*'),
+          db.from('accounts').select('*'),
+          db.from('purchases').select('*')
         ]);
-        
-        products = await prodRes.json();
-        accounts = await accRes.json();
-        purchases = await purRes.json();
 
-        if (!products || products.length === 0) {
-          products = defaultProducts;
+        products = prodRes.data && prodRes.data.length > 0 ? prodRes.data : defaultProducts;
+        accounts = accRes.data || [];
+        purchases = purRes.data || [];
+
+        // If products table is completely empty on Supabase, seed defaults
+        if (!prodRes.data || prodRes.data.length === 0) {
+          for (let p of defaultProducts) {
+            await db.from('products').insert([p]);
+          }
         }
       } catch (error) {
-        console.error("Failed to connect to cloud database, falling back to defaults.", error);
+        console.error("Supabase sync warning, using local defaults.", error);
         products = defaultProducts;
       }
       
@@ -1107,7 +1025,7 @@
       element.classList.add('selected');
     }
 
-    // Settings Modal Logic
+    // Settings Modal
     const settingsModal = document.getElementById('settings-modal');
     document.getElementById('open-settings-modal').addEventListener('click', () => {
       document.getElementById('bin-overlay').classList.add('open');
@@ -1121,7 +1039,7 @@
       }
     }
 
-    // Account Management Logic
+    // Account Modal
     const accountModal = document.getElementById('account-modal');
     document.getElementById('open-account-modal').addEventListener('click', () => {
       document.getElementById('bin-overlay').classList.add('open');
@@ -1163,49 +1081,42 @@
       const password = document.getElementById('acc-pass').value.trim();
 
       if (isLoginMode) {
-        try {
-          const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-          });
-          
-          if (response.ok) {
-            loggedInUser = await response.json();
-            localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
-            updateAccountUIStatus();
-            alert(`Welcome back, ${loggedInUser.name}!`);
-            closeAccountModal();
-          } else {
-            alert("Invalid email or password.");
-          }
-        } catch (err) {
-          alert("Sign-in network error.");
+        const found = accounts.find(a => a.email === email && a.password === password);
+        if (found) {
+          loggedInUser = found;
+          localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
+          updateAccountUIStatus();
+          alert(`Welcome back, ${loggedInUser.name}!`);
+          closeAccountModal();
+        } else {
+          alert("Invalid email or password.");
         }
       } else {
         const name = document.getElementById('acc-name').value.trim();
-        const newAccountData = { name, email, password, date: new Date().toLocaleDateString() };
+        const newAccount = {
+          id: 'acc_' + Date.now(),
+          name,
+          email,
+          password,
+          date: new Date().toLocaleDateString()
+        };
 
         try {
-          const response = await fetch('/api/accounts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newAccountData)
-          });
-          
-          const savedAccount = await response.json();
-          accounts.push(savedAccount);
+          const { error } = await db.from('accounts').insert([newAccount]);
+          if (error) throw error;
+
+          accounts.push(newAccount);
           updateOwnerAccountsUI();
 
-          loggedInUser = savedAccount;
+          loggedInUser = newAccount;
           localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
           updateAccountUIStatus();
 
-          alert("Account created and safely stored in the cloud database!");
+          alert("Account registered and safely saved to Supabase cloud database!");
           document.getElementById('account-form').reset();
           closeAccountModal();
         } catch (err) {
-          alert("Error registering account to cloud database.");
+          alert("Error saving account to cloud database.");
         }
       }
     }
@@ -1222,7 +1133,6 @@
     function updateOwnerAccountsUI() {
       const listContainer = document.getElementById('owner-accounts-list');
       const countLabel = document.getElementById('account-total-count');
-      
       countLabel.textContent = `${accounts.length} accounts`;
 
       if (accounts.length === 0) {
@@ -1236,7 +1146,7 @@
             <strong>${acc.name}</strong><br>
             <span style="color: var(--text-muted); font-size: 0.75rem;">${acc.email} — Registered: ${acc.date || 'Recent'}</span>
           </div>
-          <button class="remove-btn" onclick="deleteAccount('${acc.id || acc._id}')">Delete</button>
+          <button class="remove-btn" onclick="deleteAccount('${acc.id}')">Delete</button>
         </div>
       `).join('');
     }
@@ -1244,7 +1154,6 @@
     function updateOwnerPurchasesUI() {
       const listContainer = document.getElementById('owner-purchases-list');
       const countLabel = document.getElementById('purchase-total-count');
-      
       countLabel.textContent = `${purchases.length} orders`;
 
       if (purchases.length === 0) {
@@ -1259,41 +1168,41 @@
             <span style="color: var(--text-muted); font-size: 0.75rem;">Customer: ${order.name} (${order.email}) | Method: ${order.method.toUpperCase()} | Date: ${order.date}</span><br>
             <span style="color: var(--text-muted); font-size: 0.7rem;">Items: ${order.itemsSummary}</span>
           </div>
-          <button class="remove-btn" onclick="deletePurchase('${order.id || order._id}')">Remove</button>
+          <button class="remove-btn" onclick="deletePurchase('${order.id}')">Remove</button>
         </div>
       `).join('');
     }
 
     async function deleteAccount(id) {
-      if (confirm("Are you sure you want to delete this user account record from the database?")) {
+      if (confirm("Delete this user account from Supabase?")) {
         try {
-          await fetch(`/api/accounts/${id}`, { method: 'DELETE' });
-          accounts = accounts.filter(a => (a.id !== id && a._id !== id));
-          if (loggedInUser && (loggedInUser.id === id || loggedInUser._id === id)) {
+          await db.from('accounts').delete().eq('id', id);
+          accounts = accounts.filter(a => a.id !== id);
+          if (loggedInUser && loggedInUser.id === id) {
             loggedInUser = null;
             localStorage.removeItem('carlos_logged_in_user');
             updateAccountUIStatus();
           }
           updateOwnerAccountsUI();
         } catch (err) {
-          alert("Failed to delete account from database.");
+          alert("Failed to delete account.");
         }
       }
     }
 
     async function deletePurchase(id) {
-      if (confirm("Are you sure you want to delete this purchase record from the database?")) {
+      if (confirm("Delete this order record from Supabase?")) {
         try {
-          await fetch(`/api/purchases/${id}`, { method: 'DELETE' });
-          purchases = purchases.filter(p => (p.id !== id && p._id !== id));
+          await db.from('purchases').delete().eq('id', id);
+          purchases = purchases.filter(p => p.id !== id);
           updateOwnerPurchasesUI();
         } catch (err) {
-          alert("Failed to delete purchase from database.");
+          alert("Failed to delete purchase record.");
         }
       }
     }
 
-    // Owner Auth & Dashboard
+    // Owner Dashboard Passcode
     const toggleAdminBtn = document.getElementById('toggle-admin');
     const adminPanel = document.getElementById('admin-panel');
     toggleAdminBtn.addEventListener('click', () => {
@@ -1301,7 +1210,7 @@
         const pass = prompt("Enter Owner Passcode (carlos2026):");
         if (pass === OWNER_PASSCODE) {
           isOwnerAuthenticated = true;
-          alert("Owner Access Granted! You can now manage inventory, user accounts, and customer purchases.");
+          alert("Owner Access Granted!");
           adminPanel.classList.add('active');
           renderProducts();
           updateOwnerAccountsUI();
@@ -1337,21 +1246,16 @@
           };
 
           try {
-            const response = await fetch('/api/products', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(newProduct)
-            });
-            
-            const savedProduct = await response.json();
-            products.unshift(savedProduct);
+            const { error } = await db.from('products').insert([newProduct]);
+            if (error) throw error;
+
+            products.unshift(newProduct);
             renderProducts();
-            
             document.getElementById('add-product-form').reset();
             adminPanel.classList.remove('active');
-            alert("New product published successfully to the cloud database!");
+            alert("New product published live to Supabase database!");
           } catch (err) {
-            alert("Error saving product to cloud database.");
+            alert("Error saving product to Supabase.");
           }
         };
         reader.readAsDataURL(fileInput.files[0]);
@@ -1359,13 +1263,13 @@
     }
 
     async function deleteProduct(id) {
-      if (confirm("Are you sure you want to delete this item from the cloud catalog?")) {
+      if (confirm("Delete this product from Supabase catalog?")) {
         try {
-          await fetch(`/api/products/${id}`, { method: 'DELETE' });
-          products = products.filter(p => (p.id !== id && p._id !== id));
+          await db.from('products').delete().eq('id', id);
+          products = products.filter(p => p.id !== id);
           renderProducts();
         } catch (err) {
-          alert("Failed to delete product from database.");
+          alert("Failed to delete product.");
         }
       }
     }
@@ -1444,30 +1348,6 @@
       const email = document.getElementById('chk-email').value.trim();
       const address = document.getElementById('chk-address').value.trim();
 
-      if (selectedPaymentMethod === 'visa') {
-        const cardNum = document.getElementById('visa-card-number').value.trim();
-        const exp = document.getElementById('visa-exp').value.trim();
-        const cvc = document.getElementById('visa-cvc').value.trim();
-        if (!cardNum || !exp || !cvc) {
-          alert("Please fill out all Visa payment fields securely.");
-          return;
-        }
-      } else if (selectedPaymentMethod === 'moncash') {
-        const phone = document.getElementById('moncash-phone').value.trim();
-        const pin = document.getElementById('moncash-pin').value.trim();
-        if (!phone || !pin) {
-          alert("Please enter your MonCash phone number and PIN.");
-          return;
-        }
-      } else if (selectedPaymentMethod === 'natcash') {
-        const account = document.getElementById('natcash-account').value.trim();
-        const pin = document.getElementById('natcash-pin').value.trim();
-        if (!account || !pin) {
-          alert("Please enter your NatCash account info and PIN.");
-          return;
-        }
-      }
-
       const totalAmount = bin.reduce((sum, item) => sum + item.price, 0);
       const itemsSummary = bin.map(item => `${item.name} (${item.size})`).join(', ');
 
@@ -1483,24 +1363,20 @@
       };
 
       try {
-        const response = await fetch('/api/purchases', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newPurchase)
-        });
+        const { error } = await db.from('purchases').insert([newPurchase]);
+        if (error) throw error;
 
-        const savedPurchase = await response.json();
-        purchases.unshift(savedPurchase);
+        purchases.unshift(newPurchase);
         updateOwnerPurchasesUI();
 
         let methodText = selectedPaymentMethod === 'visa' ? 'Visa / Card' : selectedPaymentMethod.toUpperCase();
-        alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS. Your order has been saved to the cloud database.`);
+        alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS. Your order has been saved directly to Supabase.`);
         
         bin = [];
         updateBinUI();
         closeCheckoutModal();
       } catch (err) {
-        alert("Error saving transaction to the cloud database.");
+        alert("Error saving transaction to Supabase database.");
       }
     }
 
@@ -1529,7 +1405,7 @@
       closeSettingsModal();
     });
 
-    // Run startup initialization to connect with the cloud database backend API
+    // Run startup initialization
     initializeApp();
   </script>
 </body>
