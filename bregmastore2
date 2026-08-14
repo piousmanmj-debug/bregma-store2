@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BREGMA — Tech & Modern Apparel</title>
+  <style>
+    /* CSS Variables & Theme Setup */
+    :root {
+      --bg-primary: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-pink: #ec4899;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.1);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* Navigation Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.8);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .admin-toggle-btn, .bin-btn, .currency-select {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 10px 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .currency-select {
+      outline: none;
+    }
+
+    .currency-select option {
+      background: var(--bg-surface);
+      color: var(--text-main);
+    }
+
+    .admin-toggle-btn:hover, .bin-btn:hover, .currency-select:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .bin-count {
+      background: var(--accent-pink);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Hero Banner */
+    .hero {
+      text-align: center;
+      padding: 50px 20px 30px;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* Filters & Search Bar Section */
+    .filter-section {
+      max-width: 1200px;
+      margin: 0 auto 30px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 240px;
+      padding: 12px 18px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .category-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .filter-chip.active, .filter-chip:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    /* Admin Panel */
+    .admin-panel {
+      max-width: 800px;
+      margin: 0 auto 30px auto;
+      background: var(--bg-surface);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .admin-panel.active {
+      display: block;
+    }
+
+    .admin-panel h3 {
+      margin-bottom: 16px;
+      font-size: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .admin-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .admin-form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .admin-input {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    .admin-submit-btn {
+      grid-column: span 2;
+      background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* Products Grid */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 28px;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-category {
+      font-size: 0.75rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .product-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .product-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #38bdf8;
+    }
+
+    .delete-item-btn {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: #f43f5e;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: auto;
+    }
+
+    /* Slide-out Bin (Cart) Drawer */
+    .bin-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 200;
+    }
+
+    .bin-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .bin-drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border);
+      z-index: 201;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 24px;
+    }
+
+    .bin-drawer.open {
+      right: 0;
+    }
+
+    .bin-header, .bin-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bin-footer {
+      flex-direction: column;
+      align-items: stretch;
+      border-top: 1px solid var(--border);
+      border-bottom: none;
+      padding-top: 20px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .close-btn:hover { color: white; }
+
+    .bin-items {
+      flex-grow: 1;
+      overflow-y: auto;
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .bin-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .bin-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .bin-item-details {
+      flex-grow: 1;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #f43f5e;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    /* Modals (Product Details & Checkout) */
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      padding: 30px;
+      border-radius: var(--radius);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      max-width: 480px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .modal-img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .size-selector {
+      display: flex;
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .size-btn {
+      flex: 1;
+      padding: 8px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .size-btn.selected {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .action-btn {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Checkout Modal & Payment Tabs */
+    .checkout-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .checkout-input {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      width: 100%;
+    }
+
+    .checkout-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+    }
+
+    .payment-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 15px 0 5px 0;
+    }
+
+    .payment-tab {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 6px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .payment-tab.active {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--text-main);
+    }
+
+    .payment-fields {
+      display: none;
+    }
+
+    .payment-fields.active {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .payment-instructions {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">BREGMA</div>
+    <div class="header-actions">
+      <select id="currency-selector" class="currency-select" onchange="changeCurrency(this.value)">
+        <option value="USD">USD ($)</option>
+        <option value="HTG">HTG (G)</option>
+      </select>
+      <button class="admin-toggle-btn" id="toggle-admin">⚙️ Owner Dashboard</button>
+      <button class="bin-btn" id="open-bin">🛍️ My Bin <span class="bin-count" id="bin-count">0</span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Tech & Modern Apparel</h1>
+    <p>Discover innovative wearables and apparel crafted for the future.</p>
+  </section>
+
+  <div class="filter-section">
+    <input type="text" id="search-input" class="search-input" placeholder="Search gear or apparel..." oninput="filterProducts()" />
+    <div class="category-filters" id="category-filters">
+      <button class="filter-chip active" onclick="setCategory('All', this)">All</button>
+      <button class="filter-chip" onclick="setCategory('Technology', this)">Technology</button>
+      <button class="filter-chip" onclick="setCategory('Outerwear', this)">Outerwear</button>
+      <button class="filter-chip" onclick="setCategory('Pants', this)">Pants</button>
+      <button class="filter-chip" onclick="setCategory('Tops', this)">Tops</button>
+      <button class="filter-chip" onclick="setCategory('Knitwear', this)">Knitwear</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="admin-panel" id="admin-panel">
+      <h3>
+        <span>🛠️ Site Owner Management Panel</span>
+        <button class="close-btn" id="close-admin" style="font-size: 1.2rem;">&times;</button>
+      </h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Use this control panel to publish new products directly to the Bregma catalog or remove obsolete catalog records.</p>
+      <form id="add-product-form" onsubmit="handleAddNewProduct(event)">
+        <div class="admin-form-grid">
+          <div class="admin-form-group full-width">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Product Name</label>
+            <input type="text" id="new-name" class="admin-input" placeholder="e.g. Smart Thermal Hoodie" required />
+          </div>
+          <div class="admin-form-group">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Base Price ($ USD)</label>
+            <input type="number" step="0.01" id="new-price" class="admin-input" placeholder="125.00" required />
+          </div>
+          <div class="admin-form-group">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Category</label>
+            <input type="text" id="new-category" class="admin-input" placeholder="Technology, Outerwear, etc." required />
+          </div>
+          <div class="admin-form-group full-width">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Select Image from Computer</label>
+            <input type="file" id="new-image-file" class="admin-input" accept="image/*" required />
+          </div>
+          <button type="submit" class="admin-submit-btn">Publish Product to Bregma Catalog</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="product-grid" id="product-grid"></div>
+  </main>
+
+  <div class="bin-overlay" id="bin-overlay"></div>
+  <aside class="bin-drawer" id="bin-drawer">
+    <div class="bin-header">
+      <h2>Your Shopping Bin</h2>
+      <button class="close-btn" id="close-bin">&times;</button>
+    </div>
+    <div class="bin-items" id="bin-items">
+      <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your bin is currently empty.</p>
+    </div>
+    <div class="bin-footer">
+      <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; width: 100%; margin-bottom: 15px;">
+        <span>Total</span>
+        <span id="bin-total">$0.00</span>
+      </div>
+      <button class="action-btn" onclick="openCheckoutModal()">Proceed to Checkout</button>
+    </div>
+  </aside>
+
+  <div class="modal" id="product-detail-modal">
+    <span class="close-btn" onclick="closeModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
+    <img id="modal-product-img" class="modal-img" src="" alt="" />
+    <span id="modal-product-category" class="product-category"></span>
+    <h2 id="modal-product-title" style="margin: 5px 0 8px 0;"></h2>
+    <div id="modal-product-price" class="product-price"></div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px;">Select Size:</p>
+    <div class="size-selector">
+      <button class="size-btn selected" onclick="selectSize('S', this)">S</button>
+      <button class="size-btn" onclick="selectSize('M', this)">M</button>
+      <button class="size-btn" onclick="selectSize('L', this)">L</button>
+      <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
+    </div>
+    <button class="action-btn" id="modal-add-btn">Add to Bin</button>
+  </div>
+
+  <div class="modal" id="checkout-modal">
+    <span class="close-btn" onclick="closeCheckoutModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
+    <h2 style="margin-bottom: 5px;">🔒 Secure Checkout</h2>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Enter your delivery and payment details.</p>
+    
+    <form class="checkout-form" onsubmit="processPayment(event)">
+      <input type="text" class="checkout-input" placeholder="Full Name" required />
+      <input type="email" class="checkout-input" placeholder="Email Address" required />
+      <input type="text" class="checkout-input" placeholder="Shipping Address / City" required />
+
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">Select Payment Method:</p>
+      <div class="payment-tabs">
+        <button type="button" class="payment-tab active" onclick="switchPayment('card', this)">Credit Card</button>
+        <button type="button" class="payment-tab" onclick="switchPayment('moncash', this)">MonCash</button>
+        <button type="button" class="payment-tab" onclick="switchPayment('natcash', this)">NatCash</button>
+      </div>
+
+      <div id="payment-card" class="payment-fields active">
+        <input type="text" class="checkout-input" placeholder="Card Number (4242 •••• •••• ••••)" />
+        <div class="checkout-row">
+          <input type="text" class="checkout-input" placeholder="MM / YY" />
+          <input type="password" class="checkout-input" placeholder="CVC" maxlength="4" />
+        </div>
+      </div>
+
+      <div id="payment-moncash" class="payment-fields">
+        <div class="payment-instructions">
+          📱 <strong>MonCash Payment:</strong> Enter your registered phone number. A USSD payment authorization prompt will be pushed to your mobile device.
+        </div>
+        <input type="tel" class="checkout-input" placeholder="MonCash Phone Number (e.g. +509 ...)" />
+      </div>
+
+      <div id="payment-natcash" class="payment-fields">
+        <div class="payment-instructions">
+          💳 <strong>NatCash Payment:</strong> Enter your NatCash mobile account number to initiate instant transfer authorization.
+        </div>
+        <input type="tel" class="checkout-input" placeholder="NatCash Account Number" />
+      </div>
+
+      <button type="submit" class="action-btn" style="margin-top: 10px;">Pay <span id="checkout-btn-total">$0.00</span></button>
+    </form>
+  </div>
+
+  <script>
+    const defaultProducts = [
+      { id: 1, name: "Neural-Link Smart Tech Fleece", price: 145.00, category: "Technology", image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80" },
+      { id: 2, name: "Cyberpunk LED Visor System", price: 199.00, category: "Technology", image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=600&q=80" },
+      { id: 3, name: "Minimalist Linen Jacket", price: 110.00, category: "Outerwear", image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=600&q=80" },
+      { id: 4, name: "Structured Tailored Trousers", price: 95.00, category: "Pants", image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80" },
+      { id: 5, name: "Organic Cotton Essential Tee", price: 42.00, category: "Tops", image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80" },
+      { id: 6, name: "Monochrome Knit Sweater", price: 88.00, category: "Knitwear", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80" }
+    ];
+
+    let products = JSON.parse(localStorage.getItem('bregma_products')) || defaultProducts;
+    let bin = [];
+    let selectedCategory = 'All';
+    let selectedSize = 'S';
+    let activeModalProduct = null;
+    let isOwnerAuthenticated = false;
+    let selectedPaymentMethod = 'card';
+    let currentCurrency = 'USD';
+    const USD_TO_HTG_RATE = 132.50; // Configurable standard exchange rate reference
+    const OWNER_PASSCODE = "bregma2026";
+
+    const productGrid = document.getElementById('product-grid');
+
+    function formatPrice(usdAmount) {
+      if (currentCurrency === 'HTG') {
+        const htgAmount = usdAmount * USD_TO_HTG_RATE;
+        return `G ${htgAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      } else {
+        return `$${usdAmount.toFixed(2)}`;
+      }
+    }
+
+    function changeCurrency(currency) {
+      currentCurrency = currency;
+      renderProducts();
+      updateBinUI();
+      if (activeModalProduct) {
+        document.getElementById('modal-product-price').textContent = formatPrice(activeModalProduct.price);
+      }
+    }
+
+    function renderProducts() {
+      const searchQuery = document.getElementById('search-input').value.toLowerCase();
+      
+      const filtered = products.filter(product => {
+        const matchesCategory = selectedCategory === 'All' || product.category.toLowerCase() === selectedCategory.toLowerCase();
+        const matchesSearch = product.name.toLowerCase().includes(searchQuery);
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        productGrid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align:center; padding: 40px;">No products found.</p>';
+        return;
+      }
+
+      productGrid.innerHTML = filtered.map(product => `
+        <div class="product-card" onclick="openProductModal(${product.id})">
+          <img src="${product.image}" alt="${product.name}" class="product-img">
+          <div class="product-info">
+            <span class="product-category">${product.category}</span>
+            <h3 class="product-title">${product.name}</h3>
+            <div class="product-price">${formatPrice(product.price)}</div>
+            ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove from Database</button>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setCategory(category, element) {
+      selectedCategory = category;
+      document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+      element.classList.add('active');
+      renderProducts();
+    }
+
+    function filterProducts() {
+      renderProducts();
+    }
+
+    function openProductModal(id) {
+      activeModalProduct = products.find(p => p.id === id);
+      if (!activeModalProduct) return;
+
+      document.getElementById('modal-product-img').src = activeModalProduct.image;
+      document.getElementById('modal-product-category').textContent = activeModalProduct.category;
+      document.getElementById('modal-product-title').textContent = activeModalProduct.name;
+      document.getElementById('modal-product-price').textContent = formatPrice(activeModalProduct.price);
+      
+      document.getElementById('modal-add-btn').onclick = () => {
+        bin.push({ ...activeModalProduct, size: selectedSize });
+        updateBinUI();
+        closeModal();
+        openBinDrawer();
+      };
+
+      document.getElementById('product-detail-modal').classList.add('active');
+      document.getElementById('bin-overlay').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('product-detail-modal').classList.remove('active');
+      if (!document.getElementById('checkout-modal').classList.contains('active')) {
+        document.getElementById('bin-overlay').classList.remove('open');
+      }
+    }
+
+    function selectSize(size, element) {
+      selectedSize = size;
+      document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function saveProducts() {
+      localStorage.setItem('bregma_products', JSON.stringify(products));
+    }
+
+    // Owner Auth & Add Products
+    const toggleAdminBtn = document.getElementById('toggle-admin');
+    const adminPanel = document.getElementById('admin-panel');
+    toggleAdminBtn.addEventListener('click', () => {
+      if (!isOwnerAuthenticated) {
+        const pass = prompt("Enter Owner Passcode (bregma2026):");
+        if (pass === OWNER_PASSCODE) {
+          isOwnerAuthenticated = true;
+          alert("Owner Access Granted! You can now manage inventory via the dashboard.");
+          adminPanel.classList.add('active');
+          renderProducts();
+        } else if (pass !== null) {
+          alert("Incorrect Passcode.");
+        }
+      } else {
+        adminPanel.classList.toggle('active');
+      }
+    });
+
+    document.getElementById('close-admin').addEventListener('click', () => adminPanel.classList.remove('active'));
+
+    function handleAddNewProduct(event) {
+      event.preventDefault();
+      const name = document.getElementById('new-name').value.trim();
+      const price = parseFloat(document.getElementById('new-price').value);
+      const category = document.getElementById('new-category').value.trim();
+      const fileInput = document.getElementById('new-image-file');
+
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          products.unshift({ id: Date.now(), name, price, category, image: e.target.result });
+          saveProducts();
+          renderProducts();
+          document.getElementById('add-product-form').reset();
+          adminPanel.classList.remove('active');
+          alert("New product published successfully!");
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      }
+    }
+
+    function deleteProduct(id) {
+      if (confirm("Are you sure you want to delete this item from the catalog?")) {
+        products = products.filter(p => p.id !== id);
+        saveProducts();
+        renderProducts();
+      }
+    }
+
+    function removeFromBin(index) {
+      bin.splice(index, 1);
+      updateBinUI();
+    }
+
+    function updateBinUI() {
+      document.getElementById('bin-count').textContent = bin.length;
+      const binItems = document.getElementById('bin-items');
+      
+      if (bin.length === 0) {
+        binItems.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your bin is currently empty.</p>';
+        document.getElementById('bin-total').textContent = formatPrice(0);
+        return;
+      }
+
+      binItems.innerHTML = bin.map((item, index) => `
+        <div class="bin-item">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="bin-item-details">
+            <div style="font-size: 0.9rem; font-weight: 600;">${item.name}</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Size: ${item.size}</div>
+            <div style="font-size: 0.85rem; color: #38bdf8;">${formatPrice(item.price)}</div>
+          </div>
+          <button class="remove-btn" onclick="removeFromBin(${index})">Remove</button>
+        </div>
+      `).join('');
+
+      const total = bin.reduce((sum, item) => sum + item.price, 0);
+      document.getElementById('bin-total').textContent = formatPrice(total);
+      document.getElementById('checkout-btn-total').textContent = formatPrice(total);
+    }
+
+    // Payment method tab switching
+    function switchPayment(method, element) {
+      selectedPaymentMethod = method;
+      document.querySelectorAll('.payment-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.payment-fields').forEach(field => field.classList.remove('active'));
+      
+      element.classList.add('active');
+      document.getElementById(`payment-${method}`).classList.add('active');
+    }
+
+    // Checkout Flow Logic
+    function openCheckoutModal() {
+      if (bin.length === 0) {
+        alert("Your shopping bin is empty.");
+        return;
+      }
+      closeBinDrawer();
+      document.getElementById('checkout-modal').classList.add('active');
+      document.getElementById('bin-overlay').classList.add('open');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkout-modal').classList.remove('active');
+      document.getElementById('bin-overlay').classList.remove('open');
+    }
+
+    function processPayment(event) {
+      event.preventDefault();
+      let methodText = selectedPaymentMethod === 'card' ? 'Credit Card' : selectedPaymentMethod.toUpperCase();
+      alert(`🎉 Payment successful via ${methodText}! Thank you for your order with BREGMA. A receipt has been sent to your email.`);
+      bin = [];
+      updateBinUI();
+      closeCheckoutModal();
+    }
+
+    // Bin Drawer Toggles
+    const openBinBtn = document.getElementById('open-bin');
+    const closeBinBtn = document.getElementById('close-bin');
+    const binDrawer = document.getElementById('bin-drawer');
+    const binOverlay = document.getElementById('bin-overlay');
+
+    function openBinDrawer() {
+      binDrawer.classList.add('open');
+      binOverlay.classList.add('open');
+    }
+
+    function closeBinDrawer() {
+      binDrawer.classList.remove('open');
+      binOverlay.classList.remove('open');
+    }
+
+    openBinBtn.addEventListener('click', openBinDrawer);
+    closeBinBtn.addEventListener('click', closeBinDrawer);
+    binOverlay.addEventListener('click', () => {
+      closeBinDrawer();
+      closeModal();
+      closeCheckoutModal();
+    });
+
+    renderProducts();
+  </script>
+</body>
+</html>
