@@ -62,11 +62,11 @@
       align-items: center;
     }
 
-    .admin-toggle-btn, .bin-btn {
+    .admin-toggle-btn, .bin-btn, .currency-select, .account-btn {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-main);
-      padding: 10px 20px;
+      padding: 10px 16px;
       border-radius: 30px;
       cursor: pointer;
       font-weight: 600;
@@ -77,7 +77,16 @@
       font-size: 0.9rem;
     }
 
-    .admin-toggle-btn:hover, .bin-btn:hover {
+    .currency-select {
+      outline: none;
+    }
+
+    .currency-select option {
+      background: var(--bg-surface);
+      color: var(--text-main);
+    }
+
+    .admin-toggle-btn:hover, .bin-btn:hover, .currency-select:hover, .account-btn:hover {
       border-color: var(--accent);
       transform: translateY(-2px);
     }
@@ -166,7 +175,7 @@
 
     /* Admin Panel */
     .admin-panel {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto 30px auto;
       background: var(--bg-surface);
       border: 1px solid var(--accent);
@@ -537,6 +546,33 @@
       border: 1px solid var(--border);
       line-height: 1.4;
     }
+
+    .payment-gateway-link {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: #38bdf8;
+      text-decoration: underline;
+    }
+
+    /* Registered Accounts & Purchases Sections inside Owner Dashboard */
+    .dashboard-section {
+      margin-top: 25px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .account-row-item, .purchase-row-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-primary);
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -544,6 +580,11 @@
   <header>
     <div class="logo">BREGMA</div>
     <div class="header-actions">
+      <button class="account-btn" id="open-account-modal">👤 <span id="account-status-text">Create Account</span></button>
+      <select id="currency-selector" class="currency-select" onchange="changeCurrency(this.value)">
+        <option value="USD">USD ($)</option>
+        <option value="HTG">HTG (G)</option>
+      </select>
       <button class="admin-toggle-btn" id="toggle-admin">⚙️ Owner Dashboard</button>
       <button class="bin-btn" id="open-bin">🛍️ My Bin <span class="bin-count" id="bin-count">0</span></button>
     </div>
@@ -580,7 +621,7 @@
             <input type="text" id="new-name" class="admin-input" placeholder="e.g. Smart Thermal Hoodie" required />
           </div>
           <div class="admin-form-group">
-            <label style="font-size: 0.85rem; color: var(--text-muted);">Price ($)</label>
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Base Price ($ USD)</label>
             <input type="number" step="0.01" id="new-price" class="admin-input" placeholder="125.00" required />
           </div>
           <div class="admin-form-group">
@@ -594,6 +635,28 @@
           <button type="submit" class="admin-submit-btn">Publish Product to Bregma Catalog</button>
         </div>
       </form>
+
+      <div class="dashboard-section">
+        <h4 style="margin-bottom: 12px; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center;">
+          <span>📦 Completed Purchases & Orders</span>
+          <span id="purchase-total-count" style="font-size: 0.85rem; background: var(--accent); padding: 2px 8px; border-radius: 10px;">0 orders</span>
+        </h4>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 14px;">All successful payments made through Visa, MonCash, and NatCash are saved here.</p>
+        <div id="owner-purchases-list">
+          <p style="color: var(--text-muted); text-align: center; padding: 15px;">No purchases recorded yet.</p>
+        </div>
+      </div>
+
+      <div class="dashboard-section">
+        <h4 style="margin-bottom: 12px; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center;">
+          <span>📋 Registered User Accounts</span>
+          <span id="account-total-count" style="font-size: 0.85rem; background: var(--accent); padding: 2px 8px; border-radius: 10px;">0 accounts</span>
+        </h4>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 14px;">All customer profiles created prior to checkout are securely saved below.</p>
+        <div id="owner-accounts-list">
+          <p style="color: var(--text-muted); text-align: center; padding: 15px;">No accounts registered yet.</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -619,6 +682,22 @@
     </div>
   </aside>
 
+  <div class="modal" id="account-modal">
+    <span class="close-btn" onclick="closeAccountModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
+    <h2 id="account-modal-title" style="margin-bottom: 5px;">👤 Create Account</h2>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Create a user account before completing your purchases.</p>
+    
+    <form class="checkout-form" id="account-form" onsubmit="handleAccountSubmit(event)">
+      <input type="text" id="acc-name" class="checkout-input" placeholder="Full Name" required />
+      <input type="email" id="acc-email" class="checkout-input" placeholder="Email Address" required />
+      <input type="password" id="acc-pass" class="checkout-input" placeholder="Create Password" required />
+      <button type="submit" class="action-btn" style="margin-top: 5px;" id="account-submit-btn">Create Account</button>
+    </form>
+    <div style="text-align: center; margin-top: 15px;">
+      <button id="toggle-auth-mode" style="background: none; border: none; color: var(--accent); cursor: pointer; font-size: 0.85rem;" onclick="toggleAuthMode()">Already have an account? Sign In</button>
+    </div>
+  </div>
+
   <div class="modal" id="product-detail-modal">
     <span class="close-btn" onclick="closeModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
     <img id="modal-product-img" class="modal-img" src="" alt="" />
@@ -641,37 +720,45 @@
     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Enter your delivery and payment details.</p>
     
     <form class="checkout-form" onsubmit="processPayment(event)">
-      <input type="text" class="checkout-input" placeholder="Full Name" required />
-      <input type="email" class="checkout-input" placeholder="Email Address" required />
-      <input type="text" class="checkout-input" placeholder="Shipping Address / City" required />
+      <input type="text" id="chk-name" class="checkout-input" placeholder="Full Name" required />
+      <input type="email" id="chk-email" class="checkout-input" placeholder="Email Address" required />
+      <input type="text" id="chk-address" class="checkout-input" placeholder="Shipping Address / City" required />
 
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">Select Payment Method:</p>
       <div class="payment-tabs">
-        <button type="button" class="payment-tab active" onclick="switchPayment('card', this)">Credit Card</button>
+        <button type="button" class="payment-tab active" onclick="switchPayment('visa', this)">Visa / Card</button>
         <button type="button" class="payment-tab" onclick="switchPayment('moncash', this)">MonCash</button>
         <button type="button" class="payment-tab" onclick="switchPayment('natcash', this)">NatCash</button>
       </div>
 
-      <div id="payment-card" class="payment-fields active">
-        <input type="text" class="checkout-input" placeholder="Card Number (4242 •••• •••• ••••)" />
+      <div id="payment-visa" class="payment-fields active">
+        <div class="payment-instructions">
+          💳 <strong>Visa Payment Gateway:</strong> Complete your payment securely via card network.
+          <br><a href="https://usa.visa.com" target="_blank" class="payment-gateway-link">Open Official Visa Portal ↗</a>
+        </div>
+        <input type="text" id="visa-card-number" class="checkout-input" placeholder="Visa Card Number (e.g. 4000 1234 5678 9010)" maxlength="19" />
         <div class="checkout-row">
-          <input type="text" class="checkout-input" placeholder="MM / YY" />
-          <input type="password" class="checkout-input" placeholder="CVC" maxlength="4" />
+          <input type="text" id="visa-exp" class="checkout-input" placeholder="MM / YY" maxlength="5" />
+          <input type="password" id="visa-cvc" class="checkout-input" placeholder="CVC" maxlength="4" />
         </div>
       </div>
 
       <div id="payment-moncash" class="payment-fields">
         <div class="payment-instructions">
-          📱 <strong>MonCash Payment:</strong> Enter your registered phone number. A USSD payment authorization prompt will be pushed to your mobile device.
+          📱 <strong>MonCash Direct Pay:</strong> Authorize your transfer through Digicel MonCash services.
+          <br><a href="https://moncashbutton.digicelgroup.com" target="_blank" class="payment-gateway-link">Open Official MonCash Portal ↗</a>
         </div>
-        <input type="tel" class="checkout-input" placeholder="MonCash Phone Number (e.g. +509 ...)" />
+        <input type="tel" id="moncash-phone" class="checkout-input" placeholder="MonCash Phone Number (e.g. +509 ...)" />
+        <input type="password" id="moncash-pin" class="checkout-input" placeholder="MonCash 4-digit PIN" maxlength="4" />
       </div>
 
       <div id="payment-natcash" class="payment-fields">
         <div class="payment-instructions">
-          💳 <strong>NatCash Payment:</strong> Enter your NatCash mobile account number to initiate instant transfer authorization.
+          💳 <strong>NatCash Instant Transfer:</strong> Secure digital wallet payment settlement.
+          <br><a href="https://www.natcom.ht" target="_blank" class="payment-gateway-link">Open Official Natcom / NatCash Portal ↗</a>
         </div>
-        <input type="tel" class="checkout-input" placeholder="NatCash Account Number" />
+        <input type="tel" id="natcash-account" class="checkout-input" placeholder="NatCash Account / Phone Number" />
+        <input type="password" id="natcash-pin" class="checkout-input" placeholder="NatCash PIN" maxlength="6" />
       </div>
 
       <button type="submit" class="action-btn" style="margin-top: 10px;">Pay <span id="checkout-btn-total">$0.00</span></button>
@@ -689,15 +776,39 @@
     ];
 
     let products = JSON.parse(localStorage.getItem('bregma_products')) || defaultProducts;
+    let accounts = JSON.parse(localStorage.getItem('bregma_accounts')) || [];
+    let purchases = JSON.parse(localStorage.getItem('bregma_purchases')) || [];
+    let loggedInUser = JSON.parse(localStorage.getItem('bregma_logged_in_user')) || null;
     let bin = [];
     let selectedCategory = 'All';
     let selectedSize = 'S';
     let activeModalProduct = null;
     let isOwnerAuthenticated = false;
-    let selectedPaymentMethod = 'card';
+    let selectedPaymentMethod = 'visa';
+    let currentCurrency = 'USD';
+    let isLoginMode = false;
+    const USD_TO_HTG_RATE = 132.50;
     const OWNER_PASSCODE = "bregma2026";
 
     const productGrid = document.getElementById('product-grid');
+
+    function formatPrice(usdAmount) {
+      if (currentCurrency === 'HTG') {
+        const htgAmount = usdAmount * USD_TO_HTG_RATE;
+        return `G ${htgAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      } else {
+        return `$${usdAmount.toFixed(2)}`;
+      }
+    }
+
+    function changeCurrency(currency) {
+      currentCurrency = currency;
+      renderProducts();
+      updateBinUI();
+      if (activeModalProduct) {
+        document.getElementById('modal-product-price').textContent = formatPrice(activeModalProduct.price);
+      }
+    }
 
     function renderProducts() {
       const searchQuery = document.getElementById('search-input').value.toLowerCase();
@@ -719,7 +830,7 @@
           <div class="product-info">
             <span class="product-category">${product.category}</span>
             <h3 class="product-title">${product.name}</h3>
-            <div class="product-price">$${product.price.toFixed(2)}</div>
+            <div class="product-price">${formatPrice(product.price)}</div>
             ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove from Database</button>` : ''}
           </div>
         </div>
@@ -744,7 +855,7 @@
       document.getElementById('modal-product-img').src = activeModalProduct.image;
       document.getElementById('modal-product-category').textContent = activeModalProduct.category;
       document.getElementById('modal-product-title').textContent = activeModalProduct.name;
-      document.getElementById('modal-product-price').textContent = `$${activeModalProduct.price.toFixed(2)}`;
+      document.getElementById('modal-product-price').textContent = formatPrice(activeModalProduct.price);
       
       document.getElementById('modal-add-btn').onclick = () => {
         bin.push({ ...activeModalProduct, size: selectedSize });
@@ -759,7 +870,7 @@
 
     function closeModal() {
       document.getElementById('product-detail-modal').classList.remove('active');
-      if (!document.getElementById('checkout-modal').classList.contains('active')) {
+      if (!document.getElementById('checkout-modal').classList.contains('active') && !document.getElementById('account-modal').classList.contains('active')) {
         document.getElementById('bin-overlay').classList.remove('open');
       }
     }
@@ -774,7 +885,166 @@
       localStorage.setItem('bregma_products', JSON.stringify(products));
     }
 
-    // Owner Auth & Add Products
+    function saveAccounts() {
+      localStorage.setItem('bregma_accounts', JSON.stringify(accounts));
+      updateOwnerAccountsUI();
+    }
+
+    function savePurchases() {
+      localStorage.setItem('bregma_purchases', JSON.stringify(purchases));
+      updateOwnerPurchasesUI();
+    }
+
+    // Account Management Logic
+    const accountModal = document.getElementById('account-modal');
+    const openAccountModalBtn = document.getElementById('open-account-modal');
+
+    openAccountModalBtn.addEventListener('click', () => {
+      document.getElementById('bin-overlay').classList.add('open');
+      accountModal.classList.add('active');
+    });
+
+    function closeAccountModal() {
+      accountModal.classList.remove('active');
+      if (!document.getElementById('checkout-modal').classList.contains('active') && !document.getElementById('bin-drawer').classList.contains('open') && !document.getElementById('product-detail-modal').classList.contains('active')) {
+        document.getElementById('bin-overlay').classList.remove('open');
+      }
+    }
+
+    function toggleAuthMode() {
+      isLoginMode = !isLoginMode;
+      const title = document.getElementById('account-modal-title');
+      const submitBtn = document.getElementById('account-submit-btn');
+      const toggleBtn = document.getElementById('toggle-auth-mode');
+      const nameInput = document.getElementById('acc-name');
+
+      if (isLoginMode) {
+        title.textContent = "👤 Sign In Account";
+        submitBtn.textContent = "Sign In";
+        toggleBtn.textContent = "Don't have an account? Create Account";
+        nameInput.style.display = "none";
+        nameInput.removeAttribute('required');
+      } else {
+        title.textContent = "👤 Create Account";
+        submitBtn.textContent = "Create Account";
+        toggleBtn.textContent = "Already have an account? Sign In";
+        nameInput.style.display = "block";
+        nameInput.setAttribute('required', 'true');
+      }
+    }
+
+    function handleAccountSubmit(event) {
+      event.preventDefault();
+      const email = document.getElementById('acc-email').value.trim();
+      const password = document.getElementById('acc-pass').value.trim();
+
+      if (isLoginMode) {
+        const found = accounts.find(acc => acc.email === email && acc.password === password);
+        if (found) {
+          loggedInUser = found;
+          localStorage.setItem('bregma_logged_in_user', JSON.stringify(loggedInUser));
+          updateAccountUIStatus();
+          alert(`Welcome back, ${found.name}!`);
+          closeAccountModal();
+        } else {
+          alert("Invalid email or password.");
+        }
+      } else {
+        const name = document.getElementById('acc-name').value.trim();
+        const existing = accounts.find(acc => acc.email === email);
+        if (existing) {
+          alert("An account with this email already exists.");
+          return;
+        }
+
+        const newAccount = { id: Date.now(), name, email, password, date: new Date().toLocaleDateString() };
+        accounts.push(newAccount);
+        saveAccounts();
+
+        loggedInUser = newAccount;
+        localStorage.setItem('bregma_logged_in_user', JSON.stringify(loggedInUser));
+        updateAccountUIStatus();
+
+        alert("Account created and saved successfully!");
+        document.getElementById('account-form').reset();
+        closeAccountModal();
+      }
+    }
+
+    function updateAccountUIStatus() {
+      const statusText = document.getElementById('account-status-text');
+      if (loggedInUser) {
+        statusText.textContent = loggedInUser.name.split(' ')[0];
+      } else {
+        statusText.textContent = "Create Account";
+      }
+    }
+
+    function updateOwnerAccountsUI() {
+      const listContainer = document.getElementById('owner-accounts-list');
+      const countLabel = document.getElementById('account-total-count');
+      
+      countLabel.textContent = `${accounts.length} accounts`;
+
+      if (accounts.length === 0) {
+        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 15px;">No accounts registered yet.</p>';
+        return;
+      }
+
+      listContainer.innerHTML = accounts.map((acc) => `
+        <div class="account-row-item">
+          <div>
+            <strong>${acc.name}</strong><br>
+            <span style="color: var(--text-muted); font-size: 0.8rem;">${acc.email} — Registered: ${acc.date || 'Recent'}</span>
+          </div>
+          <button class="remove-btn" onclick="deleteAccount(${acc.id})">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    function updateOwnerPurchasesUI() {
+      const listContainer = document.getElementById('owner-purchases-list');
+      const countLabel = document.getElementById('purchase-total-count');
+      
+      countLabel.textContent = `${purchases.length} orders`;
+
+      if (purchases.length === 0) {
+        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 15px;">No purchases recorded yet.</p>';
+        return;
+      }
+
+      listContainer.innerHTML = purchases.map((order) => `
+        <div class="purchase-row-item">
+          <div>
+            <strong>Order #${order.id}</strong> - <span style="color: #38bdf8;">${formatPrice(order.total)}</span><br>
+            <span style="color: var(--text-muted); font-size: 0.8rem;">Customer: ${order.name} (${order.email}) | Method: ${order.method.toUpperCase()} | Date: ${order.date}</span><br>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">Items: ${order.itemsSummary}</span>
+          </div>
+          <button class="remove-btn" onclick="deletePurchase(${order.id})">Remove</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteAccount(id) {
+      if (confirm("Are you sure you want to delete this user account record?")) {
+        accounts = accounts.filter(a => a.id !== id);
+        if (loggedInUser && loggedInUser.id === id) {
+          loggedInUser = null;
+          localStorage.removeItem('bregma_logged_in_user');
+          updateAccountUIStatus();
+        }
+        saveAccounts();
+      }
+    }
+
+    function deletePurchase(id) {
+      if (confirm("Are you sure you want to delete this purchase record?")) {
+        purchases = purchases.filter(p => p.id !== id);
+        savePurchases();
+      }
+    }
+
+    // Owner Auth & Dashboard
     const toggleAdminBtn = document.getElementById('toggle-admin');
     const adminPanel = document.getElementById('admin-panel');
     toggleAdminBtn.addEventListener('click', () => {
@@ -782,9 +1052,11 @@
         const pass = prompt("Enter Owner Passcode (bregma2026):");
         if (pass === OWNER_PASSCODE) {
           isOwnerAuthenticated = true;
-          alert("Owner Access Granted! You can now manage inventory via the dashboard.");
+          alert("Owner Access Granted! You can now manage inventory, user accounts, and customer purchases.");
           adminPanel.classList.add('active');
           renderProducts();
+          updateOwnerAccountsUI();
+          updateOwnerPurchasesUI();
         } else if (pass !== null) {
           alert("Incorrect Passcode.");
         }
@@ -835,7 +1107,7 @@
       
       if (bin.length === 0) {
         binItems.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your bin is currently empty.</p>';
-        document.getElementById('bin-total').textContent = '$0.00';
+        document.getElementById('bin-total').textContent = formatPrice(0);
         return;
       }
 
@@ -845,15 +1117,15 @@
           <div class="bin-item-details">
             <div style="font-size: 0.9rem; font-weight: 600;">${item.name}</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">Size: ${item.size}</div>
-            <div style="font-size: 0.85rem; color: #38bdf8;">$${item.price.toFixed(2)}</div>
+            <div style="font-size: 0.85rem; color: #38bdf8;">${formatPrice(item.price)}</div>
           </div>
           <button class="remove-btn" onclick="removeFromBin(${index})">Remove</button>
         </div>
       `).join('');
 
       const total = bin.reduce((sum, item) => sum + item.price, 0);
-      document.getElementById('bin-total').textContent = `$${total.toFixed(2)}`;
-      document.getElementById('checkout-btn-total').textContent = `$${total.toFixed(2)}`;
+      document.getElementById('bin-total').textContent = formatPrice(total);
+      document.getElementById('checkout-btn-total').textContent = formatPrice(total);
     }
 
     // Payment method tab switching
@@ -872,7 +1144,18 @@
         alert("Your shopping bin is empty.");
         return;
       }
+      if (!loggedInUser) {
+        alert("Please create or sign in to your account before proceeding to checkout.");
+        closeBinDrawer();
+        document.getElementById('bin-overlay').classList.add('open');
+        accountModal.classList.add('active');
+        return;
+      }
+
       closeBinDrawer();
+      document.getElementById('chk-name').value = loggedInUser.name;
+      document.getElementById('chk-email').value = loggedInUser.email;
+
       document.getElementById('checkout-modal').classList.add('active');
       document.getElementById('bin-overlay').classList.add('open');
     }
@@ -884,8 +1167,58 @@
 
     function processPayment(event) {
       event.preventDefault();
-      let methodText = selectedPaymentMethod === 'card' ? 'Credit Card' : selectedPaymentMethod.toUpperCase();
-      alert(`🎉 Payment successful via ${methodText}! Thank you for your order with BREGMA. A receipt has been sent to your email.`);
+      
+      const name = document.getElementById('chk-name').value.trim();
+      const email = document.getElementById('chk-email').value.trim();
+      const address = document.getElementById('chk-address').value.trim();
+
+      // Detailed validation for Visa, MonCash, and NatCash parameters
+      if (selectedPaymentMethod === 'visa') {
+        const cardNum = document.getElementById('visa-card-number').value.trim();
+        const exp = document.getElementById('visa-exp').value.trim();
+        const cvc = document.getElementById('visa-cvc').value.trim();
+        if (!cardNum || !exp || !cvc) {
+          alert("Please fill out all Visa / Card payment fields securely.");
+          return;
+        }
+      } else if (selectedPaymentMethod === 'moncash') {
+        const phone = document.getElementById('moncash-phone').value.trim();
+        const pin = document.getElementById('moncash-pin').value.trim();
+        if (!phone || !pin) {
+          alert("Please enter your MonCash phone number and 4-digit PIN authorization code.");
+          return;
+        }
+      } else if (selectedPaymentMethod === 'natcash') {
+        const account = document.getElementById('natcash-account').value.trim();
+        const pin = document.getElementById('natcash-pin').value.trim();
+        if (!account || !pin) {
+          alert("Please enter your NatCash account info and confirmation PIN.");
+          return;
+        }
+      }
+
+      // Calculate total and compile order items summary
+      const totalAmount = bin.reduce((sum, item) => sum + item.price, 0);
+      const itemsSummary = bin.map(item => `${item.name} (${item.size})`).join(', ');
+
+      // Save order to owner purchases records
+      const newPurchase = {
+        id: Date.now().toString().slice(-6),
+        name,
+        email,
+        address,
+        method: selectedPaymentMethod,
+        total: totalAmount,
+        itemsSummary,
+        date: new Date().toLocaleString()
+      };
+
+      purchases.unshift(newPurchase);
+      savePurchases();
+
+      let methodText = selectedPaymentMethod === 'visa' ? 'Visa / Card' : selectedPaymentMethod.toUpperCase();
+      alert(`🎉 Payment successful via ${methodText}! Thank you for your order with BREGMA. Your purchase has been securely saved to the owner dashboard.`);
+      
       bin = [];
       updateBinUI();
       closeCheckoutModal();
@@ -913,9 +1246,13 @@
       closeBinDrawer();
       closeModal();
       closeCheckoutModal();
+      closeAccountModal();
     });
 
     renderProducts();
+    updateAccountUIStatus();
+    updateOwnerAccountsUI();
+    updateOwnerPurchasesUI();
   </script>
 </body>
 </html>
