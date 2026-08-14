@@ -646,6 +646,7 @@
       color: var(--text-main);
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -879,8 +880,11 @@
   </div>
 
   <script>
-    // --- INTEGRATED MOCK BACKEND API INTERCEPTOR ---
-    // This intercepts all internal fetch() requests so the app works standalone in the browser
+    // Initialize Supabase Client with your credentials
+    const SUPABASE_URL = 'https://unhaxejnqwzymsfswlgs.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuaGF4ZWpucXd6eW1zZnN3bGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3Mjg1ODUsImV4cCI6MjEwMjMwNDU4NX0.KxSDPDRDe1RwjOQVkixVfjahCqEslYrDCUu6KECv1uw';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const defaultProducts = [
       { id: 1, name: "Neural-Link Smart Tech Fleece Hoodie", price: 34.99, originalPrice: 65.00, discount: "-46%", category: "Technology", image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80" },
       { id: 2, name: "Cyberpunk LED Futuristic Visor System", price: 22.50, originalPrice: 45.00, discount: "-50%", category: "Technology", image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=600&q=80" },
@@ -890,77 +894,6 @@
       { id: 6, name: "Cozy Monochrome Knit Ribbed Sweater", price: 21.99, originalPrice: 42.00, discount: "-48%", category: "Knitwear", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80" }
     ];
 
-    let dbProducts = JSON.parse(localStorage.getItem('carlos_db_products')) || defaultProducts;
-    let dbAccounts = JSON.parse(localStorage.getItem('carlos_db_accounts')) || [];
-    let dbPurchases = JSON.parse(localStorage.getItem('carlos_db_purchases')) || [];
-
-    // Mock fetch implementation
-    window.fetch = async function(url, options = {}) {
-      const method = options.method || 'GET';
-      let body = options.body ? JSON.parse(options.body) : null;
-
-      // Simulate network latency
-      await new Promise(resolve => setTimeout(resolve, 50));
-
-      if (url === '/api/products' && method === 'GET') {
-        return { ok: true, json: async () => dbProducts };
-      }
-      if (url === '/api/products' && method === 'POST') {
-        dbProducts.unshift(body);
-        localStorage.setItem('carlos_db_products', JSON.stringify(dbProducts));
-        return { ok: true, json: async () => body };
-      }
-      if (url.startsWith('/api/products/') && method === 'DELETE') {
-        const id = Number(url.split('/').pop()) || url.split('/').pop();
-        dbProducts = dbProducts.filter(p => p.id != id && p._id != id);
-        localStorage.setItem('carlos_db_products', JSON.stringify(dbProducts));
-        return { ok: true, json: async () => ({ success: true }) };
-      }
-
-      if (url === '/api/accounts' && method === 'GET') {
-        return { ok: true, json: async () => dbAccounts };
-      }
-      if (url === '/api/accounts' && method === 'POST') {
-        body.id = Date.now().toString();
-        dbAccounts.push(body);
-        localStorage.setItem('carlos_db_accounts', JSON.stringify(dbAccounts));
-        return { ok: true, json: async () => body };
-      }
-      if (url.startsWith('/api/accounts/') && method === 'DELETE') {
-        const id = url.split('/').pop();
-        dbAccounts = dbAccounts.filter(a => a.id !== id && a._id !== id);
-        localStorage.setItem('carlos_db_accounts', JSON.stringify(dbAccounts));
-        return { ok: true, json: async () => ({ success: true }) };
-      }
-
-      if (url === '/api/login' && method === 'POST') {
-        const user = dbAccounts.find(acc => acc.email === body.email && acc.password === body.password);
-        if (user) {
-          return { ok: true, json: async () => user };
-        } else {
-          return { ok: false, status: 401, json: async () => ({ error: "Invalid credentials" }) };
-        }
-      }
-
-      if (url === '/api/purchases' && method === 'GET') {
-        return { ok: true, json: async () => dbPurchases };
-      }
-      if (url === '/api/purchases' && method === 'POST') {
-        dbPurchases.unshift(body);
-        localStorage.setItem('carlos_db_purchases', JSON.stringify(dbPurchases));
-        return { ok: true, json: async () => body };
-      }
-      if (url.startsWith('/api/purchases/') && method === 'DELETE') {
-        const id = url.split('/').pop();
-        dbPurchases = dbPurchases.filter(p => p.id !== id && p._id !== id);
-        localStorage.setItem('carlos_db_purchases', JSON.stringify(dbPurchases));
-        return { ok: true, json: async () => ({ success: true }) };
-      }
-
-      return { ok: false, status: 404, json: async () => ({ error: "Not found" }) };
-    };
-
-    // --- APP RUNTIME LOGIC ---
     let products = [];
     let accounts = [];
     let purchases = [];
@@ -978,19 +911,24 @@
 
     const productGrid = document.getElementById('product-grid');
 
+    // Fetch initial data from Supabase tables on startup
     async function initializeApp() {
       try {
         const [prodRes, accRes, purRes] = await Promise.all([
-          fetch('/api/products'),
-          fetch('/api/accounts'),
-          fetch('/api/purchases')
+          supabase.from('products').select('*'),
+          supabase.from('accounts').select('*'),
+          supabase.from('purchases').select('*')
         ]);
         
-        products = await prodRes.json();
-        accounts = await accRes.json();
-        purchases = await purRes.json();
+        products = prodRes.data || [];
+        accounts = accRes.data || [];
+        purchases = purRes.data || [];
+
+        if (!products || products.length === 0) {
+          products = defaultProducts;
+        }
       } catch (error) {
-        console.error("Initialization error", error);
+        console.error("Failed to connect to Supabase, falling back to defaults.", error);
         products = defaultProducts;
       }
       
@@ -1045,7 +983,7 @@
               <div class="product-price">${formatPrice(product.price)}</div>
               ${product.originalPrice ? `<div class="product-original-price">${formatPrice(product.originalPrice)}</div>` : ''}
             </div>
-            ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove</button>` : ''}
+            ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct('${product.id}')">Remove</button>` : ''}
           </div>
         </div>
       `).join('');
@@ -1063,7 +1001,7 @@
     }
 
     function openProductModal(id) {
-      activeModalProduct = products.find(p => p.id === id);
+      activeModalProduct = products.find(p => p.id == id);
       if (!activeModalProduct) return;
 
       document.getElementById('modal-product-img').src = activeModalProduct.image;
@@ -1095,6 +1033,7 @@
       element.classList.add('selected');
     }
 
+    // Settings Modal Logic
     const settingsModal = document.getElementById('settings-modal');
     document.getElementById('open-settings-modal').addEventListener('click', () => {
       document.getElementById('bin-overlay').classList.add('open');
@@ -1108,6 +1047,7 @@
       }
     }
 
+    // Account Management Logic
     const accountModal = document.getElementById('account-modal');
     document.getElementById('open-account-modal').addEventListener('click', () => {
       document.getElementById('bin-overlay').classList.add('open');
@@ -1150,14 +1090,15 @@
 
       if (isLoginMode) {
         try {
-          const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-          });
+          const { data, error } = await supabase
+            .from('accounts')
+            .select('*')
+            .eq('email', email)
+            .eq('password', password)
+            .single();
           
-          if (response.ok) {
-            loggedInUser = await response.json();
+          if (data && !error) {
+            loggedInUser = data;
             localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
             updateAccountUIStatus();
             alert(`Welcome back, ${loggedInUser.name}!`);
@@ -1166,20 +1107,21 @@
             alert("Invalid email or password.");
           }
         } catch (err) {
-          alert("Sign-in network error.");
+          alert("Sign-in database error.");
         }
       } else {
         const name = document.getElementById('acc-name').value.trim();
         const newAccountData = { name, email, password, date: new Date().toLocaleDateString() };
 
         try {
-          const response = await fetch('/api/accounts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newAccountData)
-          });
+          const { data, error } = await supabase
+            .from('accounts')
+            .insert([newAccountData])
+            .select();
           
-          const savedAccount = await response.json();
+          if (error) throw error;
+
+          const savedAccount = data ? data[0] : newAccountData;
           accounts.push(savedAccount);
           updateOwnerAccountsUI();
 
@@ -1187,11 +1129,11 @@
           localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
           updateAccountUIStatus();
 
-          alert("Account created successfully!");
+          alert("Account created and safely stored in Supabase!");
           document.getElementById('account-form').reset();
           closeAccountModal();
         } catch (err) {
-          alert("Error registering account.");
+          alert("Error registering account to Supabase.");
         }
       }
     }
@@ -1222,7 +1164,7 @@
             <strong>${acc.name}</strong><br>
             <span style="color: var(--text-muted); font-size: 0.75rem;">${acc.email} — Registered: ${acc.date || 'Recent'}</span>
           </div>
-          <button class="remove-btn" onclick="deleteAccount('${acc.id || acc._id}')">Delete</button>
+          <button class="remove-btn" onclick="deleteAccount('${acc.id}')">Delete</button>
         </div>
       `).join('');
     }
@@ -1245,40 +1187,43 @@
             <span style="color: var(--text-muted); font-size: 0.75rem;">Customer: ${order.name} (${order.email}) | Method: ${order.method.toUpperCase()} | Date: ${order.date}</span><br>
             <span style="color: var(--text-muted); font-size: 0.7rem;">Items: ${order.itemsSummary}</span>
           </div>
-          <button class="remove-btn" onclick="deletePurchase('${order.id || order._id}')">Remove</button>
+          <button class="remove-btn" onclick="deletePurchase('${order.id}')">Remove</button>
         </div>
       `).join('');
     }
 
     async function deleteAccount(id) {
-      if (confirm("Are you sure you want to delete this user account record?")) {
+      if (confirm("Are you sure you want to delete this user account record from Supabase?")) {
         try {
-          await fetch(`/api/accounts/${id}`, { method: 'DELETE' });
-          accounts = accounts.filter(a => (a.id !== id && a._id !== id));
-          if (loggedInUser && (loggedInUser.id === id || loggedInUser._id === id)) {
+          const { error } = await supabase.from('accounts').delete().eq('id', id);
+          if (error) throw error;
+          accounts = accounts.filter(a => a.id != id);
+          if (loggedInUser && loggedInUser.id == id) {
             loggedInUser = null;
             localStorage.removeItem('carlos_logged_in_user');
             updateAccountUIStatus();
           }
           updateOwnerAccountsUI();
         } catch (err) {
-          alert("Failed to delete account.");
+          alert("Failed to delete account from Supabase.");
         }
       }
     }
 
     async function deletePurchase(id) {
-      if (confirm("Are you sure you want to delete this purchase record?")) {
+      if (confirm("Are you sure you want to delete this purchase record from Supabase?")) {
         try {
-          await fetch(`/api/purchases/${id}`, { method: 'DELETE' });
-          purchases = purchases.filter(p => (p.id !== id && p._id !== id));
+          const { error } = await supabase.from('purchases').delete().eq('id', id);
+          if (error) throw error;
+          purchases = purchases.filter(p => p.id != id);
           updateOwnerPurchasesUI();
         } catch (err) {
-          alert("Failed to delete purchase.");
+          alert("Failed to delete purchase from Supabase.");
         }
       }
     }
 
+    // Owner Auth & Dashboard
     const toggleAdminBtn = document.getElementById('toggle-admin');
     const adminPanel = document.getElementById('admin-panel');
     toggleAdminBtn.addEventListener('click', () => {
@@ -1286,7 +1231,7 @@
         const pass = prompt("Enter Owner Passcode (carlos2026):");
         if (pass === OWNER_PASSCODE) {
           isOwnerAuthenticated = true;
-          alert("Owner Access Granted!");
+          alert("Owner Access Granted! You can now manage inventory, user accounts, and customer purchases.");
           adminPanel.classList.add('active');
           renderProducts();
           updateOwnerAccountsUI();
@@ -1322,21 +1267,21 @@
           };
 
           try {
-            const response = await fetch('/api/products', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(newProduct)
-            });
+            const { data, error } = await supabase
+              .from('products')
+              .insert([newProduct])
+              .select();
             
-            const savedProduct = await response.json();
+            if (error) throw error;
+            const savedProduct = data ? data[0] : newProduct;
             products.unshift(savedProduct);
             renderProducts();
             
             document.getElementById('add-product-form').reset();
             adminPanel.classList.remove('active');
-            alert("New product published successfully!");
+            alert("New product published successfully to Supabase!");
           } catch (err) {
-            alert("Error saving product.");
+            alert("Error saving product to Supabase.");
           }
         };
         reader.readAsDataURL(fileInput.files[0]);
@@ -1344,13 +1289,14 @@
     }
 
     async function deleteProduct(id) {
-      if (confirm("Are you sure you want to delete this item from the catalog?")) {
+      if (confirm("Are you sure you want to delete this item from the Supabase catalog?")) {
         try {
-          await fetch(`/api/products/${id}`, { method: 'DELETE' });
-          products = products.filter(p => (p.id !== id && p._id !== id));
+          const { error } = await supabase.from('products').delete().eq('id', id);
+          if (error) throw error;
+          products = products.filter(p => p.id != id);
           renderProducts();
         } catch (err) {
-          alert("Failed to delete product.");
+          alert("Failed to delete product from Supabase.");
         }
       }
     }
@@ -1468,24 +1414,24 @@
       };
 
       try {
-        const response = await fetch('/api/purchases', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newPurchase)
-        });
+        const { data, error } = await supabase
+          .from('purchases')
+          .insert([newPurchase])
+          .select();
 
-        const savedPurchase = await response.json();
+        if (error) throw error;
+        const savedPurchase = data ? data[0] : newPurchase;
         purchases.unshift(savedPurchase);
         updateOwnerPurchasesUI();
 
         let methodText = selectedPaymentMethod === 'visa' ? 'Visa / Card' : selectedPaymentMethod.toUpperCase();
-        alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS.`);
+        alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS. Your order has been saved to Supabase.`);
         
         bin = [];
         updateBinUI();
         closeCheckoutModal();
       } catch (err) {
-        alert("Error saving transaction.");
+        alert("Error saving transaction to Supabase.");
       }
     }
 
@@ -1514,7 +1460,7 @@
       closeSettingsModal();
     });
 
-    // Run startup initialization
+    // Run startup initialization to connect with Supabase database tables
     initializeApp();
   </script>
 </body>
