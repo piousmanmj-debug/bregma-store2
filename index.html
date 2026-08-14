@@ -888,9 +888,9 @@
       { id: 6, name: "Cozy Monochrome Knit Ribbed Sweater", price: 21.99, originalPrice: 42.00, discount: "-48%", category: "Knitwear", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80" }
     ];
 
-    let products = JSON.parse(localStorage.getItem('carlos_products')) || defaultProducts;
-    let accounts = JSON.parse(localStorage.getItem('carlos_accounts')) || [];
-    let purchases = JSON.parse(localStorage.getItem('carlos_purchases')) || [];
+    let products = [];
+    let accounts = [];
+    let purchases = [];
     let loggedInUser = JSON.parse(localStorage.getItem('carlos_logged_in_user')) || null;
     let bin = [];
     let selectedCategory = 'All';
@@ -904,6 +904,33 @@
     const OWNER_PASSCODE = "carlos2026";
 
     const productGrid = document.getElementById('product-grid');
+
+    // Fetch initial data from cloud database API endpoints on startup
+    async function initializeApp() {
+      try {
+        const [prodRes, accRes, purRes] = await Promise.all([
+          fetch('/api/products'),
+          fetch('/api/accounts'),
+          fetch('/api/purchases')
+        ]);
+        
+        products = await prodRes.json();
+        accounts = await accRes.json();
+        purchases = await purRes.json();
+
+        if (!products || products.length === 0) {
+          products = defaultProducts;
+        }
+      } catch (error) {
+        console.error("Failed to connect to cloud database, falling back to defaults.", error);
+        products = defaultProducts;
+      }
+      
+      renderProducts();
+      updateAccountUIStatus();
+      updateOwnerAccountsUI();
+      updateOwnerPurchasesUI();
+    }
 
     function formatPrice(usdAmount) {
       if (currentCurrency === 'HTG') {
@@ -1000,20 +1027,6 @@
       element.classList.add('selected');
     }
 
-    function saveProducts() {
-      localStorage.setItem('carlos_products', JSON.stringify(products));
-    }
-
-    function saveAccounts() {
-      localStorage.setItem('carlos_accounts', JSON.stringify(accounts));
-      updateOwnerAccountsUI();
-    }
-
-    function savePurchases() {
-      localStorage.setItem('carlos_purchases', JSON.stringify(purchases));
-      updateOwnerPurchasesUI();
-    }
-
     // Settings Modal Logic
     const settingsModal = document.getElementById('settings-modal');
     document.getElementById('open-settings-modal').addEventListener('click', () => {
@@ -1064,41 +1077,56 @@
       }
     }
 
-    function handleAccountSubmit(event) {
+    async function handleAccountSubmit(event) {
       event.preventDefault();
       const email = document.getElementById('acc-email').value.trim();
       const password = document.getElementById('acc-pass').value.trim();
 
       if (isLoginMode) {
-        const found = accounts.find(acc => acc.email === email && acc.password === password);
-        if (found) {
-          loggedInUser = found;
-          localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
-          updateAccountUIStatus();
-          alert(`Welcome back, ${found.name}!`);
-          closeAccountModal();
-        } else {
-          alert("Invalid email or password.");
+        try {
+          const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          
+          if (response.ok) {
+            loggedInUser = await response.json();
+            localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
+            updateAccountUIStatus();
+            alert(`Welcome back, ${loggedInUser.name}!`);
+            closeAccountModal();
+          } else {
+            alert("Invalid email or password.");
+          }
+        } catch (err) {
+          alert("Sign-in network error.");
         }
       } else {
         const name = document.getElementById('acc-name').value.trim();
-        const existing = accounts.find(acc => acc.email === email);
-        if (existing) {
-          alert("An account with this email already exists.");
-          return;
+        const newAccountData = { name, email, password, date: new Date().toLocaleDateString() };
+
+        try {
+          const response = await fetch('/api/accounts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newAccountData)
+          });
+          
+          const savedAccount = await response.json();
+          accounts.push(savedAccount);
+          updateOwnerAccountsUI();
+
+          loggedInUser = savedAccount;
+          localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
+          updateAccountUIStatus();
+
+          alert("Account created and safely stored in the cloud database!");
+          document.getElementById('account-form').reset();
+          closeAccountModal();
+        } catch (err) {
+          alert("Error registering account to cloud database.");
         }
-
-        const newAccount = { id: Date.now(), name, email, password, date: new Date().toLocaleDateString() };
-        accounts.push(newAccount);
-        saveAccounts();
-
-        loggedInUser = newAccount;
-        localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
-        updateAccountUIStatus();
-
-        alert("Account created and saved successfully!");
-        document.getElementById('account-form').reset();
-        closeAccountModal();
       }
     }
 
@@ -1128,7 +1156,7 @@
             <strong>${acc.name}</strong><br>
             <span style="color: var(--text-muted); font-size: 0.75rem;">${acc.email} — Registered: ${acc.date || 'Recent'}</span>
           </div>
-          <button class="remove-btn" onclick="deleteAccount(${acc.id})">Delete</button>
+          <button class="remove-btn" onclick="deleteAccount('${acc.id || acc._id}')">Delete</button>
         </div>
       `).join('');
     }
@@ -1151,27 +1179,37 @@
             <span style="color: var(--text-muted); font-size: 0.75rem;">Customer: ${order.name} (${order.email}) | Method: ${order.method.toUpperCase()} | Date: ${order.date}</span><br>
             <span style="color: var(--text-muted); font-size: 0.7rem;">Items: ${order.itemsSummary}</span>
           </div>
-          <button class="remove-btn" onclick="deletePurchase(${order.id})">Remove</button>
+          <button class="remove-btn" onclick="deletePurchase('${order.id || order._id}')">Remove</button>
         </div>
       `).join('');
     }
 
-    function deleteAccount(id) {
-      if (confirm("Are you sure you want to delete this user account record?")) {
-        accounts = accounts.filter(a => a.id !== id);
-        if (loggedInUser && loggedInUser.id === id) {
-          loggedInUser = null;
-          localStorage.removeItem('carlos_logged_in_user');
-          updateAccountUIStatus();
+    async function deleteAccount(id) {
+      if (confirm("Are you sure you want to delete this user account record from the database?")) {
+        try {
+          await fetch(`/api/accounts/${id}`, { method: 'DELETE' });
+          accounts = accounts.filter(a => (a.id !== id && a._id !== id));
+          if (loggedInUser && (loggedInUser.id === id || loggedInUser._id === id)) {
+            loggedInUser = null;
+            localStorage.removeItem('carlos_logged_in_user');
+            updateAccountUIStatus();
+          }
+          updateOwnerAccountsUI();
+        } catch (err) {
+          alert("Failed to delete account from database.");
         }
-        saveAccounts();
       }
     }
 
-    function deletePurchase(id) {
-      if (confirm("Are you sure you want to delete this purchase record?")) {
-        purchases = purchases.filter(p => p.id !== id);
-        savePurchases();
+    async function deletePurchase(id) {
+      if (confirm("Are you sure you want to delete this purchase record from the database?")) {
+        try {
+          await fetch(`/api/purchases/${id}`, { method: 'DELETE' });
+          purchases = purchases.filter(p => (p.id !== id && p._id !== id));
+          updateOwnerPurchasesUI();
+        } catch (err) {
+          alert("Failed to delete purchase from database.");
+        }
       }
     }
 
@@ -1180,7 +1218,7 @@
     const adminPanel = document.getElementById('admin-panel');
     toggleAdminBtn.addEventListener('click', () => {
       if (!isOwnerAuthenticated) {
-        const pass = prompt("Enter Owner Passcode :");
+        const pass = prompt("Enter Owner Passcode (carlos2026):");
         if (pass === OWNER_PASSCODE) {
           isOwnerAuthenticated = true;
           alert("Owner Access Granted! You can now manage inventory, user accounts, and customer purchases.");
@@ -1198,7 +1236,7 @@
 
     document.getElementById('close-admin').addEventListener('click', () => adminPanel.classList.remove('active'));
 
-    function handleAddNewProduct(event) {
+    async function handleAddNewProduct(event) {
       event.preventDefault();
       const name = document.getElementById('new-name').value.trim();
       const price = parseFloat(document.getElementById('new-price').value);
@@ -1207,23 +1245,48 @@
 
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-          products.unshift({ id: Date.now(), name, price, originalPrice: +(price * 1.8).toFixed(2), discount: "-45%", category, image: e.target.result });
-          saveProducts();
-          renderProducts();
-          document.getElementById('add-product-form').reset();
-          adminPanel.classList.remove('active');
-          alert("New product published successfully!");
+        reader.onload = async function(e) {
+          const newProduct = {
+            id: Date.now(),
+            name,
+            price,
+            originalPrice: +(price * 1.8).toFixed(2),
+            discount: "-45%",
+            category,
+            image: e.target.result
+          };
+
+          try {
+            const response = await fetch('/api/products', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(newProduct)
+            });
+            
+            const savedProduct = await response.json();
+            products.unshift(savedProduct);
+            renderProducts();
+            
+            document.getElementById('add-product-form').reset();
+            adminPanel.classList.remove('active');
+            alert("New product published successfully to the cloud database!");
+          } catch (err) {
+            alert("Error saving product to cloud database.");
+          }
         };
         reader.readAsDataURL(fileInput.files[0]);
       }
     }
 
-    function deleteProduct(id) {
-      if (confirm("Are you sure you want to delete this item from the catalog?")) {
-        products = products.filter(p => p.id !== id);
-        saveProducts();
-        renderProducts();
+    async function deleteProduct(id) {
+      if (confirm("Are you sure you want to delete this item from the cloud catalog?")) {
+        try {
+          await fetch(`/api/products/${id}`, { method: 'DELETE' });
+          products = products.filter(p => (p.id !== id && p._id !== id));
+          renderProducts();
+        } catch (err) {
+          alert("Failed to delete product from database.");
+        }
       }
     }
 
@@ -1259,7 +1322,6 @@
       document.getElementById('checkout-btn-total').textContent = formatPrice(total);
     }
 
-    // Payment method tab switching
     function switchPayment(method, element) {
       selectedPaymentMethod = method;
       document.querySelectorAll('.payment-tab').forEach(tab => tab.classList.remove('active'));
@@ -1269,7 +1331,6 @@
       document.getElementById(`payment-${method}`).classList.add('active');
     }
 
-    // Checkout Flow Logic
     function openCheckoutModal() {
       if (bin.length === 0) {
         alert("Your shopping cart is empty.");
@@ -1296,7 +1357,7 @@
       document.getElementById('bin-overlay').classList.remove('open');
     }
 
-    function processPayment(event) {
+    async function processPayment(event) {
       event.preventDefault();
       
       const name = document.getElementById('chk-name').value.trim();
@@ -1341,18 +1402,28 @@
         date: new Date().toLocaleString()
       };
 
-      purchases.unshift(newPurchase);
-      savePurchases();
+      try {
+        const response = await fetch('/api/purchases', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newPurchase)
+        });
 
-      let methodText = selectedPaymentMethod === 'visa' ? 'Visa / Card' : selectedPaymentMethod.toUpperCase();
-      alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS. Your order has been saved to the owner dashboard.`);
-      
-      bin = [];
-      updateBinUI();
-      closeCheckoutModal();
+        const savedPurchase = await response.json();
+        purchases.unshift(savedPurchase);
+        updateOwnerPurchasesUI();
+
+        let methodText = selectedPaymentMethod === 'visa' ? 'Visa / Card' : selectedPaymentMethod.toUpperCase();
+        alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS. Your order has been saved to the cloud database.`);
+        
+        bin = [];
+        updateBinUI();
+        closeCheckoutModal();
+      } catch (err) {
+        alert("Error saving transaction to the cloud database.");
+      }
     }
 
-    // Bin Drawer Toggles
     const openBinBtn = document.getElementById('open-bin');
     const closeBinBtn = document.getElementById('close-bin');
     const binDrawer = document.getElementById('bin-drawer');
@@ -1378,10 +1449,8 @@
       closeSettingsModal();
     });
 
-    renderProducts();
-    updateAccountUIStatus();
-    updateOwnerAccountsUI();
-    updateOwnerPurchasesUI();
+    // Run startup initialization to connect with the cloud database backend API
+    initializeApp();
   </script>
 </body>
 </html>
