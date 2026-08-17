@@ -1236,7 +1236,7 @@
     const adminPanel = document.getElementById('admin-panel');
     toggleAdminBtn.addEventListener('click', () => {
       if (!isOwnerAuthenticated) {
-        const pass = prompt("Enter Owner Passcode :")
+        const pass = prompt("Enter Owner Passcode ():");
         if (pass === OWNER_PASSCODE) {
           isOwnerAuthenticated = true;
           alert("Owner Access Granted! You can now manage inventory, user accounts, and customer purchases.");
