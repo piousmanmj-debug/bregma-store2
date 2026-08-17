@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Carlos Online Shopping</title>
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -27,6 +27,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent; /* Removes mobile tap flash */
     }
 
     body {
@@ -34,6 +35,7 @@
       color: var(--text-main);
       min-height: 100vh;
       padding-bottom: 60px;
+      overflow-x: hidden; /* Prevents unwanted horizontal scroll on phones */
     }
 
     /* Top Announcement Banner */
@@ -42,50 +44,54 @@
       color: white;
       text-align: center;
       padding: 8px 10px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.5px;
     }
 
-    /* Navigation Header */
+    /* Navigation Header - Fully Mobile Optimized */
     header {
       position: sticky;
       top: 0;
       z-index: 100;
       background: white;
       border-bottom: 1px solid var(--border);
-      padding: 15px 5%;
+      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .logo {
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: 900;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       color: #000;
     }
 
     .header-actions {
       display: flex;
-      gap: 14px;
+      gap: 8px;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .admin-toggle-btn, .bin-btn, .currency-select, .account-btn, .settings-btn {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-main);
-      padding: 8px 14px;
+      padding: 6px 10px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       transition: all 0.2s ease;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
+      white-space: nowrap;
     }
 
     .currency-select {
@@ -104,11 +110,11 @@
     .bin-count {
       background: var(--accent-pink);
       color: white;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: bold;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -118,56 +124,53 @@
     .hero {
       background: linear-gradient(135deg, #fff0f3, #ffe3ec);
       text-align: center;
-      padding: 40px 20px;
+      padding: 30px 16px;
       border-bottom: 1px solid var(--border);
     }
 
     .hero h1 {
-      font-size: 2.4rem;
-      margin-bottom: 8px;
+      font-size: 1.75rem;
+      margin-bottom: 6px;
       font-weight: 800;
       color: #111;
     }
 
     .hero p {
       color: var(--text-muted);
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     .flash-sale-tag {
       display: inline-block;
       background: var(--accent-pink);
       color: white;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 800;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 4px;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       letter-spacing: 1px;
     }
 
     /* Filters & Search Bar Section */
     .filter-section {
       max-width: 1300px;
-      margin: 25px auto;
-      padding: 0 20px;
+      margin: 16px auto;
+      padding: 0 16px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .search-input {
-      flex: 1;
-      min-width: 260px;
-      padding: 12px 18px;
+      width: 100%;
+      padding: 10px 14px;
       border-radius: 20px;
       border: 1px solid var(--border);
       background: var(--bg-surface);
       color: var(--text-main);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     .search-input:focus {
@@ -177,19 +180,26 @@
 
     .category-filters {
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none; /* Hide scrollbar for clean mobile look */
+    }
+
+    .category-filters::-webkit-scrollbar {
+      display: none;
     }
 
     .filter-chip {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
+      white-space: nowrap;
       transition: all 0.2s;
     }
 
@@ -202,11 +212,11 @@
     /* Admin Panel */
     .admin-panel {
       max-width: 900px;
-      margin: 0 auto 30px auto;
+      margin: 0 auto 20px auto;
       background: white;
       border: 2px solid #000;
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 16px;
       display: none;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
@@ -216,8 +226,8 @@
     }
 
     .admin-panel h3 {
-      margin-bottom: 16px;
-      font-size: 1.25rem;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -225,31 +235,32 @@
 
     .admin-form-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      grid-template-columns: 1fr;
+      gap: 12px;
     }
 
     .admin-form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .admin-form-group.full-width {
-      grid-column: span 2;
+      grid-column: span 1;
     }
 
     .admin-input {
-      padding: 10px 14px;
+      padding: 10px;
       border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--bg-surface);
       color: var(--text-main);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      width: 100%;
     }
 
     .admin-submit-btn {
-      grid-column: span 2;
+      grid-column: span 1;
       background: #000;
       color: white;
       border: none;
@@ -257,20 +268,45 @@
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
-    /* Products Grid */
+    /* Products Grid - Fluid 2-column layout on mobile, auto-fill for desktop */
     .container {
       max-width: 1300px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 16px;
     }
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(2, 1fr); /* 2 columns cleanly on mobile screens */
+      gap: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+      }
+      .filter-section {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .search-input {
+        flex: 1;
+        min-width: 260px;
+      }
+      .admin-form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .admin-form-group.full-width {
+        grid-column: span 2;
+      }
+      .admin-submit-btn {
+        grid-column: span 2;
+      }
     }
 
     .product-card {
@@ -292,43 +328,49 @@
 
     .discount-badge {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 8px;
+      left: 8px;
       background: var(--accent-pink);
       color: white;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: bold;
-      padding: 3px 6px;
+      padding: 2px 5px;
       border-radius: 4px;
       z-index: 2;
     }
 
     .product-img {
       width: 100%;
-      height: 260px;
+      height: 180px;
       object-fit: cover;
       background: #f0f0f0;
     }
 
+    @media (min-width: 768px) {
+      .product-img {
+        height: 260px;
+      }
+    }
+
     .product-info {
-      padding: 14px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
     }
 
     .product-category {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .product-title {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 500;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -338,18 +380,19 @@
     .product-price-row {
       display: flex;
       align-items: baseline;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 6px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
     }
 
     .product-price {
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: var(--accent-pink);
     }
 
     .product-original-price {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-decoration: line-through;
     }
@@ -363,7 +406,7 @@
       cursor: pointer;
       font-weight: bold;
       margin-top: auto;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
 
     /* Slide-out Bin (Cart) Drawer */
@@ -385,9 +428,9 @@
     .bin-drawer {
       position: fixed;
       top: 0;
-      right: -420px;
+      right: -100%;
       width: 100%;
-      max-width: 400px;
+      max-width: 380px;
       height: 100%;
       background: white;
       border-left: 1px solid var(--border);
@@ -395,7 +438,7 @@
       display: flex;
       flex-direction: column;
       transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      padding: 24px;
+      padding: 16px;
     }
 
     .bin-drawer.open {
@@ -406,7 +449,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 16px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -415,7 +458,7 @@
       align-items: stretch;
       border-top: 1px solid var(--border);
       border-bottom: none;
-      padding-top: 16px;
+      padding-top: 12px;
     }
 
     .close-btn {
@@ -424,6 +467,7 @@
       color: var(--text-muted);
       font-size: 1.5rem;
       cursor: pointer;
+      padding: 4px;
     }
 
     .close-btn:hover { color: black; }
@@ -431,25 +475,25 @@
     .bin-items {
       flex-grow: 1;
       overflow-y: auto;
-      margin: 16px 0;
+      margin: 12px 0;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .bin-item {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       background: var(--bg-surface);
-      padding: 10px;
+      padding: 8px;
       border-radius: 8px;
       border: 1px solid var(--border);
     }
 
     .bin-item img {
-      width: 55px;
-      height: 55px;
+      width: 48px;
+      height: 48px;
       border-radius: 6px;
       object-fit: cover;
     }
@@ -463,10 +507,10 @@
       border: none;
       color: #f43f5e;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
 
-    /* Modals */
+    /* Modals - Mobile Responsive Center Popup */
     .modal {
       position: fixed;
       top: 50%;
@@ -474,15 +518,15 @@
       transform: translate(-50%, -50%) scale(0.9);
       background: white;
       border: 1px solid var(--border);
-      padding: 30px;
+      padding: 20px;
       border-radius: var(--radius);
       z-index: 300;
       opacity: 0;
       pointer-events: none;
       transition: all 0.2s ease;
-      max-width: 460px;
-      width: 90%;
-      max-height: 90vh;
+      max-width: 440px;
+      width: 92%;
+      max-height: 85vh;
       overflow-y: auto;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
@@ -495,27 +539,29 @@
 
     .modal-img {
       width: 100%;
-      height: 240px;
+      height: 200px;
       object-fit: cover;
       border-radius: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .size-selector {
       display: flex;
-      gap: 8px;
-      margin: 12px 0;
+      gap: 6px;
+      margin: 10px 0;
     }
 
     .size-btn {
       flex: 1;
-      padding: 8px;
+      padding: 8px 4px;
       background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-main);
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
+      font-size: 0.85rem;
+      text-align: center;
     }
 
     .size-btn.selected {
@@ -533,6 +579,7 @@
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
+      font-size: 0.95rem;
     }
 
     .action-btn:hover {
@@ -543,42 +590,42 @@
     .checkout-form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-top: 14px;
+      gap: 10px;
+      margin-top: 10px;
     }
 
     .checkout-input {
-      padding: 12px;
+      padding: 10px 12px;
       border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--bg-surface);
       color: var(--text-main);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       width: 100%;
     }
 
     .checkout-row {
       display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 10px;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 8px;
     }
 
     .payment-tabs {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin: 10px 0 4px 0;
+      gap: 4px;
+      margin: 8px 0 2px 0;
     }
 
     .payment-tab {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 8px 4px;
+      padding: 6px 2px;
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-align: center;
       transition: all 0.2s;
     }
@@ -596,32 +643,32 @@
     .payment-fields.active {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .payment-instructions {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       background: var(--bg-surface);
-      padding: 10px;
+      padding: 8px;
       border-radius: 6px;
       border: 1px solid var(--border);
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
     .payment-gateway-link {
       display: inline-block;
       margin-top: 4px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #0066cc;
       text-decoration: underline;
     }
 
     /* Dashboard & Admin Sections */
     .dashboard-section {
-      margin-top: 20px;
+      margin-top: 16px;
       border-top: 1px solid var(--border);
-      padding-top: 16px;
+      padding-top: 12px;
     }
 
     .account-row-item, .purchase-row-item {
@@ -629,23 +676,23 @@
       justify-content: space-between;
       align-items: center;
       background: var(--bg-surface);
-      padding: 10px 12px;
+      padding: 8px 10px;
       border-radius: 6px;
       border: 1px solid var(--border);
       margin-bottom: 6px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
 
     /* Settings Modal Styles */
     .settings-group {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .settings-group label {
       display: block;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       color: var(--text-main);
     }
   </style>
@@ -660,13 +707,13 @@
     <div class="logo">CARLOS</div>
     <div class="header-actions">
       <button class="settings-btn" id="open-settings-modal">⚙️ Settings</button>
-      <button class="account-btn" id="open-account-modal">👤 <span id="account-status-text">Create Account</span></button>
+      <button class="account-btn" id="open-account-modal">👤 <span id="account-status-text">Account</span></button>
       <select id="currency-selector" class="currency-select" onchange="changeCurrency(this.value)">
         <option value="USD">USD ($)</option>
         <option value="HTG">HTG (G)</option>
       </select>
-      <button class="admin-toggle-btn" id="toggle-admin">🛡️ Owner Dashboard</button>
-      <button class="bin-btn" id="open-bin">🛍️ Cart <span class="bin-count" id="bin-count">0</span></button>
+      <button class="admin-toggle-btn" id="toggle-admin">🛡️ Owner</button>
+      <button class="bin-btn" id="open-bin">🛍️ <span class="bin-count" id="bin-count">0</span></button>
     </div>
   </header>
 
@@ -691,26 +738,26 @@
   <div class="container">
     <div class="admin-panel" id="admin-panel">
       <h3>
-        <span>🛡️ Site Owner Management Panel</span>
+        <span>🛡️ Owner Management Panel</span>
         <button class="close-btn" id="close-admin" style="font-size: 1.2rem;">&times;</button>
       </h3>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">Manage catalog inventory, inspect user accounts, and track fulfilled purchases.</p>
+      <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 12px;">Manage inventory, inspect user accounts, and track fulfilled purchases.</p>
       <form id="add-product-form" onsubmit="handleAddNewProduct(event)">
         <div class="admin-form-grid">
           <div class="admin-form-group full-width">
-            <label style="font-size: 0.8rem; color: var(--text-muted);">Product Name</label>
-            <input type="text" id="new-name" class="admin-input" placeholder="e.g. SHEIN-style Aesthetic Crop Top" required />
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Product Name</label>
+            <input type="text" id="new-name" class="admin-input" placeholder="e.g. Aesthetic Crop Top" required />
           </div>
           <div class="admin-form-group">
-            <label style="font-size: 0.8rem; color: var(--text-muted);">Base Price ($ USD)</label>
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Base Price ($ USD)</label>
             <input type="number" step="0.01" id="new-price" class="admin-input" placeholder="24.99" required />
           </div>
           <div class="admin-form-group">
-            <label style="font-size: 0.8rem; color: var(--text-muted);">Category</label>
-            <input type="text" id="new-category" class="admin-input" placeholder="Technology, Tops, etc." required />
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Category</label>
+            <input type="text" id="new-category" class="admin-input" placeholder="Technology, Tops..." required />
           </div>
           <div class="admin-form-group full-width">
-            <label style="font-size: 0.8rem; color: var(--text-muted);">Upload Product Image</label>
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Upload Product Image</label>
             <input type="file" id="new-image-file" class="admin-input" accept="image/*" required />
           </div>
           <button type="submit" class="admin-submit-btn">Publish Product to Catalog</button>
@@ -718,22 +765,22 @@
       </form>
 
       <div class="dashboard-section">
-        <h4 style="margin-bottom: 10px; font-size: 1rem; display: flex; justify-content: space-between; align-items: center;">
-          <span>📦 Completed Purchases & Orders</span>
-          <span id="purchase-total-count" style="font-size: 0.75rem; background: #000; color: #fff; padding: 2px 8px; border-radius: 10px;">0 orders</span>
+        <h4 style="margin-bottom: 8px; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
+          <span>📦 Completed Purchases</span>
+          <span id="purchase-total-count" style="font-size: 0.7rem; background: #000; color: #fff; padding: 2px 6px; border-radius: 10px;">0 orders</span>
         </h4>
         <div id="owner-purchases-list">
-          <p style="color: var(--text-muted); text-align: center; padding: 10px;">No purchases recorded yet.</p>
+          <p style="color: var(--text-muted); text-align: center; padding: 8px;">No purchases recorded yet.</p>
         </div>
       </div>
 
       <div class="dashboard-section">
-        <h4 style="margin-bottom: 10px; font-size: 1rem; display: flex; justify-content: space-between; align-items: center;">
-          <span>📋 Registered User Accounts</span>
-          <span id="account-total-count" style="font-size: 0.75rem; background: #000; color: #fff; padding: 2px 8px; border-radius: 10px;">0 accounts</span>
+        <h4 style="margin-bottom: 8px; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
+          <span>📋 Registered Accounts</span>
+          <span id="account-total-count" style="font-size: 0.7rem; background: #000; color: #fff; padding: 2px 6px; border-radius: 10px;">0 accounts</span>
         </h4>
         <div id="owner-accounts-list">
-          <p style="color: var(--text-muted); text-align: center; padding: 10px;">No accounts registered yet.</p>
+          <p style="color: var(--text-muted); text-align: center; padding: 8px;">No accounts registered yet.</p>
         </div>
       </div>
     </div>
@@ -746,14 +793,14 @@
   <div class="bin-overlay" id="bin-overlay"></div>
   <aside class="bin-drawer" id="bin-drawer">
     <div class="bin-header">
-      <h2>Shopping Cart</h2>
+      <h2 style="font-size: 1.25rem;">Shopping Cart</h2>
       <button class="close-btn" id="close-bin">&times;</button>
     </div>
     <div class="bin-items" id="bin-items">
       <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your cart is currently empty.</p>
     </div>
     <div class="bin-footer">
-      <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700; width: 100%; margin-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; width: 100%; margin-bottom: 10px;">
         <span>Subtotal</span>
         <span id="bin-total">$0.00</span>
       </div>
@@ -762,9 +809,9 @@
   </aside>
 
   <div class="modal" id="settings-modal">
-    <span class="close-btn" onclick="closeSettingsModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
-    <h2 style="margin-bottom: 12px;">⚙️ Site Settings</h2>
-    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Customize your browsing preferences and regional settings.</p>
+    <span class="close-btn" onclick="closeSettingsModal()" style="position: absolute; top: 12px; right: 16px;">&times;</span>
+    <h2 style="margin-bottom: 10px; font-size: 1.2rem;">⚙️ Site Settings</h2>
+    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Customize browsing preferences and regional settings.</p>
     
     <div class="settings-group">
       <label>Default Currency</label>
@@ -785,23 +832,18 @@
 
     <div class="settings-group">
       <label>Theme Mode</label>
-      <select class="checkout-input" onchange="alert('Light mode optimized for modern SHEIN catalog look.')">
-        <option value="light">SHEIN Bright Light Mode</option>
+      <select class="checkout-input" onchange="alert('Light mode optimized for modern catalog look.')">
+        <option value="light">Bright Light Mode</option>
       </select>
     </div>
 
-    <div class="settings-group" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-      <span style="font-size: 0.85rem; font-weight: 600;">Enable Promotional Push Alerts</span>
-      <input type="checkbox" checked style="width: 18px; height: 18px; cursor: pointer;" />
-    </div>
-
-    <button class="action-btn" style="margin-top: 15px;" onclick="closeSettingsModal()">Save & Apply Settings</button>
+    <button class="action-btn" style="margin-top: 10px;" onclick="closeSettingsModal()">Save & Apply Settings</button>
   </div>
 
   <div class="modal" id="account-modal">
-    <span class="close-btn" onclick="closeAccountModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
-    <h2 id="account-modal-title" style="margin-bottom: 4px;">👤 Create Account</h2>
-    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Sign up to enjoy personalized recommendations and faster checkout.</p>
+    <span class="close-btn" onclick="closeAccountModal()" style="position: absolute; top: 12px; right: 16px;">&times;</span>
+    <h2 id="account-modal-title" style="margin-bottom: 4px; font-size: 1.2rem;">👤 Create Account</h2>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Sign up for personalized recommendations and faster checkout.</p>
     
     <form class="checkout-form" id="account-form" onsubmit="handleAccountSubmit(event)">
       <input type="text" id="acc-name" class="checkout-input" placeholder="Full Name" required />
@@ -809,38 +851,38 @@
       <input type="password" id="acc-pass" class="checkout-input" placeholder="Create Password" required />
       <button type="submit" class="action-btn" style="margin-top: 4px;" id="account-submit-btn">Create Account</button>
     </form>
-    <div style="text-align: center; margin-top: 12px;">
-      <button id="toggle-auth-mode" style="background: none; border: none; color: #0066cc; cursor: pointer; font-size: 0.8rem;" onclick="toggleAuthMode()">Already have an account? Sign In</button>
+    <div style="text-align: center; margin-top: 10px;">
+      <button id="toggle-auth-mode" style="background: none; border: none; color: #0066cc; cursor: pointer; font-size: 0.75rem;" onclick="toggleAuthMode()">Already have an account? Sign In</button>
     </div>
   </div>
 
   <div class="modal" id="product-detail-modal">
-    <span class="close-btn" onclick="closeModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
+    <span class="close-btn" onclick="closeModal()" style="position: absolute; top: 12px; right: 16px;">&times;</span>
     <img id="modal-product-img" class="modal-img" src="" alt="" />
     <span id="modal-product-category" class="product-category"></span>
-    <h2 id="modal-product-title" style="margin: 4px 0 6px 0; font-size: 1.1rem;"></h2>
-    <div id="modal-product-price" class="product-price"></div>
-    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Select Size:</p>
+    <h2 id="modal-product-title" style="margin: 2px 0 4px 0; font-size: 1rem;"></h2>
+    <div id="modal-product-price" class="product-price" style="font-size: 1.1rem; margin-bottom: 8px;"></div>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px;">Select Size:</p>
     <div class="size-selector">
       <button class="size-btn selected" onclick="selectSize('S', this)">S</button>
       <button class="size-btn" onclick="selectSize('M', this)">M</button>
       <button class="size-btn" onclick="selectSize('L', this)">L</button>
       <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
     </div>
-    <button class="action-btn" id="modal-add-btn">Add to Cart</button>
+    <button class="action-btn" id="modal-add-btn" style="margin-top: 6px;">Add to Cart</button>
   </div>
 
   <div class="modal" id="checkout-modal">
-    <span class="close-btn" onclick="closeCheckoutModal()" style="position: absolute; top: 15px; right: 20px;">&times;</span>
-    <h2 style="margin-bottom: 4px;">🔒 Secure Checkout</h2>
-    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Enter your delivery address and payment details.</p>
+    <span class="close-btn" onclick="closeCheckoutModal()" style="position: absolute; top: 12px; right: 16px;">&times;</span>
+    <h2 style="margin-bottom: 4px; font-size: 1.2rem;">🔒 Secure Checkout</h2>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Enter delivery address and payment details.</p>
     
     <form class="checkout-form" onsubmit="processPayment(event)">
       <input type="text" id="chk-name" class="checkout-input" placeholder="Full Name" required />
       <input type="email" id="chk-email" class="checkout-input" placeholder="Email Address" required />
       <input type="text" id="chk-address" class="checkout-input" placeholder="Shipping Address / City" required />
 
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Select Payment Method:</p>
+      <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Select Payment Method:</p>
       <div class="payment-tabs">
         <button type="button" class="payment-tab active" onclick="switchPayment('visa', this)">Visa / Card</button>
         <button type="button" class="payment-tab" onclick="switchPayment('moncash', this)">MonCash</button>
@@ -849,8 +891,8 @@
 
       <div id="payment-visa" class="payment-fields active">
         <div class="payment-instructions">
-          💳 <strong>Visa Gateway:</strong> Complete payment securely via international card network.
-          <br><a href="https://usa.visa.com" target="_blank" class="payment-gateway-link">Open Official Visa Portal ↗</a>
+          💳 <strong>Visa Gateway:</strong> Complete payment securely via card network.
+          <br><a href="https://usa.visa.com" target="_blank" class="payment-gateway-link">Open Visa Portal ↗</a>
         </div>
         <input type="text" id="visa-card-number" class="checkout-input" placeholder="Card Number (4000 1234...)" maxlength="19" />
         <div class="checkout-row">
@@ -861,23 +903,23 @@
 
       <div id="payment-moncash" class="payment-fields">
         <div class="payment-instructions">
-          📱 <strong>MonCash Direct Pay:</strong> Fast mobile wallet payment service.
-          <br><a href="https://moncashbutton.digicelgroup.com" target="_blank" class="payment-gateway-link">Open Official MonCash Portal ↗</a>
+          📱 <strong>MonCash Direct Pay:</strong> Fast mobile wallet payment.
+          <br><a href="https://moncashbutton.digicelgroup.com" target="_blank" class="payment-gateway-link">Open MonCash Portal ↗</a>
         </div>
-        <input type="tel" id="moncash-phone" class="checkout-input" placeholder="MonCash Phone Number (+509 ...)" />
+        <input type="tel" id="moncash-phone" class="checkout-input" placeholder="MonCash Phone (+509 ...)" />
         <input type="password" id="moncash-pin" class="checkout-input" placeholder="4-digit PIN" maxlength="4" />
       </div>
 
       <div id="payment-natcash" class="payment-fields">
         <div class="payment-instructions">
-          💳 <strong>NatCash Instant Transfer:</strong> Secure mobile settlement.
-          <br><a href="https://www.natcom.ht" target="_blank" class="payment-gateway-link">Open Official Natcom Portal ↗</a>
+          💳 <strong>NatCash Transfer:</strong> Secure mobile settlement.
+          <br><a href="https://www.natcom.ht" target="_blank" class="payment-gateway-link">Open Natcom Portal ↗</a>
         </div>
         <input type="tel" id="natcash-account" class="checkout-input" placeholder="NatCash Account / Phone" />
         <input type="password" id="natcash-pin" class="checkout-input" placeholder="NatCash PIN" maxlength="6" />
       </div>
 
-      <button type="submit" class="action-btn" style="margin-top: 8px;">Pay <span id="checkout-btn-total">$0.00</span></button>
+      <button type="submit" class="action-btn" style="margin-top: 6px;">Pay <span id="checkout-btn-total">$0.00</span></button>
     </form>
   </div>
 
@@ -913,7 +955,6 @@
 
     const productGrid = document.getElementById('product-grid');
 
-    // Fetch initial data directly from Supabase on startup
     async function initializeApp() {
       try {
         const [prodRes, accRes, purRes] = await Promise.all([
@@ -1035,7 +1076,6 @@
       element.classList.add('selected');
     }
 
-    // Settings Modal Logic
     const settingsModal = document.getElementById('settings-modal');
     document.getElementById('open-settings-modal').addEventListener('click', () => {
       document.getElementById('bin-overlay').classList.add('open');
@@ -1049,7 +1089,6 @@
       }
     }
 
-    // Account Management Logic
     const accountModal = document.getElementById('account-modal');
     document.getElementById('open-account-modal').addEventListener('click', () => {
       document.getElementById('bin-overlay').classList.add('open');
@@ -1135,7 +1174,7 @@
           localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
           updateAccountUIStatus();
 
-          alert("Account created and safely stored in Supabase!");
+          alert("Account created and safely stored!");
           document.getElementById('account-form').reset();
           closeAccountModal();
         } catch (err) {
@@ -1149,7 +1188,7 @@
       if (loggedInUser) {
         statusText.textContent = loggedInUser.name.split(' ')[0];
       } else {
-        statusText.textContent = "Create Account";
+        statusText.textContent = "Account";
       }
     }
 
@@ -1160,7 +1199,7 @@
       countLabel.textContent = `${accounts.length} accounts`;
 
       if (accounts.length === 0) {
-        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 10px;">No accounts registered yet.</p>';
+        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 8px;">No accounts registered yet.</p>';
         return;
       }
 
@@ -1168,7 +1207,7 @@
         <div class="account-row-item">
           <div>
             <strong>${acc.name}</strong><br>
-            <span style="color: var(--text-muted); font-size: 0.75rem;">${acc.email} — Registered: ${acc.date || 'Recent'}</span>
+            <span style="color: var(--text-muted); font-size: 0.7rem;">${acc.email} — Registered: ${acc.date || 'Recent'}</span>
           </div>
           <button class="remove-btn" onclick="deleteAccount('${acc.id}')">Delete</button>
         </div>
@@ -1182,7 +1221,7 @@
       countLabel.textContent = `${purchases.length} orders`;
 
       if (purchases.length === 0) {
-        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 10px;">No purchases recorded yet.</p>';
+        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 8px;">No purchases recorded yet.</p>';
         return;
       }
 
@@ -1190,8 +1229,8 @@
         <div class="purchase-row-item">
           <div>
             <strong>Order #${order.id || order.order_id}</strong> - <span style="color: var(--accent-pink);">${formatPrice(order.total)}</span><br>
-            <span style="color: var(--text-muted); font-size: 0.75rem;">Customer: ${order.name} (${order.email}) | Method: ${order.method.toUpperCase()} | Date: ${order.date}</span><br>
-            <span style="color: var(--text-muted); font-size: 0.7rem;">Items: ${order.items_summary || order.itemsSummary}</span>
+            <span style="color: var(--text-muted); font-size: 0.7rem;">Customer: ${order.name} | Method: ${order.method.toUpperCase()} | Date: ${order.date}</span><br>
+            <span style="color: var(--text-muted); font-size: 0.65rem;">Items: ${order.items_summary || order.itemsSummary}</span>
           </div>
           <button class="remove-btn" onclick="deletePurchase('${order.id}')">Remove</button>
         </div>
@@ -1199,7 +1238,7 @@
     }
 
     async function deleteAccount(id) {
-      if (confirm("Are you sure you want to delete this user account record from the database?")) {
+      if (confirm("Are you sure you want to delete this user account record?")) {
         try {
           const { error } = await supabaseClient.from('accounts').delete().eq('id', id);
           if (error) throw error;
@@ -1218,7 +1257,7 @@
     }
 
     async function deletePurchase(id) {
-      if (confirm("Are you sure you want to delete this purchase record from the database?")) {
+      if (confirm("Are you sure you want to delete this purchase record?")) {
         try {
           const { error } = await supabaseClient.from('purchases').delete().eq('id', id);
           if (error) throw error;
@@ -1231,15 +1270,14 @@
       }
     }
 
-    // Owner Auth & Dashboard
     const toggleAdminBtn = document.getElementById('toggle-admin');
     const adminPanel = document.getElementById('admin-panel');
     toggleAdminBtn.addEventListener('click', () => {
       if (!isOwnerAuthenticated) {
-        const pass = prompt("Enter Owner Passcode ():");
+        const pass = prompt("Enter Owner Passcode (carlos2026):");
         if (pass === OWNER_PASSCODE) {
           isOwnerAuthenticated = true;
-          alert("Owner Access Granted! You can now manage inventory, user accounts, and customer purchases.");
+          alert("Owner Access Granted!");
           adminPanel.classList.add('active');
           renderProducts();
           updateOwnerAccountsUI();
@@ -1287,7 +1325,7 @@
             
             document.getElementById('add-product-form').reset();
             adminPanel.classList.remove('active');
-            alert("New product published successfully to Supabase!");
+            alert("New product published successfully!");
           } catch (err) {
             alert("Error saving product to Supabase: " + err.message);
           }
@@ -1297,7 +1335,7 @@
     }
 
     async function deleteProduct(id) {
-      if (confirm("Are you sure you want to delete this item from the cloud catalog?")) {
+      if (confirm("Are you sure you want to delete this item?")) {
         try {
           const { error } = await supabaseClient.from('products').delete().eq('id', id);
           if (error) throw error;
@@ -1329,9 +1367,9 @@
         <div class="bin-item">
           <img src="${item.image}" alt="${item.name}">
           <div class="bin-item-details">
-            <div style="font-size: 0.85rem; font-weight: 500;">${item.name}</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Size: ${item.size}</div>
-            <div style="font-size: 0.85rem; color: var(--accent-pink); font-weight: 700;">${formatPrice(item.price)}</div>
+            <div style="font-size: 0.8rem; font-weight: 500;">${item.name}</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Size: ${item.size}</div>
+            <div style="font-size: 0.8rem; color: var(--accent-pink); font-weight: 700;">${formatPrice(item.price)}</div>
           </div>
           <button class="remove-btn" onclick="removeFromBin(${index})">Remove</button>
         </div>
@@ -1357,7 +1395,7 @@
         return;
       }
       if (!loggedInUser) {
-        alert("Please create or sign in to your account before proceeding to checkout.");
+        alert("Please sign in or create an account before checkout.");
         closeBinDrawer();
         document.getElementById('bin-overlay').classList.add('open');
         accountModal.classList.add('active');
@@ -1434,13 +1472,13 @@
         updateOwnerPurchasesUI();
 
         let methodText = selectedPaymentMethod === 'visa' ? 'Visa / Card' : selectedPaymentMethod.toUpperCase();
-        alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS. Your order has been saved to Supabase.`);
+        alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS.`);
         
         bin = [];
         updateBinUI();
         closeCheckoutModal();
       } catch (err) {
-        alert("Error saving transaction to Supabase: " + err.message);
+        alert("Error saving transaction: " + err.message);
       }
     }
 
@@ -1469,7 +1507,6 @@
       closeSettingsModal();
     });
 
-    // Run startup initialization to connect with Supabase
     initializeApp();
   </script>
 </body>
