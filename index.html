@@ -4,31 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Carlos Online Shopping</title>
+  
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
+    /* SHEIN-Inspired Vibrant Aesthetic & Variables */
     :root {
       --bg-primary: #ffffff;
       --bg-surface: #f9f9f9;
       --bg-card: #ffffff;
       --accent: #222222;
       --accent-hover: #000000;
-      --accent-pink: #ff3b6b;
+      --accent-pink: #ff3b6b; /* Classic SHEIN bright pink/coral tag color */
       --text-main: #222222;
       --text-muted: #777777;
       --border: #e5e5e5;
       --radius: 8px;
-    }
-
-    /* Dark Theme Variables */
-    body.dark-theme {
-      --bg-primary: #121212;
-      --bg-surface: #1e1e1e;
-      --bg-card: #1a1a1a;
-      --accent: #ffffff;
-      --accent-hover: #e0e0e0;
-      --text-main: #f0f0f0;
-      --text-muted: #a0a0a0;
-      --border: #333333;
     }
 
     * {
@@ -36,7 +27,6 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     }
 
     body {
@@ -46,9 +36,10 @@
       padding-bottom: 60px;
     }
 
+    /* Top Announcement Banner */
     .top-banner {
       background: var(--accent);
-      color: var(--bg-primary);
+      color: white;
       text-align: center;
       padding: 8px 10px;
       font-size: 0.8rem;
@@ -56,11 +47,12 @@
       letter-spacing: 0.5px;
     }
 
+    /* Navigation Header */
     header {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--bg-primary);
+      background: white;
       border-bottom: 1px solid var(--border);
       padding: 15px 5%;
       display: flex;
@@ -72,7 +64,7 @@
       font-size: 2rem;
       font-weight: 900;
       letter-spacing: 3px;
-      color: var(--text-main);
+      color: #000;
     }
 
     .header-actions {
@@ -81,7 +73,7 @@
       align-items: center;
     }
 
-    .bin-btn, .currency-select, .account-btn, .settings-btn {
+    .admin-toggle-btn, .bin-btn, .currency-select, .account-btn, .settings-btn {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-main);
@@ -101,12 +93,12 @@
     }
 
     .currency-select option {
-      background: var(--bg-card);
+      background: white;
       color: var(--text-main);
     }
 
-    .bin-btn:hover, .currency-select:hover, .account-btn:hover, .settings-btn:hover {
-      border-color: var(--text-main);
+    .admin-toggle-btn:hover, .bin-btn:hover, .currency-select:hover, .account-btn:hover, .settings-btn:hover {
+      border-color: #000;
     }
 
     .bin-count {
@@ -122,6 +114,7 @@
       justify-content: center;
     }
 
+    /* SHEIN Style Hero Promo Carousel Banner */
     .hero {
       background: linear-gradient(135deg, #fff0f3, #ffe3ec);
       text-align: center;
@@ -129,15 +122,11 @@
       border-bottom: 1px solid var(--border);
     }
 
-    body.dark-theme .hero {
-      background: linear-gradient(135deg, #2c1a22, #1f1418);
-    }
-
     .hero h1 {
       font-size: 2.4rem;
       margin-bottom: 8px;
       font-weight: 800;
-      color: var(--text-main);
+      color: #111;
     }
 
     .hero p {
@@ -158,6 +147,7 @@
       letter-spacing: 1px;
     }
 
+    /* Filters & Search Bar Section */
     .filter-section {
       max-width: 1300px;
       margin: 25px auto;
@@ -182,7 +172,7 @@
 
     .search-input:focus {
       outline: none;
-      border-color: var(--text-main);
+      border-color: #000;
     }
 
     .category-filters {
@@ -204,11 +194,73 @@
     }
 
     .filter-chip.active, .filter-chip:hover {
-      background: var(--accent);
-      color: var(--bg-primary);
-      border-color: var(--accent);
+      background: #000;
+      color: white;
+      border-color: #000;
     }
 
+    /* Admin Panel */
+    .admin-panel {
+      max-width: 900px;
+      margin: 0 auto 30px auto;
+      background: white;
+      border: 2px solid #000;
+      border-radius: var(--radius);
+      padding: 24px;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .admin-panel.active {
+      display: block;
+    }
+
+    .admin-panel h3 {
+      margin-bottom: 16px;
+      font-size: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .admin-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .admin-form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .admin-input {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    .admin-submit-btn {
+      grid-column: span 2;
+      background: #000;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* Products Grid */
     .container {
       max-width: 1300px;
       margin: 0 auto;
@@ -235,7 +287,7 @@
 
     .product-card:hover {
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      border-color: var(--text-muted);
+      border-color: #bbb;
     }
 
     .discount-badge {
@@ -255,7 +307,7 @@
       width: 100%;
       height: 260px;
       object-fit: cover;
-      background: var(--bg-surface);
+      background: #f0f0f0;
     }
 
     .product-info {
@@ -281,7 +333,6 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      color: var(--text-main);
     }
 
     .product-price-row {
@@ -303,6 +354,19 @@
       text-decoration: line-through;
     }
 
+    .delete-item-btn {
+      background: rgba(244, 63, 94, 0.1);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: #f43f5e;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: auto;
+      font-size: 0.8rem;
+    }
+
+    /* Slide-out Bin (Cart) Drawer */
     .bin-overlay {
       position: fixed;
       inset: 0;
@@ -325,14 +389,13 @@
       width: 100%;
       max-width: 400px;
       height: 100%;
-      background: var(--bg-card);
+      background: white;
       border-left: 1px solid var(--border);
       z-index: 201;
       display: flex;
       flex-direction: column;
       transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       padding: 24px;
-      color: var(--text-main);
     }
 
     .bin-drawer.open {
@@ -363,7 +426,7 @@
       cursor: pointer;
     }
 
-    .close-btn:hover { color: var(--text-main); }
+    .close-btn:hover { color: black; }
 
     .bin-items {
       flex-grow: 1;
@@ -403,12 +466,13 @@
       font-size: 0.8rem;
     }
 
+    /* Modals */
     .modal {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0.9);
-      background: var(--bg-card);
+      background: white;
       border: 1px solid var(--border);
       padding: 30px;
       border-radius: var(--radius);
@@ -421,7 +485,6 @@
       max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      color: var(--text-main);
     }
 
     .modal.active {
@@ -456,27 +519,27 @@
     }
 
     .size-btn.selected {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: var(--bg-primary);
+      border-color: #000;
+      background: #000;
+      color: white;
     }
 
     .action-btn {
       width: 100%;
-      background: var(--accent);
-      color: var(--bg-primary);
+      background: #000;
+      color: white;
       border: none;
       padding: 12px;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
     }
 
     .action-btn:hover {
-      opacity: 0.85;
+      background: #333;
     }
 
+    /* Checkout & Settings Forms */
     .checkout-form {
       display: flex;
       flex-direction: column;
@@ -492,11 +555,6 @@
       color: var(--text-main);
       font-size: 0.95rem;
       width: 100%;
-    }
-
-    .checkout-input:focus {
-      outline: none;
-      border-color: var(--text-main);
     }
 
     .checkout-row {
@@ -526,9 +584,9 @@
     }
 
     .payment-tab.active {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: var(--bg-primary);
+      border-color: #000;
+      background: #000;
+      color: white;
     }
 
     .payment-fields {
@@ -559,6 +617,26 @@
       text-decoration: underline;
     }
 
+    /* Dashboard & Admin Sections */
+    .dashboard-section {
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .account-row-item, .purchase-row-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-surface);
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+
+    /* Settings Modal Styles */
     .settings-group {
       margin-bottom: 16px;
     }
@@ -574,7 +652,7 @@
 </head>
 <body>
 
-  <div class="top-banner" id="announcement-banner">
+  <div class="top-banner">
     FLASH SALE 🔥 UP TO 80% OFF NEW TREND STYLES & TECH GEAR • FREE SHIPPING OVER $49
   </div>
 
@@ -587,6 +665,7 @@
         <option value="USD">USD ($)</option>
         <option value="HTG">HTG (G)</option>
       </select>
+      <button class="admin-toggle-btn" id="toggle-admin">🛡️ Owner Dashboard</button>
       <button class="bin-btn" id="open-bin">🛍️ Cart <span class="bin-count" id="bin-count">0</span></button>
     </div>
   </header>
@@ -606,6 +685,57 @@
       <button class="filter-chip" onclick="setCategory('Pants', this)">Pants</button>
       <button class="filter-chip" onclick="setCategory('Tops', this)">Tops</button>
       <button class="filter-chip" onclick="setCategory('Knitwear', this)">Knitwear</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="admin-panel" id="admin-panel">
+      <h3>
+        <span>🛡️ Site Owner Management Panel</span>
+        <button class="close-btn" id="close-admin" style="font-size: 1.2rem;">&times;</button>
+      </h3>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">Manage catalog inventory, inspect user accounts, and track fulfilled purchases.</p>
+      <form id="add-product-form" onsubmit="handleAddNewProduct(event)">
+        <div class="admin-form-grid">
+          <div class="admin-form-group full-width">
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Product Name</label>
+            <input type="text" id="new-name" class="admin-input" placeholder="e.g. SHEIN-style Aesthetic Crop Top" required />
+          </div>
+          <div class="admin-form-group">
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Base Price ($ USD)</label>
+            <input type="number" step="0.01" id="new-price" class="admin-input" placeholder="24.99" required />
+          </div>
+          <div class="admin-form-group">
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Category</label>
+            <input type="text" id="new-category" class="admin-input" placeholder="Technology, Tops, etc." required />
+          </div>
+          <div class="admin-form-group full-width">
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Upload Product Image</label>
+            <input type="file" id="new-image-file" class="admin-input" accept="image/*" required />
+          </div>
+          <button type="submit" class="admin-submit-btn">Publish Product to Catalog</button>
+        </div>
+      </form>
+
+      <div class="dashboard-section">
+        <h4 style="margin-bottom: 10px; font-size: 1rem; display: flex; justify-content: space-between; align-items: center;">
+          <span>📦 Completed Purchases & Orders</span>
+          <span id="purchase-total-count" style="font-size: 0.75rem; background: #000; color: #fff; padding: 2px 8px; border-radius: 10px;">0 orders</span>
+        </h4>
+        <div id="owner-purchases-list">
+          <p style="color: var(--text-muted); text-align: center; padding: 10px;">No purchases recorded yet.</p>
+        </div>
+      </div>
+
+      <div class="dashboard-section">
+        <h4 style="margin-bottom: 10px; font-size: 1rem; display: flex; justify-content: space-between; align-items: center;">
+          <span>📋 Registered User Accounts</span>
+          <span id="account-total-count" style="font-size: 0.75rem; background: #000; color: #fff; padding: 2px 8px; border-radius: 10px;">0 accounts</span>
+        </h4>
+        <div id="owner-accounts-list">
+          <p style="color: var(--text-muted); text-align: center; padding: 10px;">No accounts registered yet.</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -646,7 +776,7 @@
 
     <div class="settings-group">
       <label>Display Language</label>
-      <select id="settings-lang" class="checkout-input" onchange="updateLanguagePreference(this.value)">
+      <select class="checkout-input">
         <option value="en">English (US)</option>
         <option value="fr">Français (Haïti)</option>
         <option value="es">Español</option>
@@ -655,15 +785,14 @@
 
     <div class="settings-group">
       <label>Theme Mode</label>
-      <select id="settings-theme" class="checkout-input" onchange="updateThemePreference(this.value)">
+      <select class="checkout-input" onchange="alert('Light mode optimized for modern SHEIN catalog look.')">
         <option value="light">SHEIN Bright Light Mode</option>
-        <option value="dark">Dark Theme Mode</option>
       </select>
     </div>
 
     <div class="settings-group" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
       <span style="font-size: 0.85rem; font-weight: 600;">Enable Promotional Push Alerts</span>
-      <input type="checkbox" id="settings-promo" checked style="width: 18px; height: 18px; cursor: pointer;" onchange="togglePromoBanner(this.checked)" />
+      <input type="checkbox" checked style="width: 18px; height: 18px; cursor: pointer;" />
     </div>
 
     <button class="action-btn" style="margin-top: 15px;" onclick="closeSettingsModal()">Save & Apply Settings</button>
@@ -681,7 +810,7 @@
       <button type="submit" class="action-btn" style="margin-top: 4px;" id="account-submit-btn">Create Account</button>
     </form>
     <div style="text-align: center; margin-top: 12px;">
-      <button id="toggle-auth-mode" style="background: none; border: none; color: #0066cc; cursor: pointer; font-size: 0.8rem;" type="button" onclick="toggleAuthMode()">Already have an account? Sign In</button>
+      <button id="toggle-auth-mode" style="background: none; border: none; color: #0066cc; cursor: pointer; font-size: 0.8rem;" onclick="toggleAuthMode()">Already have an account? Sign In</button>
     </div>
   </div>
 
@@ -693,10 +822,10 @@
     <div id="modal-product-price" class="product-price"></div>
     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Select Size:</p>
     <div class="size-selector">
-      <button type="button" class="size-btn selected" onclick="selectSize('S', this)">S</button>
-      <button type="button" class="size-btn" onclick="selectSize('M', this)">M</button>
-      <button type="button" class="size-btn" onclick="selectSize('L', this)">L</button>
-      <button type="button" class="size-btn" onclick="selectSize('XL', this)">XL</button>
+      <button class="size-btn selected" onclick="selectSize('S', this)">S</button>
+      <button class="size-btn" onclick="selectSize('M', this)">M</button>
+      <button class="size-btn" onclick="selectSize('L', this)">L</button>
+      <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
     </div>
     <button class="action-btn" id="modal-add-btn">Add to Cart</button>
   </div>
@@ -753,20 +882,10 @@
   </div>
 
   <script>
-    // ==========================================
-    // SUPABASE CONFIGURATION (Configured with your URL & Key)
-    // ==========================================
+    // --- SUPABASE CONFIGURATION ---
     const SUPABASE_URL = 'https://unhaxejnqwzymsfswlgs.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuaGF4ZWpucXd6eW1zZnN3bGgsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzg2NzI4NTg1LCJleHAiOjIxMDIzMDQ1ODV9.KxSDPDRDe1RwjOQVkixVfjahCqEslYrDCUu6KECv1uw';
-
-    let supabaseClient = null;
-    try {
-      if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      }
-    } catch (e) {
-      console.warn("Supabase client init issue. Falling back gracefully.");
-    }
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuaGF4ZWpucXd6eW1zZnN3bGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3Mjg1ODUsImV4cCI6MjEwMjMwNDU4NX0.KxSDPDRDe1RwjOQVkixVfjahCqEslYrDCUu6KECv1uw';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const defaultProducts = [
       { id: 1, name: "Neural-Link Smart Tech Fleece Hoodie", price: 34.99, originalPrice: 65.00, discount: "-46%", category: "Technology", image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80" },
@@ -778,58 +897,47 @@
     ];
 
     let products = [];
+    let accounts = [];
+    let purchases = [];
     let loggedInUser = JSON.parse(localStorage.getItem('carlos_logged_in_user')) || null;
     let bin = [];
     let selectedCategory = 'All';
     let selectedSize = 'S';
     let activeModalProduct = null;
+    let isOwnerAuthenticated = false;
     let selectedPaymentMethod = 'visa';
-    let currentCurrency = localStorage.getItem('carlos_currency') || 'USD';
+    let currentCurrency = 'USD';
     let isLoginMode = false;
     const USD_TO_HTG_RATE = 132.50;
+    const OWNER_PASSCODE = "carlos2026";
 
     const productGrid = document.getElementById('product-grid');
 
-    function loadSavedSettings() {
-      const savedTheme = localStorage.getItem('carlos_theme') || 'light';
-      const savedLang = localStorage.getItem('carlos_lang') || 'en';
-      const promoEnabled = localStorage.getItem('carlos_promo') !== 'false';
-
-      document.getElementById('settings-theme').value = savedTheme;
-      document.getElementById('settings-lang').value = savedLang;
-      document.getElementById('settings-promo').checked = promoEnabled;
-      document.getElementById('currency-selector').value = currentCurrency;
-      document.getElementById('settings-currency').value = currentCurrency;
-
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-      }
-      if (!promoEnabled) {
-        document.getElementById('announcement-banner').style.display = 'none';
-      }
-    }
-
+    // Fetch initial data directly from Supabase on startup
     async function initializeApp() {
-      loadSavedSettings();
+      try {
+        const [prodRes, accRes, purRes] = await Promise.all([
+          supabaseClient.from('products').select('*'),
+          supabaseClient.from('accounts').select('*'),
+          supabaseClient.from('purchases').select('*')
+        ]);
+        
+        products = prodRes.data || [];
+        accounts = accRes.data || [];
+        purchases = purRes.data || [];
 
-      if (supabaseClient) {
-        try {
-          const { data, error } = await supabaseClient.from('products').select('*');
-          if (!error && data && data.length > 0) {
-            products = data;
-          } else {
-            products = defaultProducts;
-          }
-        } catch (err) {
-          console.warn("Could not fetch from Supabase table 'products'. Using default catalog.", err);
+        if (!products || products.length === 0) {
           products = defaultProducts;
         }
-      } else {
+      } catch (error) {
+        console.error("Failed to connect to Supabase, falling back to defaults.", error);
         products = defaultProducts;
       }
       
       renderProducts();
       updateAccountUIStatus();
+      updateOwnerAccountsUI();
+      updateOwnerPurchasesUI();
     }
 
     function formatPrice(usdAmount) {
@@ -843,7 +951,6 @@
 
     function changeCurrency(currency) {
       currentCurrency = currency;
-      localStorage.setItem('carlos_currency', currency);
       document.getElementById('currency-selector').value = currency;
       document.getElementById('settings-currency').value = currency;
       renderProducts();
@@ -851,24 +958,6 @@
       if (activeModalProduct) {
         document.getElementById('modal-product-price').textContent = formatPrice(activeModalProduct.price);
       }
-    }
-
-    function updateThemePreference(theme) {
-      localStorage.setItem('carlos_theme', theme);
-      if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-      } else {
-        document.body.classList.remove('dark-theme');
-      }
-    }
-
-    function updateLanguagePreference(lang) {
-      localStorage.setItem('carlos_lang', lang);
-    }
-
-    function togglePromoBanner(show) {
-      localStorage.setItem('carlos_promo', show);
-      document.getElementById('announcement-banner').style.display = show ? 'block' : 'none';
     }
 
     function renderProducts() {
@@ -896,6 +985,7 @@
               <div class="product-price">${formatPrice(product.price)}</div>
               ${product.originalPrice ? `<div class="product-original-price">${formatPrice(product.originalPrice)}</div>` : ''}
             </div>
+            ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove</button>` : ''}
           </div>
         </div>
       `).join('');
@@ -945,6 +1035,7 @@
       element.classList.add('selected');
     }
 
+    // Settings Modal Logic
     const settingsModal = document.getElementById('settings-modal');
     document.getElementById('open-settings-modal').addEventListener('click', () => {
       document.getElementById('bin-overlay').classList.add('open');
@@ -958,6 +1049,7 @@
       }
     }
 
+    // Account Management Logic
     const accountModal = document.getElementById('account-modal');
     document.getElementById('open-account-modal').addEventListener('click', () => {
       document.getElementById('bin-overlay').classList.add('open');
@@ -998,58 +1090,58 @@
       const email = document.getElementById('acc-email').value.trim();
       const password = document.getElementById('acc-pass').value.trim();
 
-      if (supabaseClient) {
-        if (isLoginMode) {
+      if (isLoginMode) {
+        try {
           const { data, error } = await supabaseClient
             .from('accounts')
             .select('*')
             .eq('email', email)
             .eq('password', password)
             .single();
-
+          
           if (error || !data) {
             alert("Invalid email or password.");
             return;
           }
-          loggedInUser = data;
-        } else {
-          const name = document.getElementById('acc-name').value.trim();
-          const newAccount = { name, email, password, date: new Date().toLocaleDateString() };
-          
-          const { data, error } = await supabaseClient
-            .from('accounts')
-            .insert([newAccount])
-            .select()
-            .single();
 
-          if (error) {
-            alert("Error registering account to Supabase.");
-            return;
-          }
           loggedInUser = data;
+          localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
+          updateAccountUIStatus();
+          alert(`Welcome back, ${loggedInUser.name}!`);
+          closeAccountModal();
+        } catch (err) {
+          alert("Sign-in network error.");
         }
       } else {
-        let localAccounts = JSON.parse(localStorage.getItem('carlos_local_accounts')) || [];
-        if (isLoginMode) {
-          const found = localAccounts.find(acc => acc.email === email && acc.password === password);
-          if (!found) {
-            alert("Invalid email or password.");
+        const name = document.getElementById('acc-name').value.trim();
+        const newAccountData = { name, email, password, date: new Date().toLocaleDateString() };
+
+        try {
+          const { data, error } = await supabaseClient
+            .from('accounts')
+            .insert([newAccountData])
+            .select();
+          
+          if (error) {
+            alert("Error registering account: " + error.message);
             return;
           }
-          loggedInUser = found;
-        } else {
-          const name = document.getElementById('acc-name').value.trim();
-          loggedInUser = { name, email, password, date: new Date().toLocaleDateString() };
-          localAccounts.push(loggedInUser);
-          localStorage.setItem('carlos_local_accounts', JSON.stringify(localAccounts));
+
+          const savedAccount = data[0];
+          accounts.push(savedAccount);
+          updateOwnerAccountsUI();
+
+          loggedInUser = savedAccount;
+          localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
+          updateAccountUIStatus();
+
+          alert("Account created and safely stored in Supabase!");
+          document.getElementById('account-form').reset();
+          closeAccountModal();
+        } catch (err) {
+          alert("Error registering account to Supabase.");
         }
       }
-
-      localStorage.setItem('carlos_logged_in_user', JSON.stringify(loggedInUser));
-      updateAccountUIStatus();
-      alert(isLoginMode ? `Welcome back, ${loggedInUser.name}!` : "Account created successfully!");
-      document.getElementById('account-form').reset();
-      closeAccountModal();
     }
 
     function updateAccountUIStatus() {
@@ -1058,6 +1150,163 @@
         statusText.textContent = loggedInUser.name.split(' ')[0];
       } else {
         statusText.textContent = "Create Account";
+      }
+    }
+
+    function updateOwnerAccountsUI() {
+      const listContainer = document.getElementById('owner-accounts-list');
+      const countLabel = document.getElementById('account-total-count');
+      
+      countLabel.textContent = `${accounts.length} accounts`;
+
+      if (accounts.length === 0) {
+        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 10px;">No accounts registered yet.</p>';
+        return;
+      }
+
+      listContainer.innerHTML = accounts.map((acc) => `
+        <div class="account-row-item">
+          <div>
+            <strong>${acc.name}</strong><br>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">${acc.email} — Registered: ${acc.date || 'Recent'}</span>
+          </div>
+          <button class="remove-btn" onclick="deleteAccount('${acc.id}')">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    function updateOwnerPurchasesUI() {
+      const listContainer = document.getElementById('owner-purchases-list');
+      const countLabel = document.getElementById('purchase-total-count');
+      
+      countLabel.textContent = `${purchases.length} orders`;
+
+      if (purchases.length === 0) {
+        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 10px;">No purchases recorded yet.</p>';
+        return;
+      }
+
+      listContainer.innerHTML = purchases.map((order) => `
+        <div class="purchase-row-item">
+          <div>
+            <strong>Order #${order.id || order.order_id}</strong> - <span style="color: var(--accent-pink);">${formatPrice(order.total)}</span><br>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">Customer: ${order.name} (${order.email}) | Method: ${order.method.toUpperCase()} | Date: ${order.date}</span><br>
+            <span style="color: var(--text-muted); font-size: 0.7rem;">Items: ${order.items_summary || order.itemsSummary}</span>
+          </div>
+          <button class="remove-btn" onclick="deletePurchase('${order.id}')">Remove</button>
+        </div>
+      `).join('');
+    }
+
+    async function deleteAccount(id) {
+      if (confirm("Are you sure you want to delete this user account record from the database?")) {
+        try {
+          const { error } = await supabaseClient.from('accounts').delete().eq('id', id);
+          if (error) throw error;
+          
+          accounts = accounts.filter(a => a.id != id);
+          if (loggedInUser && loggedInUser.id == id) {
+            loggedInUser = null;
+            localStorage.removeItem('carlos_logged_in_user');
+            updateAccountUIStatus();
+          }
+          updateOwnerAccountsUI();
+        } catch (err) {
+          alert("Failed to delete account from database.");
+        }
+      }
+    }
+
+    async function deletePurchase(id) {
+      if (confirm("Are you sure you want to delete this purchase record from the database?")) {
+        try {
+          const { error } = await supabaseClient.from('purchases').delete().eq('id', id);
+          if (error) throw error;
+
+          purchases = purchases.filter(p => p.id != id);
+          updateOwnerPurchasesUI();
+        } catch (err) {
+          alert("Failed to delete purchase from database.");
+        }
+      }
+    }
+
+    // Owner Auth & Dashboard
+    const toggleAdminBtn = document.getElementById('toggle-admin');
+    const adminPanel = document.getElementById('admin-panel');
+    toggleAdminBtn.addEventListener('click', () => {
+      if (!isOwnerAuthenticated) {
+        const pass = prompt("Enter Owner Passcode (carlos2026):");
+        if (pass === OWNER_PASSCODE) {
+          isOwnerAuthenticated = true;
+          alert("Owner Access Granted! You can now manage inventory, user accounts, and customer purchases.");
+          adminPanel.classList.add('active');
+          renderProducts();
+          updateOwnerAccountsUI();
+          updateOwnerPurchasesUI();
+        } else if (pass !== null) {
+          alert("Incorrect Passcode.");
+        }
+      } else {
+        adminPanel.classList.toggle('active');
+      }
+    });
+
+    document.getElementById('close-admin').addEventListener('click', () => adminPanel.classList.remove('active'));
+
+    async function handleAddNewProduct(event) {
+      event.preventDefault();
+      const name = document.getElementById('new-name').value.trim();
+      const price = parseFloat(document.getElementById('new-price').value);
+      const category = document.getElementById('new-category').value.trim();
+      const fileInput = document.getElementById('new-image-file');
+
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const newProduct = {
+            id: Date.now(),
+            name,
+            price,
+            originalPrice: +(price * 1.8).toFixed(2),
+            discount: "-45%",
+            category,
+            image: e.target.result
+          };
+
+          try {
+            const { data, error } = await supabaseClient
+              .from('products')
+              .insert([newProduct])
+              .select();
+            
+            if (error) throw error;
+
+            products.unshift(data[0]);
+            renderProducts();
+            
+            document.getElementById('add-product-form').reset();
+            adminPanel.classList.remove('active');
+            alert("New product published successfully to Supabase!");
+          } catch (err) {
+            alert("Error saving product to Supabase: " + err.message);
+          }
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      }
+    }
+
+    async function deleteProduct(id) {
+      if (confirm("Are you sure you want to delete this item from the cloud catalog?")) {
+        try {
+          const { error } = await supabaseClient.from('products').delete().eq('id', id);
+          if (error) throw error;
+
+          products = products.filter(p => p.id !== id);
+          renderProducts();
+        } catch (err) {
+          alert("Failed to delete product from database.");
+        }
       }
     }
 
@@ -1084,7 +1333,7 @@
             <div style="font-size: 0.75rem; color: var(--text-muted);">Size: ${item.size}</div>
             <div style="font-size: 0.85rem; color: var(--accent-pink); font-weight: 700;">${formatPrice(item.price)}</div>
           </div>
-          <button type="button" class="remove-btn" onclick="removeFromBin(${index})">Remove</button>
+          <button class="remove-btn" onclick="removeFromBin(${index})">Remove</button>
         </div>
       `).join('');
 
@@ -1173,16 +1422,26 @@
         date: new Date().toLocaleString()
       };
 
-      if (supabaseClient) {
-        await supabaseClient.from('purchases').insert([newPurchase]);
-      }
+      try {
+        const { data, error } = await supabaseClient
+          .from('purchases')
+          .insert([newPurchase])
+          .select();
 
-      let methodText = selectedPaymentMethod === 'visa' ? 'Visa / Card' : selectedPaymentMethod.toUpperCase();
-      alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS.`);
-      
-      bin = [];
-      updateBinUI();
-      closeCheckoutModal();
+        if (error) throw error;
+
+        purchases.unshift(data[0]);
+        updateOwnerPurchasesUI();
+
+        let methodText = selectedPaymentMethod === 'visa' ? 'Visa / Card' : selectedPaymentMethod.toUpperCase();
+        alert(`🎉 Payment successful via ${methodText}! Thank you for shopping with CARLOS. Your order has been saved to Supabase.`);
+        
+        bin = [];
+        updateBinUI();
+        closeCheckoutModal();
+      } catch (err) {
+        alert("Error saving transaction to Supabase: " + err.message);
+      }
     }
 
     const openBinBtn = document.getElementById('open-bin');
@@ -1210,6 +1469,7 @@
       closeSettingsModal();
     });
 
+    // Run startup initialization to connect with Supabase
     initializeApp();
   </script>
 </body>
