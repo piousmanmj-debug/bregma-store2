@@ -786,14 +786,6 @@
       line-height: 1.4;
     }
 
-    .payment-gateway-link {
-      display: inline-block;
-      margin-top: 4px;
-      font-size: 0.8rem;
-      color: #0066cc;
-      text-decoration: underline;
-    }
-
     .dashboard-section {
       margin-top: 16px;
       border-top: 1px solid var(--border);
@@ -1096,7 +1088,7 @@
         </div>
       </div>
 
-      <button type="submit" class="action-btn" style="margin-top: 6px;">Pay <span id="checkout-btn-total">$0.00</span></button>
+      <button type="submit" class="action-btn" id="checkout-submit-btn" style="margin-top: 6px;">Pay <span id="checkout-btn-total">$0.00</span></button>
     </form>
   </div>
 
@@ -1162,7 +1154,6 @@
       updateOwnerPurchasesUI();
     }
 
-    // Currency Conversion helper function
     function formatPrice(usdAmount) {
       if (currentCurrency === 'HTG') {
         const htgAmount = usdAmount * USD_TO_HTG_RATE;
@@ -1688,8 +1679,11 @@
       const itemsSummary = bin.map(item => item.category.toLowerCase() === 'technology' ? `${item.name} (x${item.quantity})` : `${item.name} [Size: ${item.size}] (x${item.quantity})`).join(', ');
       const orderId = 'ORD-' + Date.now().toString().slice(-6);
 
-      // --- MonCash Integration Flow (Converts USD to HTG Gourdes) ---
+      // --- MonCash Integration Flow ---
       if (selectedPaymentMethod === 'moncash') {
+        const submitBtn = document.getElementById('checkout-submit-btn');
+        if (submitBtn) submitBtn.innerText = "Connecting to MonCash...";
+
         try {
           const { data, error } = await supabaseClient.functions.invoke('moncash-payment', {
             body: { 
@@ -1699,20 +1693,28 @@
           });
 
           if (error) {
-            alert("MonCash initialization failed: " + error.message);
-            return;
+            let detailedMsg = error.message;
+            try {
+              if (error.context && typeof error.context.json === 'function') {
+                const errJson = await error.context.json();
+                detailedMsg = errJson.error || JSON.stringify(errJson);
+              }
+            } catch (e) {}
+            throw new Error(detailedMsg);
           }
 
-          const tokenValue = data?.payment_token?.token || data?.payment_token;
-          if (tokenValue) {
-            window.location.href = `https://sandbox.moncashbutton.digicelgroup.com/Moncash-middleware/Payment/Redirect?token=${tokenValue}`;
-            return;
-          } else {
-            alert("Could not retrieve payment redirection link from MonCash.");
-            return;
+          const paymentToken = data?.payment_token?.token || data?.payment_token;
+          if (!paymentToken) {
+            throw new Error("Could not retrieve payment token from MonCash response.");
           }
+
+          window.location.href = `https://sandbox.moncashbutton.digicelgroup.com/Moncash-middleware/Payment/Redirect?token=${paymentToken}`;
+          return;
+
         } catch (err) {
-          alert("An unexpected error occurred connecting to MonCash API.");
+          console.error("MonCash Error:", err.message);
+          alert("MonCash initialization failed: " + err.message);
+          if (submitBtn) submitBtn.innerText = "Pay " + formatPrice(totalAmountUsd);
           return;
         }
       }
