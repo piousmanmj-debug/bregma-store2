@@ -3,30 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Carlos Online Shopping</title>
+  <title>Carlos Online Shopping - Amazon Style</title>
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    /* SHEIN-Inspired Vibrant Aesthetic & Variables */
+    /* Amazon-Inspired Aesthetic & Variables */
     :root {
-      --bg-primary: #ffffff;
-      --bg-surface: #f9f9f9;
+      --bg-primary: #eaeded;
+      --bg-surface: #ffffff;
       --bg-card: #ffffff;
-      --accent: #222222;
-      --accent-hover: #000000;
-      --accent-pink: #ff3b6b;
-      --text-main: #222222;
-      --text-muted: #777777;
-      --border: #e5e5e5;
-      --radius: 8px;
+      --amazon-nav: #131921;
+      --amazon-nav-secondary: #232f3e;
+      --amazon-yellow: #febd69;
+      --amazon-yellow-hover: #f3a847;
+      --amazon-orange: #ffd814;
+      --amazon-orange-hover: #f7ca00;
+      --accent: #131921;
+      --accent-hover: #232f3e;
+      --accent-pink: #B12704; /* Amazon deal red */
+      --text-main: #0F1111;
+      --text-muted: #565959;
+      --border: #d5d9d9;
+      --radius: 4px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: 'Arial', sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -39,25 +45,33 @@
     }
 
     .top-banner {
-      background: var(--accent);
+      background: var(--amazon-nav-secondary);
       color: white;
       text-align: center;
       padding: 8px 10px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+      font-size: 0.8rem;
+      font-weight: 500;
     }
 
     header {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: white;
-      border-bottom: 1px solid var(--border);
-      padding: 12px 4%;
+      background: var(--amazon-nav);
+      color: white;
+      padding: 10px 16px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    @media(min-width: 768px) {
+      header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+      }
     }
 
     .logo-area {
@@ -68,61 +82,115 @@
 
     .hamburger-btn {
       background: none;
-      border: none;
-      font-size: 1.5rem;
+      border: 1px solid transparent;
+      color: white;
+      font-size: 1.4rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 4px;
+      padding: 4px 8px;
+      border-radius: 2px;
+    }
+    .hamburger-btn:hover {
+      border-color: white;
     }
 
     .logo {
-      font-size: 1.6rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #000;
+      font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: 0px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .logo span {
+      color: var(--amazon-yellow);
+    }
+
+    .header-search-container {
+      flex-grow: 1;
+      max-width: 700px;
+      display: flex;
+    }
+
+    .header-search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 4px 0 0 4px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .header-search-btn {
+      background: var(--amazon-yellow);
+      border: none;
+      padding: 0 16px;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-search-btn:hover {
+      background: var(--amazon-yellow-hover);
     }
 
     .header-actions {
       display: flex;
-      gap: 10px;
+      gap: 15px;
       align-items: center;
+      justify-content: flex-end;
     }
 
     .admin-toggle-btn, .bin-btn, .currency-select, .account-btn, .settings-btn {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      color: var(--text-main);
-      padding: 8px 12px;
-      border-radius: 20px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: white;
+      padding: 6px 8px;
+      border-radius: 2px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      font-size: 0.8rem;
+      gap: 4px;
+      font-size: 0.85rem;
+    }
+    .admin-toggle-btn:hover, .bin-btn:hover, .account-btn:hover, .settings-btn:hover {
+      border-color: white;
     }
 
     .currency-select {
+      background: #374151;
+      border: 1px solid #4b5563;
+      color: white;
       outline: none;
-      height: 36px;
+      height: 32px;
+      border-radius: 4px;
+      padding: 0 6px;
     }
 
     .currency-select option {
-      background: white;
-      color: var(--text-main);
+      background: #131921;
+      color: white;
+    }
+
+    .bin-btn {
+      font-size: 1rem;
+      font-weight: bold;
     }
 
     .bin-count {
-      background: var(--accent-pink);
-      color: white;
-      font-size: 0.7rem;
+      background: var(--amazon-yellow);
+      color: #0F1111;
+      font-size: 0.75rem;
       font-weight: bold;
       border-radius: 50%;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -133,16 +201,15 @@
       top: 0;
       left: -320px;
       width: 100%;
-      max-width: 300px;
+      max-width: 320px;
       height: 100%;
       background: white;
       border-right: 1px solid var(--border);
       z-index: 205;
       display: flex;
       flex-direction: column;
-      transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      padding: 24px;
-      padding-top: env(safe-area-inset-top, 24px);
+      transition: left 0.3s ease;
+      padding: 20px;
     }
 
     .menu-drawer.open {
@@ -150,78 +217,84 @@
     }
 
     .menu-header {
+      background: var(--amazon-nav-secondary);
+      color: white;
+      margin: -20px -20px 20px -20px;
+      padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 20px;
     }
 
     .menu-links {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
 
     .menu-link-item {
-      background: var(--bg-surface);
+      background: #f7fafa;
       border: 1px solid var(--border);
       color: var(--text-main);
-      padding: 14px 16px;
-      border-radius: 8px;
+      padding: 12px 14px;
+      border-radius: 4px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 500;
       text-align: left;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       text-decoration: none;
+    }
+    .menu-link-item:hover {
+      background: #eaeded;
     }
 
     .menu-link-item.ai-menu-btn {
-      background: linear-gradient(135deg, #ff3b6b, #ff758c);
-      color: white;
-      border: none;
+      background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+      border-color: #a88734 #9c7e31 #846a29;
+      color: #111;
+      font-weight: bold;
     }
 
     .hero {
-      background: linear-gradient(135deg, #fff0f3, #ffe3ec);
+      background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(234,237,237,1)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
       text-align: center;
-      padding: 30px 16px;
+      padding: 40px 16px 60px 16px;
       border-bottom: 1px solid var(--border);
+      color: #111;
     }
 
     .hero h1 {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       margin-bottom: 6px;
-      font-weight: 800;
-      color: #111;
+      font-weight: bold;
     }
 
     .hero p {
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
 
     .flash-sale-tag {
       display: inline-block;
       background: var(--accent-pink);
       color: white;
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 4px 8px;
-      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 2px;
       text-transform: uppercase;
       margin-bottom: 8px;
-      letter-spacing: 1px;
     }
 
     .filter-section {
-      max-width: 1300px;
-      margin: 20px auto;
+      max-width: 1400px;
+      margin: -30px auto 20px auto;
       padding: 0 16px;
+      position: relative;
+      z-index: 10;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     @media(min-width: 768px) {
@@ -233,18 +306,7 @@
     }
 
     .search-input {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--bg-surface);
-      color: var(--text-main);
-      font-size: 1rem;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: #000;
+      display: none; /* Replaced by header search input */
     }
 
     .category-filters {
@@ -253,6 +315,11 @@
       overflow-x: auto;
       padding-bottom: 4px;
       scrollbar-width: none;
+      background: white;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      width: 100%;
     }
 
     .category-filters::-webkit-scrollbar {
@@ -260,32 +327,32 @@
     }
 
     .filter-chip {
-      background: var(--bg-surface);
+      background: #f0f2f2;
       border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 8px 14px;
+      color: var(--text-main);
+      padding: 6px 14px;
       border-radius: 20px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 0.85rem;
       white-space: nowrap;
     }
 
     .filter-chip.active, .filter-chip:hover {
-      background: #000;
-      color: white;
-      border-color: #000;
+      background: #e3e6e6;
+      border-color: #007185;
+      color: #007185;
     }
 
     .admin-panel {
       max-width: 900px;
       margin: 0 auto 20px auto;
       background: white;
-      border: 2px solid #000;
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 16px;
       display: none;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .admin-panel.active {
@@ -309,28 +376,38 @@
     }
 
     .admin-input {
-      padding: 12px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 4px;
       border: 1px solid var(--border);
-      background: var(--bg-surface);
+      background: #f0f2f2;
       color: var(--text-main);
-      font-size: 1rem;
+      font-size: 0.95rem;
+    }
+    .admin-input:focus {
+      border-color: #e77600;
+      box-shadow: 0 0 3px 2px rgba(228, 121, 17, 0.5);
+      outline: none;
+      background: white;
     }
 
     .admin-submit-btn {
       grid-column: 1 / -1;
-      background: #000;
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
+      background: var(--amazon-orange);
+      border: 1px solid;
+      border-color: #a88734 #9c7e31 #846a29;
+      color: #111;
+      padding: 10px;
+      border-radius: 4px;
       font-weight: bold;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.95rem;
+    }
+    .admin-submit-btn:hover {
+      background: var(--amazon-orange-hover);
     }
 
     .container {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 0 16px;
     }
@@ -338,12 +415,12 @@
     .product-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      gap: 16px;
     }
 
     @media(min-width: 768px) {
       .product-grid {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 20px;
       }
     }
@@ -357,57 +434,67 @@
       flex-direction: column;
       cursor: pointer;
       position: relative;
+      padding: 16px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+      transition: box-shadow 0.2s ease;
+    }
+    .product-card:hover {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     .discount-badge {
       position: absolute;
-      top: 8px;
-      left: 8px;
+      top: 12px;
+      left: 12px;
       background: var(--accent-pink);
       color: white;
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       font-weight: bold;
       padding: 3px 6px;
-      border-radius: 4px;
+      border-radius: 2px;
       z-index: 2;
     }
 
     .product-img {
       width: 100%;
-      height: 190px;
-      object-fit: cover;
-      background: #f0f0f0;
+      height: 180px;
+      object-fit: contain;
+      background: #fff;
+      margin-bottom: 12px;
     }
 
     @media(min-width: 768px) {
       .product-img {
-        height: 260px;
+        height: 220px;
       }
     }
 
     .product-info {
-      padding: 10px;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
     }
 
     .product-category {
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
 
     .product-title {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 500;
+      color: #007185;
       margin-bottom: 6px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+    .product-title:hover {
+      color: #c7511f;
+      text-decoration: underline;
     }
 
     .product-price-row {
@@ -418,23 +505,23 @@
     }
 
     .product-price {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--accent-pink);
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--text-main);
     }
 
     .product-original-price {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       text-decoration: line-through;
     }
 
     .delete-item-btn {
-      background: rgba(244, 63, 94, 0.1);
-      border: 1px solid rgba(244, 63, 94, 0.3);
-      color: #f43f5e;
+      background: #fff0f1;
+      border: 1px solid #f99;
+      color: #c00;
       padding: 6px;
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
       font-weight: bold;
       margin-top: auto;
@@ -445,7 +532,7 @@
     .bin-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
@@ -462,14 +549,14 @@
       top: 0;
       right: -100%;
       width: 100%;
-      max-width: 380px;
+      max-width: 400px;
       height: 100%;
       background: white;
       border-left: 1px solid var(--border);
       z-index: 201;
       display: flex;
       flex-direction: column;
-      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: right 0.3s ease;
       padding: 20px;
     }
 
@@ -481,8 +568,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 14px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
+      background: none;
+      color: var(--text-main);
+      margin: 0;
     }
 
     .bin-footer {
@@ -493,14 +583,13 @@
       align-items: stretch;
       border-top: 1px solid var(--border);
       padding: 16px 0;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
     }
 
     .close-btn {
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       cursor: pointer;
       padding: 4px;
     }
@@ -512,37 +601,62 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      -webkit-overflow-scrolling: touch;
     }
 
     .bin-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: var(--bg-surface);
-      padding: 8px;
-      border-radius: 8px;
+      background: #f7fafa;
+      padding: 10px;
+      border-radius: 4px;
       border: 1px solid var(--border);
     }
 
     .bin-item img {
-      width: 50px;
-      height: 50px;
-      border-radius: 6px;
-      object-fit: cover;
+      width: 60px;
+      height: 60px;
+      border-radius: 4px;
+      object-fit: contain;
+      background: white;
     }
 
     .bin-item-details {
       flex-grow: 1;
     }
 
+    .bin-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .qty-btn {
+      background: #f0f2f2;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      width: 24px;
+      height: 24px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .remove-btn {
       background: none;
       border: none;
-      color: #f43f5e;
+      color: #007185;
       cursor: pointer;
       font-size: 0.8rem;
       padding: 4px;
+    }
+    .remove-btn:hover {
+      text-decoration: underline;
+      color: #c7511f;
     }
 
     .ai-modal, .modal {
@@ -552,8 +666,8 @@
       transform: translate(-50%, -50%) scale(0.9);
       background: white;
       border: 1px solid var(--border);
-      padding: 20px;
-      border-radius: var(--radius);
+      padding: 24px;
+      border-radius: 8px;
       z-index: 300;
       opacity: 0;
       pointer-events: none;
@@ -562,7 +676,7 @@
       width: 92%;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
     .ai-modal.active, .modal.active {
@@ -576,9 +690,9 @@
       height: 260px;
       overflow-y: auto;
       border: 1px solid var(--border);
-      background: var(--bg-surface);
-      border-radius: 8px;
-      padding: 10px;
+      background: #f7fafa;
+      border-radius: 4px;
+      padding: 12px;
       margin: 10px 0;
       display: flex;
       flex-direction: column;
@@ -587,14 +701,14 @@
 
     .ai-msg {
       padding: 10px 12px;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 0.9rem;
       max-width: 88%;
       line-height: 1.4;
     }
 
     .ai-msg.user {
-      background: #000;
+      background: #232f3e;
       color: #fff;
       align-self: flex-end;
     }
@@ -617,10 +731,11 @@
 
     .modal-img {
       width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
+      height: 220px;
+      object-fit: contain;
+      border-radius: 4px;
       margin-bottom: 12px;
+      background: #fff;
     }
 
     .size-selector {
@@ -631,40 +746,77 @@
 
     .size-btn {
       flex: 1;
-      padding: 10px;
-      background: var(--bg-surface);
+      padding: 8px;
+      background: #f7fafa;
       border: 1px solid var(--border);
       color: var(--text-main);
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
+      font-weight: 500;
+      font-size: 0.85rem;
     }
 
     .size-btn.selected {
-      border-color: #000;
-      background: #000;
-      color: white;
+      border-color: #e77600;
+      background: #fff8f0;
+      box-shadow: 0 0 3px 1px rgba(231,118,0,0.3);
+    }
+
+    .modal-quantity-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px 0;
+    }
+
+    .modal-qty-selector {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #f0f2f2;
+      overflow: hidden;
+    }
+
+    .modal-qty-btn {
+      background: none;
+      border: none;
+      padding: 6px 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--text-main);
+    }
+    .modal-qty-btn:hover {
+      background: #e3e6e6;
+    }
+
+    #modal-qty-input {
+      width: 40px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      outline: none;
     }
 
     .action-btn {
       width: 100%;
-      background: #000;
-      color: white;
-      border: none;
-      padding: 14px;
+      background: var(--amazon-orange);
+      border: 1px solid;
+      border-color: #a88734 #9c7e31 #846a29;
+      color: #111;
+      padding: 10px 16px;
       border-radius: 8px;
-      font-weight: 600;
+      font-weight: bold;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.95rem;
       text-align: center;
     }
-
-    .checkout-form button[type="submit"], .modal .action-btn {
-      position: sticky;
-      bottom: 0;
-      z-index: 10;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    .action-btn:hover {
+      background: var(--amazon-orange-hover);
     }
 
     .checkout-form {
@@ -675,13 +827,19 @@
     }
 
     .checkout-input {
-      padding: 12px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 4px;
       border: 1px solid var(--border);
-      background: var(--bg-surface);
+      background: #f0f2f2;
       color: var(--text-main);
-      font-size: 1rem;
+      font-size: 0.95rem;
       width: 100%;
+    }
+    .checkout-input:focus {
+      border-color: #e77600;
+      box-shadow: 0 0 3px 2px rgba(228, 121, 17, 0.5);
+      outline: none;
+      background: white;
     }
 
     .checkout-row {
@@ -698,21 +856,22 @@
     }
 
     .payment-tab {
-      background: var(--bg-surface);
+      background: #f0f2f2;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 10px 4px;
-      border-radius: 6px;
+      padding: 8px 4px;
+      border-radius: 4px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 0.75rem;
       text-align: center;
     }
 
     .payment-tab.active {
-      border-color: #000;
-      background: #000;
-      color: white;
+      border-color: #e77600;
+      background: #fff8f0;
+      color: var(--text-main);
+      font-weight: bold;
     }
 
     .payment-fields {
@@ -728,9 +887,9 @@
     .payment-instructions {
       font-size: 0.8rem;
       color: var(--text-muted);
-      background: var(--bg-surface);
+      background: #f7fafa;
       padding: 10px;
-      border-radius: 6px;
+      border-radius: 4px;
       border: 1px solid var(--border);
       line-height: 1.4;
     }
@@ -739,8 +898,12 @@
       display: inline-block;
       margin-top: 4px;
       font-size: 0.8rem;
-      color: #0066cc;
+      color: #007185;
+      text-decoration: none;
+    }
+    .payment-gateway-link:hover {
       text-decoration: underline;
+      color: #c7511f;
     }
 
     .dashboard-section {
@@ -753,9 +916,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--bg-surface);
+      background: #f7fafa;
       padding: 10px;
-      border-radius: 6px;
+      border-radius: 4px;
       border: 1px solid var(--border);
       margin-bottom: 6px;
       font-size: 0.85rem;
@@ -768,7 +931,7 @@
     .settings-group label {
       display: block;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: bold;
       margin-bottom: 4px;
       color: var(--text-main);
     }
@@ -785,21 +948,21 @@
     }
 
     .social-float-btn {
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 1.4rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      font-size: 1.3rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
       text-decoration: none;
-      transition: transform 0.2s ease, opacity 0.2s ease;
+      transition: transform 0.2s ease;
     }
 
     .social-float-btn:hover {
-      transform: scale(1.1);
+      transform: scale(1.08);
     }
 
     .whatsapp-btn {
@@ -814,98 +977,103 @@
 <body>
 
   <div class="top-banner">
-    FLASH SALE 🔥 UP TO 80% OFF NEW TREND STYLES • FREE SHIPPING OVER $49
+    Amazon-Style Experience 🔥 Free Shipping on orders over $49 • Daily Deals & New Tech Arrivals
   </div>
 
   <header>
     <div class="logo-area">
-      <button class="hamburger-btn" id="open-menu-drawer">☰</button>
-      <div class="logo">CARLOS</div>
+      <button class="hamburger-btn" id="open-menu-drawer">☰ All</button>
+      <div class="logo">carlos<span>.</span></div>
     </div>
+    
+    <div class="header-search-container">
+      <input type="text" id="search-input" class="header-search-input" placeholder="Search Carlos..." oninput="filterProducts()" />
+      <button class="header-search-btn">🔍</button>
+    </div>
+
     <div class="header-actions">
       <select id="currency-selector" class="currency-select" onchange="changeCurrency(this.value)">
         <option value="USD">USD ($)</option>
         <option value="HTG">HTG (G)</option>
       </select>
-      <button class="bin-btn" id="open-bin">🛍️ <span class="bin-count" id="bin-count">0</span></button>
+      <button class="bin-btn" id="open-bin">🛒 Cart <span class="bin-count" id="bin-count">0</span></button>
     </div>
   </header>
 
   <div class="bin-overlay" id="menu-overlay"></div>
   <aside class="menu-drawer" id="menu-drawer">
     <div class="menu-header">
-      <h2>Menu</h2>
-      <button class="close-btn" id="close-menu-drawer">&times;</button>
+      <h2>Hello, Sign In</h2>
+      <button class="close-btn" id="close-menu-drawer" style="color: white;">&times;</button>
     </div>
     <div class="menu-links">
-      <button class="menu-link-item ai-menu-btn" id="open-ai-modal">✨ AI Stylist</button>
-      <button class="menu-link-item" id="open-account-modal-menu">👤 <span id="account-status-text">Create Account</span></button>
+      <button class="menu-link-item ai-menu-btn" id="open-ai-modal">✨ AI Personal Shopper</button>
+      <button class="menu-link-item" id="open-account-modal-menu">👤 <span id="account-status-text">Account & Lists</span></button>
       <button class="menu-link-item" id="open-settings-modal-menu">⚙️ Settings</button>
-      <button class="menu-link-item" id="toggle-admin">🛡️ Owner Dashboard</button>
-      <a href="https://wa.link/4avn0t" target="_blank" class="menu-link-item">💬 WhatsApp Chat</a>
-      <a href="https://www.instagram.com/tazar_anx?igsh=a3hrYjE4NnpldGVk&igsi=a3hrYjE4NnpldGVk" target="_blank" class="menu-link-item">📸 Instagram Profile</a>
+      <button class="menu-link-item" id="toggle-admin">🛡️ Seller Dashboard</button>
+      <a href="https://wa.link/4avn0t" target="_blank" class="menu-link-item">💬 WhatsApp Support</a>
+      <a href="https://www.instagram.com/tazar_anx?igsh=a3hrYjE4NnpldGVk&igsi=a3hrYjE4NnpldGVk" target="_blank" class="menu-link-item">📸 Instagram Store</a>
     </div>
   </aside>
 
   <section class="hero">
-    <div class="flash-sale-tag">MEGA SALE EVENT</div>
-    <h1>Trend-Setting Fashion & Tech</h1>
-    <p>Discover thousands of new arrivals updated daily.</p>
+    <div class="flash-sale-tag">Today's Deals</div>
+    <h1>Shop Trend-Setting Fashion & Tech</h1>
+    <p>Explore millions of items with fast delivery options.</p>
   </section>
 
   <div class="filter-section">
-    <input type="text" id="search-input" class="search-input" placeholder="Search dress, top, hoodie..." oninput="filterProducts()" />
     <div class="category-filters" id="category-filters">
-      <button class="filter-chip active" onclick="setCategory('All', this)">All</button>
-      <button class="filter-chip" onclick="setCategory('Men', this)">Men</button>
-      <button class="filter-chip" onclick="setCategory('Women', this)">Women</button>
-      <button class="filter-chip" onclick="setCategory('Technology', this)">Technology</button>
+      <button class="filter-chip active" onclick="setCategory('All', this)">All Departments</button>
+      <button class="filter-chip" onclick="setCategory('Men', this)">Men's Fashion</button>
+      <button class="filter-chip" onclick="setCategory('Women', this)">Women's Fashion</button>
+      <button class="filter-chip" onclick="setCategory('Technology', this)">Electronics & Tech</button>
     </div>
   </div>
 
   <div class="container">
     <div class="admin-panel" id="admin-panel">
       <h3>
-        <span>🛡️ Site Owner Management</span>
+        <span>🛡️ Seller Central Inventory</span>
         <button class="close-btn" id="close-admin" style="font-size: 1.2rem;">&times;</button>
       </h3>
-      <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 12px;">Manage inventory and inspect purchases.</p>
+      <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 12px;">Manage listings, accounts, and fulfillment orders.</p>
       <form id="add-product-form" onsubmit="handleAddNewProduct(event)">
         <div class="admin-form-grid">
           <div class="admin-form-group full-width">
-            <label style="font-size: 0.75rem; color: var(--text-muted);">Product Name</label>
-            <input type="text" id="new-name" class="admin-input" placeholder="e.g. Aesthetic Crop Top" required />
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Product Title</label>
+            <input type="text" id="new-name" class="admin-input" placeholder="e.g. Smart Tech Fleece Hoodie" required />
           </div>
           <div class="admin-form-group">
             <label style="font-size: 0.75rem; color: var(--text-muted);">Price ($ USD)</label>
             <input type="number" step="0.01" id="new-price" class="admin-input" placeholder="24.99" required />
           </div>
           <div class="admin-form-group">
-            <label style="font-size: 0.75rem; color: var(--text-muted);">Category</label>
-            <input type="text" id="new-category" class="admin-input" placeholder="Men, Women, Tech..." required />
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Department / Category</label>
+            <input type="text" id="new-category" class="admin-input" placeholder="Men, Women, Technology..." required />
           </div>
           <div class="admin-form-group full-width">
             <label style="font-size: 0.75rem; color: var(--text-muted);">Product Image File</label>
             <input type="file" id="new-image-file" class="admin-input" accept="image/*" required />
           </div>
-          <button type="submit" class="admin-submit-btn">Publish Product</button>
+          <button type="submit" class="admin-submit-btn">Add Listing</button>
         </div>
       </form>
 
       <div class="dashboard-section">
         <h4 style="margin-bottom: 8px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center;">
           <span>📦 Orders</span>
-          <span id="purchase-total-count" style="font-size: 0.7rem; background: #000; color: #fff; padding: 2px 6px; border-radius: 10px;">0 orders</span>
+          <span id="purchase-total-count" style="font-size: 0.7rem; background: #232f3e; color: #fff; padding: 2px 6px; border-radius: 10px;">0 orders</span>
         </h4>
         <div id="owner-purchases-list">
-          <p style="color: var(--text-muted); text-align: center; padding: 8px; font-size: 0.85rem;">No purchases recorded yet.</p>
+          <p style="color: var(--text-muted); text-align: center; padding: 8px; font-size: 0.85rem;">No orders recorded yet.</p>
         </div>
       </div>
 
       <div class="dashboard-section">
         <h4 style="margin-bottom: 8px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center;">
-          <span>📋 Accounts</span>
-          <span id="account-total-count" style="font-size: 0.7rem; background: #000; color: #fff; padding: 2px 6px; border-radius: 10px;">0 accounts</span>
+          <span>📋 Customer Accounts</span>
+          <span id="account-total-count" style="font-size: 0.7rem; background: #232f3e; color: #fff; padding: 2px 6px; border-radius: 10px;">0 accounts</span>
         </h4>
         <div id="owner-accounts-list">
           <p style="color: var(--text-muted); text-align: center; padding: 8px; font-size: 0.85rem;">No accounts registered yet.</p>
@@ -925,11 +1093,11 @@
       <button class="close-btn" id="close-bin">&times;</button>
     </div>
     <div class="bin-items" id="bin-items">
-      <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your cart is currently empty.</p>
+      <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your Cart is empty.</p>
     </div>
     <div class="bin-footer">
-      <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; width: 100%; margin-bottom: 10px;">
-        <span>Subtotal</span>
+      <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: bold; width: 100%; margin-bottom: 10px;">
+        <span>Subtotal:</span>
         <span id="bin-total">$0.00</span>
       </div>
       <button class="action-btn" onclick="openCheckoutModal()">Proceed to Checkout</button>
@@ -938,16 +1106,16 @@
 
   <div class="ai-modal" id="ai-modal">
     <span class="close-btn" onclick="closeAiModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
-    <h2 style="margin-bottom: 4px; font-size: 1.2rem;">✨ Carlos AI Stylist</h2>
-    <p style="font-size: 0.75rem; color: var(--text-muted);">Ask for recommendations or size advice!</p>
+    <h2 style="margin-bottom: 4px; font-size: 1.2rem;">✨ Carlos AI Assistant</h2>
+    <p style="font-size: 0.75rem; color: var(--text-muted);">Ask for recommendations or order help!</p>
     
     <div class="ai-chat-box" id="ai-chat-box">
-      <div class="ai-msg assistant">Hello! I'm your virtual AI stylist. What kind of outfit or tech gear are you looking for today?</div>
+      <div class="ai-msg assistant">Hello! I'm your virtual shopping assistant. What product or gadget can I help you find today?</div>
     </div>
 
     <div class="ai-input-row">
-      <input type="text" id="ai-user-input" class="checkout-input" placeholder="e.g. Cozy hoodie..." onkeydown="if(event.key==='Enter') sendAiMessage()" />
-      <button class="action-btn" style="width: 80px; padding: 10px;" onclick="sendAiMessage()">Send</button>
+      <input type="text" id="ai-user-input" class="checkout-input" placeholder="Type a request..." onkeydown="if(event.key==='Enter') sendAiMessage()" />
+      <button class="action-btn" style="width: 80px; padding: 8px;" onclick="sendAiMessage()">Send</button>
     </div>
   </div>
 
@@ -956,7 +1124,7 @@
     <h2 style="margin-bottom: 10px; font-size: 1.2rem;">⚙️ Settings</h2>
     
     <div class="settings-group">
-      <label>Default Currency</label>
+      <label>Currency Preference</label>
       <select id="settings-currency" class="checkout-input" onchange="changeCurrency(this.value)">
         <option value="USD">USD ($)</option>
         <option value="HTG">HTG (G)</option>
@@ -964,29 +1132,29 @@
     </div>
 
     <div class="settings-group">
-      <label>Display Language</label>
+      <label>Language</label>
       <select class="checkout-input">
-        <option value="en">English (US)</option>
-        <option value="fr">Français (Haïti)</option>
+        <option value="en">English</option>
+        <option value="fr">Français</option>
       </select>
     </div>
 
-    <button class="action-btn" style="margin-top: 10px;" onclick="closeSettingsModal()">Save Settings</button>
+    <button class="action-btn" style="margin-top: 10px;" onclick="closeSettingsModal()">Save Changes</button>
   </div>
 
   <div class="modal" id="account-modal">
     <span class="close-btn" onclick="closeAccountModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
-    <h2 id="account-modal-title" style="margin-bottom: 4px; font-size: 1.2rem;">👤 Create Account</h2>
-    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Sign up for personalized recommendations and faster checkout.</p>
+    <h2 id="account-modal-title" style="margin-bottom: 4px; font-size: 1.2rem;">👤 Sign In</h2>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Access your orders, recommendations, and settings.</p>
     
     <form class="checkout-form" id="account-form" onsubmit="handleAccountSubmit(event)">
-      <input type="text" id="acc-name" class="checkout-input" placeholder="Full Name" required />
+      <input type="text" id="acc-name" class="checkout-input" placeholder="Full Name" style="display:none;" />
       <input type="email" id="acc-email" class="checkout-input" placeholder="Email Address" required />
-      <input type="password" id="acc-pass" class="checkout-input" placeholder="Create Password" required />
-      <button type="submit" class="action-btn" id="account-submit-btn">Create Account</button>
+      <input type="password" id="acc-pass" class="checkout-input" placeholder="Password" required />
+      <button type="submit" class="action-btn" id="account-submit-btn">Sign In</button>
     </form>
     <div style="text-align: center; margin-top: 10px;">
-      <button id="toggle-auth-mode" style="background: none; border: none; color: #0066cc; cursor: pointer; font-size: 0.8rem;" onclick="toggleAuthMode()">Already have an account? Sign In</button>
+      <button id="toggle-auth-mode" style="background: none; border: none; color: #007185; cursor: pointer; font-size: 0.8rem;" onclick="toggleAuthMode()">New to Carlos? Create your account</button>
     </div>
   </div>
 
@@ -994,14 +1162,24 @@
     <span class="close-btn" onclick="closeModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
     <img id="modal-product-img" class="modal-img" src="" alt="" />
     <span id="modal-product-category" class="product-category"></span>
-    <h2 id="modal-product-title" style="margin: 2px 0 4px 0; font-size: 1rem;"></h2>
-    <div id="modal-product-price" class="product-price"></div>
-    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Select Size:</p>
-    <div class="size-selector">
-      <button class="size-btn selected" onclick="selectSize('S', this)">S</button>
-      <button class="size-btn" onclick="selectSize('M', this)">M</button>
-      <button class="size-btn" onclick="selectSize('L', this)">L</button>
-      <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
+    <h2 id="modal-product-title" style="margin: 2px 0 6px 0; font-size: 1.1rem; color: #007185;"></h2>
+    <div id="modal-product-price" class="product-price" style="margin-bottom: 10px;"></div>
+    <div id="modal-size-container">
+      <p style="font-size: 0.8rem; font-weight: bold; margin-bottom: 4px;">Size Selection:</p>
+      <div class="size-selector">
+        <button class="size-btn selected" onclick="selectSize('S', this)">S</button>
+        <button class="size-btn" onclick="selectSize('M', this)">M</button>
+        <button class="size-btn" onclick="selectSize('L', this)">L</button>
+        <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
+      </div>
+    </div>
+    <div class="modal-quantity-row">
+      <span style="font-size: 0.8rem; font-weight: bold;">Quantity:</span>
+      <div class="modal-qty-selector">
+        <button type="button" class="modal-qty-btn" onclick="adjustModalQty(-1)">-</button>
+        <input type="text" id="modal-qty-input" value="1" readonly />
+        <button type="button" class="modal-qty-btn" onclick="adjustModalQty(1)">+</button>
+      </div>
     </div>
     <button class="action-btn" id="modal-add-btn">Add to Cart</button>
   </div>
@@ -1009,24 +1187,24 @@
   <div class="modal" id="checkout-modal">
     <span class="close-btn" onclick="closeCheckoutModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
     <h2 style="margin-bottom: 4px; font-size: 1.2rem;">🔒 Secure Checkout</h2>
-    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Enter delivery address and payment details.</p>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Shipping address and payment details.</p>
     
     <form class="checkout-form" onsubmit="processPayment(event)">
       <input type="text" id="chk-name" class="checkout-input" placeholder="Full Name" required />
       <input type="email" id="chk-email" class="checkout-input" placeholder="Email Address" required />
       <input type="text" id="chk-address" class="checkout-input" placeholder="Shipping Address / City" required />
 
-      <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Select Payment Method:</p>
+      <p style="font-size: 0.8rem; font-weight: bold; margin-top: 4px;">Payment Method:</p>
       <div class="payment-tabs">
-        <button type="button" class="payment-tab active" onclick="switchPayment('visa', this)">Visa</button>
+        <button type="button" class="payment-tab active" onclick="switchPayment('visa', this)">Visa / Card</button>
         <button type="button" class="payment-tab" onclick="switchPayment('moncash', this)">MonCash</button>
         <button type="button" class="payment-tab" onclick="switchPayment('natcash', this)">NatCash</button>
       </div>
 
       <div id="payment-visa" class="payment-fields active">
         <div class="payment-instructions">
-          💳 <strong>Visa Gateway:</strong> Secure card payment.
-          <br><a href="https://usa.visa.com" target="_blank" class="payment-gateway-link">Open Official Visa Portal ↗</a>
+          💳 <strong>Credit Card Gateway:</strong> Secure processing.
+          <br><a href="https://usa.visa.com" target="_blank" class="payment-gateway-link">Visa Portal ↗</a>
         </div>
         <input type="text" id="visa-card-number" class="checkout-input" placeholder="Card Number" maxlength="19" />
         <div class="checkout-row">
@@ -1037,8 +1215,8 @@
 
       <div id="payment-moncash" class="payment-fields">
         <div class="payment-instructions">
-          📱 <strong>MonCash Direct Pay:</strong> Mobile wallet payment.
-          <br><a href="https://moncashbutton.digicelgroup.com" target="_blank" class="payment-gateway-link">Open MonCash Portal ↗</a>
+          📱 <strong>MonCash Mobile Wallet:</strong> Direct payment.
+          <br><a href="https://moncashbutton.digicelgroup.com" target="_blank" class="payment-gateway-link">MonCash Portal ↗</a>
         </div>
         <input type="tel" id="moncash-phone" class="checkout-input" placeholder="MonCash Phone (+509 ...)" />
         <input type="password" id="moncash-pin" class="checkout-input" placeholder="4-digit PIN" maxlength="4" />
@@ -1046,14 +1224,14 @@
 
       <div id="payment-natcash" class="payment-fields">
         <div class="payment-instructions">
-          💳 <strong>NatCash Transfer:</strong> Mobile settlement.
-          <br><a href="https://www.natcom.ht" target="_blank" class="payment-gateway-link">Open Natcom Portal ↗</a>
+          💳 <strong>NatCash Transfer:</strong> Account settlement.
+          <br><a href="https://www.natcom.ht" target="_blank" class="payment-gateway-link">Natcom Portal ↗</a>
         </div>
         <input type="tel" id="natcash-account" class="checkout-input" placeholder="NatCash Account / Phone" />
         <input type="password" id="natcash-pin" class="checkout-input" placeholder="NatCash PIN" maxlength="6" />
       </div>
 
-      <button type="submit" class="action-btn" style="margin-top: 6px;">Pay <span id="checkout-btn-total">$0.00</span></button>
+      <button type="submit" class="action-btn" style="margin-top: 6px;">Place Your Order (<span id="checkout-btn-total">$0.00</span>)</button>
     </form>
   </div>
 
@@ -1067,7 +1245,7 @@
   </div>
 
   <script>
-  const SUPABASE_URL = 'https://unhaxejnqwzymsfswlgs.supabase.co';
+    const SUPABASE_URL = 'https://unhaxejnqwzymsfswlgs.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuaGF4ZWpucXd6eW1zZnN3bGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3Mjg1ODUsImV4cCI6MjEwMjMwNDU4NX0.KxSDPDRDe1RwjOQVkixVfjahCqEslYrDCUu6KECv1uw';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const defaultProducts = [
@@ -1086,11 +1264,12 @@
     let bin = [];
     let selectedCategory = 'All';
     let selectedSize = 'S';
+    let modalQuantity = 1;
     let activeModalProduct = null;
     let isOwnerAuthenticated = false;
     let selectedPaymentMethod = 'visa';
     let currentCurrency = 'USD';
-    let isLoginMode = false;
+    let isLoginMode = true; // Default to Sign In mode matching Amazon flow
     const USD_TO_HTG_RATE = 132.50;
     const OWNER_PASSCODE = "carlos2026";
 
@@ -1166,7 +1345,7 @@
               <div class="product-price">${formatPrice(product.price)}</div>
               ${product.originalPrice ? `<div class="product-original-price">${formatPrice(product.originalPrice)}</div>` : ''}
             </div>
-            ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove</button>` : ''}
+            ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove Listing</button>` : ''}
           </div>
         </div>
       `).join('');
@@ -1187,13 +1366,37 @@
       activeModalProduct = products.find(p => p.id === id);
       if (!activeModalProduct) return;
 
+      modalQuantity = 1;
+      document.getElementById('modal-qty-input').value = modalQuantity;
+
       document.getElementById('modal-product-img').src = activeModalProduct.image;
       document.getElementById('modal-product-category').textContent = activeModalProduct.category;
       document.getElementById('modal-product-title').textContent = activeModalProduct.name;
       document.getElementById('modal-product-price').textContent = formatPrice(activeModalProduct.price);
       
+      const sizeContainer = document.getElementById('modal-size-container');
+      if (activeModalProduct.category.toLowerCase() === 'technology') {
+        sizeContainer.style.display = 'none';
+      } else {
+        sizeContainer.style.display = 'block';
+      }
+      
       document.getElementById('modal-add-btn').onclick = () => {
-        bin.push({ ...activeModalProduct, size: selectedSize });
+        const itemPayload = { ...activeModalProduct };
+        if (activeModalProduct.category.toLowerCase() !== 'technology') {
+          itemPayload.size = selectedSize;
+        } else {
+          itemPayload.size = 'N/A';
+        }
+        itemPayload.quantity = modalQuantity;
+
+        const existingIndex = bin.findIndex(i => i.id === itemPayload.id && i.size === itemPayload.size);
+        if (existingIndex > -1) {
+          bin[existingIndex].quantity += modalQuantity;
+        } else {
+          bin.push(itemPayload);
+        }
+
         updateBinUI();
         closeModal();
         openBinDrawer();
@@ -1201,6 +1404,12 @@
 
       document.getElementById('product-detail-modal').classList.add('active');
       document.getElementById('bin-overlay').classList.add('open');
+    }
+
+    function adjustModalQty(amount) {
+      modalQuantity += amount;
+      if (modalQuantity < 1) modalQuantity = 1;
+      document.getElementById('modal-qty-input').value = modalQuantity;
     }
 
     function closeModal() {
@@ -1237,15 +1446,15 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       setTimeout(() => {
-        let reply = "That sounds like a great look! Check out our collection or try filtering by categories like Men, Women, or Technology.";
+        let reply = "Here are matching suggestions from our catalog departments. Try filtering by categories or search keywords above.";
         const lower = text.toLowerCase();
 
         if (lower.includes('tech') || lower.includes('hoodie') || lower.includes('visor')) {
-          reply = "I recommend our 'Neural-Link Smart Tech Fleece Hoodie' or the 'Cyberpunk LED Futuristic Visor System'!";
+          reply = "Consider checking out the 'Neural-Link Smart Tech Fleece Hoodie' or 'Cyberpunk LED Futuristic Visor System'!";
         } else if (lower.includes('dress') || lower.includes('top') || lower.includes('shirt')) {
-          reply = "For tops and apparel, check out our latest arrivals on the home catalog!";
-        } else if (lower.includes('price') || lower.includes('cheap') || lower.includes('sale')) {
-          reply = "Everything right now is up to 50% off with our MEGA SALE EVENT! You can also switch currencies to HTG using the top header.";
+          reply = "We have organic cotton essentials and minimalist outerwear available in our fashion catalog.";
+        } else if (lower.includes('price') || lower.includes('sale') || lower.includes('deal')) {
+          reply = "All items feature limited-time special discounts across departments!";
         }
 
         chatBox.innerHTML += `<div class="ai-msg assistant">${escapeHtml(reply)}</div>`;
@@ -1289,9 +1498,9 @@
       const nameInput = document.getElementById('acc-name');
 
       if (isLoginMode) {
-        title.textContent = "👤 Sign In Account";
+        title.textContent = "👤 Sign In";
         submitBtn.textContent = "Sign In";
-        toggleBtn.textContent = "Don't have an account? Create Account";
+        toggleBtn.textContent = "New to Carlos? Create your account";
         nameInput.style.display = "none";
         nameInput.removeAttribute('required');
       } else {
@@ -1365,9 +1574,9 @@
     function updateAccountUIStatus() {
       const statusText = document.getElementById('account-status-text');
       if (loggedInUser) {
-        statusText.textContent = loggedInUser.name.split(' ')[0];
+        statusText.textContent = `Hello, ${loggedInUser.name.split(' ')[0]}`;
       } else {
-        statusText.textContent = "Create Account";
+        statusText.textContent = "Sign In & Lists";
       }
     }
 
@@ -1398,14 +1607,14 @@
       countLabel.textContent = `${purchases.length} orders`;
 
       if (purchases.length === 0) {
-        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 8px; font-size: 0.85rem;">No purchases recorded yet.</p>';
+        listContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 8px; font-size: 0.85rem;">No orders recorded yet.</p>';
         return;
       }
 
       listContainer.innerHTML = purchases.map((order) => `
         <div class="purchase-row-item">
           <div>
-            <strong>Order #${order.id || order.order_id}</strong> - <span style="color: var(--accent-pink);">${formatPrice(order.total)}</span><br>
+            <strong>Order #${order.id || order.order_id}</strong> - <span>${formatPrice(order.total)}</span><br>
             <span style="color: var(--text-muted); font-size: 0.7rem;">${order.name} | ${order.method.toUpperCase()}</span>
           </div>
           <button class="remove-btn" onclick="deletePurchase('${order.id}')">Remove</button>
@@ -1427,14 +1636,14 @@
     }
 
     async function deletePurchase(id) {
-      if (confirm("Delete this purchase record?")) {
+      if (confirm("Delete this order record?")) {
         try {
           const { error } = await supabaseClient.from('purchases').delete().eq('id', id);
           if (error) throw error;
           purchases = purchases.filter(p => p.id != id);
           updateOwnerPurchasesUI();
         } catch (err) {
-          alert("Failed to delete purchase.");
+          alert("Failed to delete order.");
         }
       }
     }
@@ -1462,10 +1671,10 @@
     toggleAdminBtn.addEventListener('click', () => {
       closeMenuDrawer();
       if (!isOwnerAuthenticated) {
-        const pass = prompt("Enter Owner Passcode :");
+        const pass = prompt("Enter Seller Passcode :");
         if (pass === OWNER_PASSCODE) {
           isOwnerAuthenticated = true;
-          alert("Owner Access Granted!");
+          alert("Seller Access Granted!");
           adminPanel.classList.add('active');
           renderProducts();
           updateOwnerAccountsUI();
@@ -1507,9 +1716,9 @@
             renderProducts();
             document.getElementById('add-product-form').reset();
             adminPanel.classList.remove('active');
-            alert("Product published successfully!");
+            alert("Product listing published successfully!");
           } catch (err) {
-            alert("Error saving product: " + err.message);
+            alert("Error saving listing: " + err.message);
           }
         };
         reader.readAsDataURL(fileInput.files[0]);
@@ -1517,7 +1726,7 @@
     }
 
     async function deleteProduct(id) {
-      if (confirm("Delete this item from the catalog?")) {
+      if (confirm("Remove this product listing?")) {
         try {
           const { error } = await supabaseClient.from('products').delete().eq('id', id);
           if (error) throw error;
@@ -1529,17 +1738,26 @@
       }
     }
 
+    function changeBinItemQty(index, delta) {
+      bin[index].quantity += delta;
+      if (bin[index].quantity < 1) {
+        bin[index].quantity = 1;
+      }
+      updateBinUI();
+    }
+
     function removeFromBin(index) {
       bin.splice(index, 1);
       updateBinUI();
     }
 
     function updateBinUI() {
-      document.getElementById('bin-count').textContent = bin.length;
+      const totalItemsCount = bin.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('bin-count').textContent = totalItemsCount;
       const binItems = document.getElementById('bin-items');
       
       if (bin.length === 0) {
-        binItems.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 40px; font-size: 0.9rem;">Your cart is currently empty.</p>';
+        binItems.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 40px; font-size: 0.9rem;">Your Cart is empty.</p>';
         document.getElementById('bin-total').textContent = formatPrice(0);
         return;
       }
@@ -1548,15 +1766,20 @@
         <div class="bin-item">
           <img src="${item.image}" alt="${item.name}">
           <div class="bin-item-details">
-            <div style="font-size: 0.8rem; font-weight: 500;">${item.name}</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">Size: ${item.size}</div>
-            <div style="font-size: 0.8rem; color: var(--accent-pink); font-weight: 700;">${formatPrice(item.price)}</div>
+            <div style="font-size: 0.85rem; font-weight: 500; color: #007185;">${item.name}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">${item.category.toLowerCase() === 'technology' ? 'Universal' : `Size: ${item.size}`}</div>
+            <div style="font-size: 0.85rem; color: var(--text-main); font-weight: bold; margin-top: 2px;">${formatPrice(item.price * item.quantity)}</div>
+            <div class="bin-item-controls">
+              <button class="qty-btn" onclick="changeBinItemQty(${index}, -1)">-</button>
+              <span style="font-size: 0.8rem; font-weight: 600; padding: 0 4px;">${item.quantity}</span>
+              <button class="qty-btn" onclick="changeBinItemQty(${index}, 1)">+</button>
+            </div>
           </div>
-          <button class="remove-btn" onclick="removeFromBin(${index})">Remove</button>
+          <button class="remove-btn" onclick="removeFromBin(${index})">Delete</button>
         </div>
       `).join('');
 
-      const total = bin.reduce((sum, item) => sum + item.price, 0);
+      const total = bin.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       document.getElementById('bin-total').textContent = formatPrice(total);
       document.getElementById('checkout-btn-total').textContent = formatPrice(total);
     }
@@ -1571,11 +1794,11 @@
 
     function openCheckoutModal() {
       if (bin.length === 0) {
-        alert("Your shopping cart is empty.");
+        alert("Your cart is empty.");
         return;
       }
       if (!loggedInUser) {
-        alert("Please sign in or create an account before checkout.");
+        alert("Please sign in to your account before proceeding to checkout.");
         closeBinDrawer();
         document.getElementById('bin-overlay').classList.add('open');
         accountModal.classList.add('active');
@@ -1600,8 +1823,8 @@
       const email = document.getElementById('chk-email').value.trim();
       const address = document.getElementById('chk-address').value.trim();
 
-      const totalAmount = bin.reduce((sum, item) => sum + item.price, 0);
-      const itemsSummary = bin.map(item => `${item.name} (${item.size})`).join(', ');
+      const totalAmount = bin.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const itemsSummary = bin.map(item => item.category.toLowerCase() === 'technology' ? `${item.name} (x${item.quantity})` : `${item.name} [Size: ${item.size}] (x${item.quantity})`).join(', ');
 
       const newPurchase = {
         order_id: Date.now().toString().slice(-6),
@@ -1621,7 +1844,7 @@
         purchases.unshift(data[0]);
         updateOwnerPurchasesUI();
 
-        alert(`🎉 Payment successful! Thank you for shopping with CARLOS.`);
+        alert(`🎉 Order placed successfully! Thank you for shopping with Carlos.`);
         bin = [];
         updateBinUI();
         closeCheckoutModal();
