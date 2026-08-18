@@ -1712,7 +1712,7 @@
       // --- MonCash Live Sandbox Integration Flow ---
       if (selectedPaymentMethod === 'moncash') {
         try {
-          const { data, error } = await supabaseClient.functions.invoke('moncash-init', {
+          const { data, error } = await supabaseClient.functions.invoke('moncash-payment', {
             body: { 
               amount: totalAmount, 
               orderId: orderId 
@@ -1724,9 +1724,10 @@
             return;
           }
 
-          // Directly handle redirect URL returned from backend Edge Function
-          if (data && data.redirectUrl) {
-            window.location.href = data.redirectUrl;
+          const tokenValue = data?.payment_token?.token || data?.payment_token;
+          if (tokenValue) {
+            // Redirect user directly to Digicel's Sandbox payment gateway
+            window.location.href = `https://sandbox.moncashbutton.digicelgroup.com/Moncash-middleware/Payment/Redirect?token=${tokenValue}`;
             return;
           } else {
             alert("Could not retrieve payment redirection link from MonCash.");
