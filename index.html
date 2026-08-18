@@ -90,7 +90,7 @@
       align-items: center;
     }
 
-    .admin-toggle-btn, .bin-btn, .currency-select, .account-btn, .settings-btn {
+    .bin-btn, .currency-select {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-main);
@@ -694,10 +694,6 @@
       color: var(--text-main);
     }
 
-    .modal-qty-btn:active {
-      background: var(--border);
-    }
-
     #modal-qty-input {
       width: 40px;
       text-align: center;
@@ -720,13 +716,6 @@
       cursor: pointer;
       font-size: 1rem;
       text-align: center;
-    }
-
-    .checkout-form button[type="submit"], .modal .action-btn {
-      position: sticky;
-      bottom: 0;
-      z-index: 10;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
     }
 
     .checkout-form {
@@ -835,7 +824,6 @@
       color: var(--text-main);
     }
 
-    /* Floating Social Buttons Container Styles */
     .floating-social-bar {
       position: fixed;
       bottom: 20px;
@@ -857,7 +845,7 @@
       font-size: 1.4rem;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       text-decoration: none;
-      transition: transform 0.2s ease, opacity 0.2s ease;
+      transition: transform 0.2s ease;
     }
 
     .social-float-btn:hover {
@@ -876,7 +864,7 @@
 <body>
 
   <div class="top-banner">
-    FLASH SALE 🔥 UP TO 80% OFF NEW TREND STYLES • FREE SHIPPING OVER $49
+    FLASH SALE 🔥 UP TO 80% OFF NEW TREND STYLES • FREE SHIPPING OVER $49 / G 6,500
   </div>
 
   <header>
@@ -939,7 +927,7 @@
             <input type="text" id="new-name" class="admin-input" placeholder="e.g. Aesthetic Crop Top" required />
           </div>
           <div class="admin-form-group">
-            <label style="font-size: 0.75rem; color: var(--text-muted);">Price ($ USD)</label>
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Price ($ USD base)</label>
             <input type="number" step="0.01" id="new-price" class="admin-input" placeholder="24.99" required />
           </div>
           <div class="admin-form-group">
@@ -1001,14 +989,14 @@
   <div class="ai-modal" id="ai-modal">
     <span class="close-btn" onclick="closeAiModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
     <h2 style="margin-bottom: 4px; font-size: 1.2rem;">✨ Carlos AI Stylist</h2>
-    <p style="font-size: 0.75rem; color: var(--text-muted);">Ask for recommendations or size advice!</p>
+    <p style="font-size: 0.75rem; color: var(--text-muted);">Ask for recommendations or currency conversion queries!</p>
     
     <div class="ai-chat-box" id="ai-chat-box">
-      <div class="ai-msg assistant">Hello! I'm your virtual AI stylist. What kind of outfit or tech gear are you looking for today?</div>
+      <div class="ai-msg assistant">Hello! I'm your virtual AI stylist. Looking for clothes, gadgets, or help with HTG / USD prices?</div>
     </div>
 
     <div class="ai-input-row">
-      <input type="text" id="ai-user-input" class="checkout-input" placeholder="e.g. Cozy hoodie..." onkeydown="if(event.key==='Enter') sendAiMessage()" />
+      <input type="text" id="ai-user-input" class="checkout-input" placeholder="e.g. how much is $20 in gourdes?" onkeydown="if(event.key==='Enter') sendAiMessage()" />
       <button class="action-btn" style="width: 80px; padding: 10px;" onclick="sendAiMessage()">Send</button>
     </div>
   </div>
@@ -1026,11 +1014,8 @@
     </div>
 
     <div class="settings-group">
-      <label>Display Language</label>
-      <select class="checkout-input">
-        <option value="en">English (US)</option>
-        <option value="fr">Français (Haïti)</option>
-      </select>
+      <label>Exchange Rate Note</label>
+      <p style="font-size: 0.8rem; color: var(--text-muted);">1 USD = 132.50 HTG (Haitian Gourdes)</p>
     </div>
 
     <button class="action-btn" style="margin-top: 10px;" onclick="closeSettingsModal()">Save Settings</button>
@@ -1039,7 +1024,7 @@
   <div class="modal" id="account-modal">
     <span class="close-btn" onclick="closeAccountModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
     <h2 id="account-modal-title" style="margin-bottom: 4px; font-size: 1.2rem;">👤 Create Account</h2>
-    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Sign up for personalized recommendations and faster checkout.</p>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Sign up for fast checkout and local payment options.</p>
     
     <form class="checkout-form" id="account-form" onsubmit="handleAccountSubmit(event)">
       <input type="text" id="acc-name" class="checkout-input" placeholder="Full Name" required />
@@ -1081,23 +1066,22 @@
   <div class="modal" id="checkout-modal">
     <span class="close-btn" onclick="closeCheckoutModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
     <h2 style="margin-bottom: 4px; font-size: 1.2rem;">🔒 Secure Checkout</h2>
-    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Enter delivery address and payment details.</p>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Pay securely via Visa or MonCash (Haitian Gourdes).</p>
     
     <form class="checkout-form" onsubmit="processPayment(event)">
       <input type="text" id="chk-name" class="checkout-input" placeholder="Full Name" required />
       <input type="email" id="chk-email" class="checkout-input" placeholder="Email Address" required />
-      <input type="text" id="chk-address" class="checkout-input" placeholder="Shipping Address / City" required />
+      <input type="text" id="chk-address" class="checkout-input" placeholder="Shipping Address / City (e.g. Port-au-Prince)" required />
 
       <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Select Payment Method:</p>
       <div class="payment-tabs">
         <button type="button" class="payment-tab active" onclick="switchPayment('visa', this)">Visa</button>
-        <button type="button" class="payment-tab" onclick="switchPayment('moncash', this)">MonCash</button>
+        <button type="button" class="payment-tab" onclick="switchPayment('moncash', this)">MonCash (HTG)</button>
       </div>
 
       <div id="payment-visa" class="payment-fields active">
         <div class="payment-instructions">
           💳 <strong>Visa Gateway:</strong> Secure card payment.
-          <br><a href="https://usa.visa.com" target="_blank" class="payment-gateway-link">Open Official Visa Portal ↗</a>
         </div>
         <input type="text" id="visa-card-number" class="checkout-input" placeholder="Card Number" maxlength="19" />
         <div class="checkout-row">
@@ -1108,8 +1092,7 @@
 
       <div id="payment-moncash" class="payment-fields">
         <div class="payment-instructions">
-          📱 <strong>MonCash Direct Pay:</strong> Secure Mobile wallet redirection.
-          <br><a href="https://moncashbutton.digicelgroup.com" target="_blank" class="payment-gateway-link">Open MonCash Portal ↗</a>
+          📱 <strong>MonCash Wallet:</strong> Total will automatically convert to Gourdes (HTG) for mobile payment.
         </div>
       </div>
 
@@ -1118,18 +1101,15 @@
   </div>
 
   <div class="floating-social-bar">
-    <a href="https://wa.link/4avn0t" target="_blank" class="social-float-btn whatsapp-btn" title="Chat on WhatsApp">
-      💬
-    </a>
-    <a href="https://www.instagram.com/tazar_anx?igsh=a3hrYjE4NnpldGVk&igsi=a3hrYjE4NnpldGVk" target="_blank" class="social-float-btn instagram-btn" title="Visit Instagram">
-      📸
-    </a>
+    <a href="https://wa.link/4avn0t" target="_blank" class="social-float-btn whatsapp-btn" title="Chat on WhatsApp">💬</a>
+    <a href="https://www.instagram.com/tazar_anx?igsh=a3hrYjE4NnpldGVk&igsi=a3hrYjE4NnpldGVk" target="_blank" class="social-float-btn instagram-btn" title="Visit Instagram">📸</a>
   </div>
 
   <script>
     const SUPABASE_URL = 'https://unhaxejnqwzymsfswlgs.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuaGF4ZWpucXd6eW1zZnN3bGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3Mjg1ODUsImV4cCI6MjEwMjMwNDU4NX0.KxSDPDRDe1RwjOQVkixVfjahCqEslYrDCUu6KECv1uw';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuaGF4ZWpucXd6eW1zZnN3bGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3reg7Mjg1ODUsImV4cCI6MjEwMjMwNDU4NX0.KxSDPDRDe1RwjOQVkixVfjahCqEslYrDCUu6KECv1uw';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const defaultProducts = [
       { id: 1, name: "Neural-Link Smart Tech Fleece Hoodie", price: 34.99, originalPrice: 65.00, discount: "-46%", category: "Technology", image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80" },
       { id: 2, name: "Cyberpunk LED Futuristic Visor System", price: 22.50, originalPrice: 45.00, discount: "-50%", category: "Technology", image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=600&q=80" },
@@ -1182,6 +1162,7 @@
       updateOwnerPurchasesUI();
     }
 
+    // Currency Conversion helper function
     function formatPrice(usdAmount) {
       if (currentCurrency === 'HTG') {
         const htgAmount = usdAmount * USD_TO_HTG_RATE;
@@ -1328,15 +1309,13 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       setTimeout(() => {
-        let reply = "That sounds like a great look! Check out our collection or try filtering by categories like Men, Women, or Technology.";
+        let reply = "That's a great question! You can change your site currency between USD and HTG (Haitian Gourdes) using the dropdown at the top.";
         const lower = text.toLowerCase();
 
-        if (lower.includes('tech') || lower.includes('hoodie') || lower.includes('visor')) {
-          reply = "I recommend our 'Neural-Link Smart Tech Fleece Hoodie' or the 'Cyberpunk LED Futuristic Visor System'!";
-        } else if (lower.includes('dress') || lower.includes('top') || lower.includes('shirt')) {
-          reply = "For tops and apparel, check out our latest arrivals on the home catalog!";
-        } else if (lower.includes('price') || lower.includes('cheap') || lower.includes('sale')) {
-          reply = "Everything right now is up to 50% off with our MEGA SALE EVENT! You can also switch currencies to HTG using the top header.";
+        if (lower.includes('rate') || lower.includes('convert') || lower.includes('gourde') || lower.includes('htg')) {
+          reply = `The current official currency conversion rate configured in Carlos is 1 USD = ${USD_TO_HTG_RATE} HTG (Gourdes).`;
+        } else if (lower.includes('tech') || lower.includes('hoodie')) {
+          reply = "I recommend checking out our smart tech fleece or futuristic visor system!";
         }
 
         chatBox.innerHTML += `<div class="ai-msg assistant">${escapeHtml(reply)}</div>`;
@@ -1705,16 +1684,16 @@
       const email = document.getElementById('chk-email').value.trim();
       const address = document.getElementById('chk-address').value.trim();
 
-      const totalAmount = bin.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const totalAmountUsd = bin.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       const itemsSummary = bin.map(item => item.category.toLowerCase() === 'technology' ? `${item.name} (x${item.quantity})` : `${item.name} [Size: ${item.size}] (x${item.quantity})`).join(', ');
       const orderId = 'ORD-' + Date.now().toString().slice(-6);
 
-      // --- MonCash Live Sandbox Integration Flow ---
+      // --- MonCash Integration Flow (Converts USD to HTG Gourdes) ---
       if (selectedPaymentMethod === 'moncash') {
         try {
           const { data, error } = await supabaseClient.functions.invoke('moncash-payment', {
             body: { 
-              amount: totalAmount, 
+              amount: totalAmountUsd, 
               orderId: orderId 
             }
           });
@@ -1726,29 +1705,26 @@
 
           const tokenValue = data?.payment_token?.token || data?.payment_token;
           if (tokenValue) {
-            // Redirect user directly to Digicel's Sandbox payment gateway
             window.location.href = `https://sandbox.moncashbutton.digicelgroup.com/Moncash-middleware/Payment/Redirect?token=${tokenValue}`;
             return;
           } else {
             alert("Could not retrieve payment redirection link from MonCash.");
-            console.error("MonCash Response:", data);
             return;
           }
         } catch (err) {
-          console.error("MonCash error:", err);
           alert("An unexpected error occurred connecting to MonCash API.");
           return;
         }
       }
 
-      // --- Standard Local Processing for Visa ---
+      // --- Visa Processing Flow ---
       const newPurchase = {
         order_id: orderId,
         name,
         email,
         address,
         method: selectedPaymentMethod,
-        total: totalAmount,
+        total: totalAmountUsd,
         items_summary: itemsSummary,
         date: new Date().toLocaleString()
       };
