@@ -754,7 +754,7 @@
 
     .payment-tabs {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 6px;
       margin: 6px 0;
     }
@@ -1092,7 +1092,6 @@
       <div class="payment-tabs">
         <button type="button" class="payment-tab active" onclick="switchPayment('visa', this)">Visa</button>
         <button type="button" class="payment-tab" onclick="switchPayment('moncash', this)">MonCash</button>
-        <button type="button" class="payment-tab" onclick="switchPayment('natcash', this)">NatCash</button>
       </div>
 
       <div id="payment-visa" class="payment-fields active">
@@ -1112,15 +1111,6 @@
           📱 <strong>MonCash Direct Pay:</strong> Secure Mobile wallet redirection.
           <br><a href="https://moncashbutton.digicelgroup.com" target="_blank" class="payment-gateway-link">Open MonCash Portal ↗</a>
         </div>
-      </div>
-
-      <div id="payment-natcash" class="payment-fields">
-        <div class="payment-instructions">
-          💳 <strong>NatCash Transfer:</strong> Mobile settlement.
-          <br><a href="https://www.natcom.ht" target="_blank" class="payment-gateway-link">Open Natcom Portal ↗</a>
-        </div>
-        <input type="tel" id="natcash-account" class="checkout-input" placeholder="NatCash Account / Phone" />
-        <input type="password" id="natcash-pin" class="checkout-input" placeholder="NatCash PIN" maxlength="6" />
       </div>
 
       <button type="submit" class="action-btn" style="margin-top: 6px;">Pay <span id="checkout-btn-total">$0.00</span></button>
@@ -1751,7 +1741,7 @@
         }
       }
 
-      // --- Standard Local Processing for Visa & NatCash ---
+      // --- Standard Local Processing for Visa ---
       const newPurchase = {
         order_id: orderId,
         name,
