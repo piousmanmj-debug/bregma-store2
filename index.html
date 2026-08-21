@@ -77,11 +77,16 @@
       padding: 4px;
     }
 
-    .logo {
-      font-size: 1.6rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #000;
+    /* Logo Image Integration with Animated Wheel Motion */
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-img {
+      height: 42px;
+      width: auto;
+      display: block;
     }
 
     .header-actions {
@@ -489,7 +494,9 @@
       position: sticky;
       bottom: 0;
       background: #ffffff;
+      display: flex;
       flex-direction: column;
+      gap: 8px;
       align-items: stretch;
       border-top: 1px solid var(--border);
       padding: 16px 0;
@@ -722,6 +729,23 @@
       text-align: center;
     }
 
+    .action-btn-secondary {
+      width: 100%;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .action-btn-secondary:hover {
+      background: var(--border);
+    }
+
     .checkout-form button[type="submit"], .modal .action-btn {
       position: sticky;
       bottom: 0;
@@ -871,6 +895,17 @@
     .instagram-btn {
       background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
     }
+
+    .manual-payment-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      color: #166534;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -882,7 +917,9 @@
   <header>
     <div class="logo-area">
       <button class="hamburger-btn" id="open-menu-drawer">☰</button>
-      <div class="logo">CARLOS</div>
+      <div class="logo-container">
+        <img src="Gemini_Generated_Image_alyx3alyx3alyx3a.png" alt="Carlos Logo" class="logo-img" />
+      </div>
     </div>
     <div class="header-actions">
       <select id="currency-selector" class="currency-select" onchange="changeCurrency(this.value)">
@@ -990,13 +1027,29 @@
       <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your cart is currently empty.</p>
     </div>
     <div class="bin-footer">
-      <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; width: 100%; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; width: 100%; margin-bottom: 6px;">
         <span>Subtotal</span>
         <span id="bin-total">$0.00</span>
       </div>
       <button class="action-btn" onclick="openCheckoutModal()">Proceed to Checkout</button>
+      <button class="action-btn-secondary" onclick="saveOrderToPaySeparately()">💾 Save Order & Pay Separately</button>
     </div>
   </aside>
+
+  <div class="modal" id="saved-order-modal">
+    <span class="close-btn" onclick="closeSavedOrderModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
+    <h2 style="margin-bottom: 4px; font-size: 1.2rem;">📦 Order Saved Successfully!</h2>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Your items have been saved. Reference Code: <strong id="saved-order-ref" style="color:var(--text-main);"></strong></p>
+    
+    <div class="manual-payment-box">
+      <strong>Payment Instructions:</strong><br>
+      To complete your purchase, please send your separate payment of <strong id="saved-order-total"></strong> to the number below:
+      <div style="font-size: 1.2rem; font-weight: 800; color: #15803d; margin: 8px 0; letter-spacing: 0.5px;">+509 34333691</div>
+      <span style="font-size: 0.75rem;">Remember to include your reference code when making your payment transfer.</span>
+    </div>
+
+    <button class="action-btn" onclick="closeSavedOrderModal()">Got It</button>
+  </div>
 
   <div class="ai-modal" id="ai-modal">
     <span class="close-btn" onclick="closeAiModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
@@ -1666,6 +1719,40 @@
       document.getElementById('checkout-btn-total').textContent = formatPrice(total);
     }
 
+    function saveOrderToPaySeparately() {
+      if (bin.length === 0) {
+        alert("Your shopping cart is empty.");
+        return;
+      }
+
+      const totalAmount = bin.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const orderRef = 'ORD-' + Date.now().toString().slice(-6);
+
+      const savedOrders = JSON.parse(localStorage.getItem('carlos_saved_orders')) || [];
+      savedOrders.unshift({
+        ref: orderRef,
+        items: [...bin],
+        total: totalAmount,
+        date: new Date().toLocaleString()
+      });
+      localStorage.setItem('carlos_saved_orders', JSON.stringify(savedOrders));
+
+      document.getElementById('saved-order-ref').textContent = orderRef;
+      document.getElementById('saved-order-total').textContent = formatPrice(totalAmount);
+
+      closeBinDrawer();
+      document.getElementById('saved-order-modal').classList.add('active');
+      document.getElementById('bin-overlay').classList.add('open');
+
+      bin = [];
+      updateBinUI();
+    }
+
+    function closeSavedOrderModal() {
+      document.getElementById('saved-order-modal').classList.remove('active');
+      checkOverlayClose();
+    }
+
     function switchPayment(method, element) {
       selectedPaymentMethod = method;
       document.querySelectorAll('.payment-tab').forEach(tab => tab.classList.remove('active'));
@@ -1709,14 +1796,12 @@
       const itemsSummary = bin.map(item => item.category.toLowerCase() === 'technology' ? `${item.name} (x${item.quantity})` : `${item.name} [Size: ${item.size}] (x${item.quantity})`).join(', ');
       const orderId = 'ORD-' + Date.now().toString().slice(-6);
 
-      // --- MonCash Live Sandbox Integration Flow (via Supabase Edge Function) ---
       if (selectedPaymentMethod === 'moncash') {
         try {
           const { data, error } = await supabaseClient.functions.invoke('moncash-payment', {
             body: { 
               amount: totalAmount, 
-              orderId: orderId,
-              returnUrl: window.location.href 
+              orderId: orderId 
             }
           });
 
@@ -1725,12 +1810,8 @@
             return;
           }
 
-          const tokenValue = data?.payment_token?.token || data?.payment_token || data?.redirect_url;
-          if (tokenValue && tokenValue.startsWith('http')) {
-            window.location.href = tokenValue;
-            return;
-          } else if (tokenValue) {
-            // Redirect user directly to Digicel's Sandbox payment gateway using token
+          const tokenValue = data?.payment_token?.token || data?.payment_token;
+          if (tokenValue) {
             window.location.href = `https://sandbox.moncashbutton.digicelgroup.com/Moncash-business/Redirection/payment?token=${tokenValue}`;
             return;
           } else {
@@ -1745,7 +1826,6 @@
         }
       }
 
-      // --- Standard Local Processing for Visa ---
       const newPurchase = {
         order_id: orderId,
         name,
@@ -1797,6 +1877,7 @@
           !document.getElementById('checkout-modal').classList.contains('active') && 
           !document.getElementById('account-modal').classList.contains('active') && 
           !document.getElementById('settings-modal').classList.contains('active') && 
+          !document.getElementById('saved-order-modal').classList.contains('active') &&
           !aiModal.classList.contains('active') &&
           !menuDrawer.classList.contains('open')) {
         binOverlay.classList.remove('open');
@@ -1810,6 +1891,7 @@
       closeCheckoutModal();
       closeAccountModal();
       closeSettingsModal();
+      closeSavedOrderModal();
       closeAiModal();
       binOverlay.classList.remove('open');
     });
