@@ -54,7 +54,7 @@
       z-index: 100;
       background: white;
       border-bottom: 1px solid var(--border);
-      padding: 10px 4%;
+      padding: 12px 4%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -63,7 +63,7 @@
     .logo-area {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .hamburger-btn {
@@ -77,32 +77,15 @@
       padding: 4px;
     }
 
-    /* Custom Logo Styling */
-    .site-logo {
+    .logo-container {
       display: flex;
       align-items: center;
-      gap: 8px;
-      text-decoration: none;
     }
 
-    .logo-text {
-      font-size: 1.5rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #000;
-      text-transform: uppercase;
-    }
-
-    /* Flame Animation */
-    @keyframes flicker {
-      0% { transform: scale(1) translateY(0) rotate(0deg); opacity: 0.9; }
-      50% { transform: scale(1.15) translateY(-3px) rotate(-3deg); opacity: 1; fill: #ff758c; }
-      100% { transform: scale(0.95) translateY(2px) rotate(3deg); opacity: 0.8; fill: #ff3b6b; }
-    }
-
-    .animated-flame {
-      animation: flicker 0.5s infinite alternate ease-in-out;
-      transform-origin: bottom center;
+    .logo-img {
+      height: 42px;
+      width: auto;
+      display: block;
     }
 
     .header-actions {
@@ -111,7 +94,7 @@
       align-items: center;
     }
 
-    .admin-toggle-btn, .bin-btn, .currency-select, .account-btn, .settings-btn {
+    .admin-toggle-btn, .bin-btn, .wishlist-btn-header, .currency-select, .account-btn, .settings-btn {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       color: var(--text-main);
@@ -136,7 +119,7 @@
       color: var(--text-main);
     }
 
-    .bin-count {
+    .bin-count, .wishlist-count {
       background: var(--accent-pink);
       color: white;
       font-size: 0.7rem;
@@ -393,6 +376,29 @@
       z-index: 2;
     }
 
+    .wishlist-toggle-card {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.85);
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      z-index: 3;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .wishlist-toggle-card:hover {
+      transform: scale(1.1);
+    }
+
     .product-img {
       width: 100%;
       height: 190px;
@@ -478,7 +484,7 @@
       pointer-events: auto;
     }
 
-    .bin-drawer {
+    .bin-drawer, .wishlist-drawer {
       position: fixed;
       top: 0;
       right: -100%;
@@ -494,11 +500,11 @@
       padding: 20px;
     }
 
-    .bin-drawer.open {
+    .bin-drawer.open, .wishlist-drawer.open {
       right: 0;
     }
 
-    .bin-header {
+    .bin-header, .wishlist-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -510,7 +516,9 @@
       position: sticky;
       bottom: 0;
       background: #ffffff;
+      display: flex;
       flex-direction: column;
+      gap: 8px;
       align-items: stretch;
       border-top: 1px solid var(--border);
       padding: 16px 0;
@@ -526,7 +534,7 @@
       padding: 4px;
     }
 
-    .bin-items {
+    .bin-items, .wishlist-items {
       flex-grow: 1;
       overflow-y: auto;
       margin: 14px 0;
@@ -536,7 +544,7 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .bin-item {
+    .bin-item, .wishlist-item {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -546,14 +554,14 @@
       border: 1px solid var(--border);
     }
 
-    .bin-item img {
+    .bin-item img, .wishlist-item img {
       width: 50px;
       height: 50px;
       border-radius: 6px;
       object-fit: cover;
     }
 
-    .bin-item-details {
+    .bin-item-details, .wishlist-item-details {
       flex-grow: 1;
     }
 
@@ -743,11 +751,21 @@
       text-align: center;
     }
 
-    .checkout-form button[type="submit"], .modal .action-btn {
-      position: sticky;
-      bottom: 0;
-      z-index: 10;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    .action-btn-secondary {
+      width: 100%;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .action-btn-secondary:hover {
+      background: var(--border);
     }
 
     .checkout-form {
@@ -771,6 +789,38 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+    }
+
+    /* Coupon Section Styles */
+    .coupon-box {
+      background: var(--bg-surface);
+      border: 1px dashed var(--border);
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .coupon-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .coupon-apply-btn {
+      background: #222;
+      color: white;
+      border: none;
+      padding: 0 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .coupon-feedback {
+      font-size: 0.75rem;
+      font-weight: 600;
     }
 
     .payment-tabs {
@@ -856,7 +906,6 @@
       color: var(--text-main);
     }
 
-    /* Floating Social Buttons Container Styles */
     .floating-social-bar {
       position: fixed;
       bottom: 20px;
@@ -892,6 +941,17 @@
     .instagram-btn {
       background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
     }
+
+    .manual-payment-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      color: #166534;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -903,19 +963,12 @@
   <header>
     <div class="logo-area">
       <button class="hamburger-btn" id="open-menu-drawer">☰</button>
-      
-      <a href="#" class="site-logo">
-        <span class="logo-text">Carlos</span>
-        <svg viewBox="0 0 110 50" width="75" height="35">
-          <path d="M5 12 H22 L35 40 H75 L88 12 H28" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="42" cy="46" r="4" fill="#222"/>
-          <circle cx="70" cy="46" r="4" fill="#222"/>
-          <path class="animated-flame" d="M88 12 C88 4, 98 0, 98 -4 C98 2, 105 6, 105 12 C105 18, 96 20, 88 12 Z" fill="#ff3b6b"/>
-        </svg>
-      </a>
-
+      <div class="logo-container">
+        <img src="Gemini_Generated_Image_alyx3alyx3alyx3a.png" alt="Carlos Logo" class="logo-img" />
+      </div>
     </div>
     <div class="header-actions">
+      <button class="wishlist-btn-header" id="open-wishlist">❤️ <span class="wishlist-count" id="wishlist-count">0</span></button>
       <select id="currency-selector" class="currency-select" onchange="changeCurrency(this.value)">
         <option value="USD">USD ($)</option>
         <option value="HTG">HTG (G)</option>
@@ -1011,6 +1064,16 @@
     <div class="product-grid" id="product-grid"></div>
   </main>
 
+  <aside class="wishlist-drawer" id="wishlist-drawer">
+    <div class="wishlist-header">
+      <h2>My Wishlist ❤️</h2>
+      <button class="close-btn" id="close-wishlist">&times;</button>
+    </div>
+    <div class="wishlist-items" id="wishlist-items">
+      <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your wishlist is currently empty.</p>
+    </div>
+  </aside>
+
   <div class="bin-overlay" id="bin-overlay"></div>
   <aside class="bin-drawer" id="bin-drawer">
     <div class="bin-header">
@@ -1021,13 +1084,29 @@
       <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">Your cart is currently empty.</p>
     </div>
     <div class="bin-footer">
-      <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; width: 100%; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; width: 100%; margin-bottom: 6px;">
         <span>Subtotal</span>
         <span id="bin-total">$0.00</span>
       </div>
       <button class="action-btn" onclick="openCheckoutModal()">Proceed to Checkout</button>
+      <button class="action-btn-secondary" onclick="saveOrderToPaySeparately()">💾 Save Order & Pay Separately</button>
     </div>
   </aside>
+
+  <div class="modal" id="saved-order-modal">
+    <span class="close-btn" onclick="closeSavedOrderModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
+    <h2 style="margin-bottom: 4px; font-size: 1.2rem;">📦 Order Saved Successfully!</h2>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Your items have been saved. Reference Code: <strong id="saved-order-ref" style="color:var(--text-main);"></strong></p>
+    
+    <div class="manual-payment-box">
+      <strong>Payment Instructions:</strong><br>
+      To complete your purchase, please send your separate payment of <strong id="saved-order-total"></strong> to the number below:
+      <div style="font-size: 1.2rem; font-weight: 800; color: #15803d; margin: 8px 0; letter-spacing: 0.5px;">+509 34333691</div>
+      <span style="font-size: 0.75rem;">Remember to include your reference code when making your payment transfer.</span>
+    </div>
+
+    <button class="action-btn" onclick="closeSavedOrderModal()">Got It</button>
+  </div>
 
   <div class="ai-modal" id="ai-modal">
     <span class="close-btn" onclick="closeAiModal()" style="position: absolute; top: 10px; right: 15px;">&times;</span>
@@ -1106,7 +1185,10 @@
         <button type="button" class="modal-qty-btn" onclick="adjustModalQty(1)">+</button>
       </div>
     </div>
-    <button class="action-btn" id="modal-add-btn">Add to Cart</button>
+    <div style="display: flex; gap: 8px;">
+      <button class="action-btn" id="modal-add-btn">Add to Cart</button>
+      <button class="action-btn-secondary" id="modal-wishlist-btn" onclick="toggleModalWishlist()">❤️ Save</button>
+    </div>
   </div>
 
   <div class="modal" id="checkout-modal">
@@ -1118,6 +1200,15 @@
       <input type="text" id="chk-name" class="checkout-input" placeholder="Full Name" required />
       <input type="email" id="chk-email" class="checkout-input" placeholder="Email Address" required />
       <input type="text" id="chk-address" class="checkout-input" placeholder="Shipping Address / City" required />
+
+      <div class="coupon-box">
+        <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Have a Promo Coupon?</label>
+        <div class="coupon-row">
+          <input type="text" id="coupon-input" class="checkout-input" placeholder="e.g. CARLOS20" style="padding: 8px 10px; font-size: 0.85rem;" />
+          <button type="button" class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
+        </div>
+        <div id="coupon-feedback" class="coupon-feedback"></div>
+      </div>
 
       <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Select Payment Method:</p>
       <div class="payment-tabs">
@@ -1175,6 +1266,10 @@
     let purchases = [];
     let loggedInUser = JSON.parse(localStorage.getItem('carlos_logged_in_user')) || null;
     let bin = [];
+    let wishlist = JSON.parse(localStorage.getItem('carlos_wishlist')) || [];
+    let activeCoupon = null;
+    let couponDiscountAmount = 0;
+
     let selectedCategory = 'All';
     let selectedSize = 'S';
     let modalQuantity = 1;
@@ -1208,6 +1303,8 @@
       }
       
       renderProducts();
+      updateBinUI();
+      updateWishlistUI();
       updateAccountUIStatus();
       updateOwnerAccountsUI();
       updateOwnerPurchasesUI();
@@ -1228,6 +1325,7 @@
       document.getElementById('settings-currency').value = currency;
       renderProducts();
       updateBinUI();
+      updateWishlistUI();
       if (activeModalProduct) {
         document.getElementById('modal-product-price').textContent = formatPrice(activeModalProduct.price);
       }
@@ -1247,21 +1345,27 @@
         return;
       }
 
-      productGrid.innerHTML = filtered.map(product => `
-        <div class="product-card" onclick="openProductModal(${product.id})">
-          ${product.discount ? `<div class="discount-badge">${product.discount}</div>` : ''}
-          <img src="${product.image}" alt="${product.name}" class="product-img">
-          <div class="product-info">
-            <span class="product-category">${product.category}</span>
-            <h3 class="product-title">${product.name}</h3>
-            <div class="product-price-row">
-              <div class="product-price">${formatPrice(product.price)}</div>
-              ${product.originalPrice ? `<div class="product-original-price">${formatPrice(product.originalPrice)}</div>` : ''}
+      productGrid.innerHTML = filtered.map(product => {
+        const isWishlisted = wishlist.some(item => item.id === product.id);
+        return `
+          <div class="product-card" onclick="openProductModal(${product.id})">
+            ${product.discount ? `<div class="discount-badge">${product.discount}</div>` : ''}
+            <button class="wishlist-toggle-card" onclick="event.stopPropagation(); toggleWishlist(${product.id})" title="Save to Wishlist">
+              ${isWishlisted ? '❤️' : '🤍'}
+            </button>
+            <img src="${product.image}" alt="${product.name}" class="product-img">
+            <div class="product-info">
+              <span class="product-category">${product.category}</span>
+              <h3 class="product-title">${product.name}</h3>
+              <div class="product-price-row">
+                <div class="product-price">${formatPrice(product.price)}</div>
+                ${product.originalPrice ? `<div class="product-original-price">${formatPrice(product.originalPrice)}</div>` : ''}
+              </div>
+              ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove</button>` : ''}
             </div>
-            ${isOwnerAuthenticated ? `<button class="delete-item-btn" onclick="event.stopPropagation(); deleteProduct(${product.id})">Remove</button>` : ''}
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function setCategory(category, element) {
@@ -1273,6 +1377,85 @@
 
     function filterProducts() {
       renderProducts();
+    }
+
+    /* Wishlist Functions */
+    function toggleWishlist(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      const index = wishlist.findIndex(item => item.id === productId);
+      if (index > -1) {
+        wishlist.splice(index, 1);
+      } else {
+        wishlist.push(product);
+      }
+
+      localStorage.setItem('carlos_wishlist', JSON.stringify(wishlist));
+      updateWishlistUI();
+      renderProducts();
+      if (activeModalProduct && activeModalProduct.id === productId) {
+        updateModalWishlistBtnState();
+      }
+    }
+
+    function updateWishlistUI() {
+      document.getElementById('wishlist-count').textContent = wishlist.length;
+      const wishlistContainer = document.getElementById('wishlist-items');
+
+      if (wishlist.length === 0) {
+        wishlistContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 40px; font-size: 0.9rem;">Your wishlist is currently empty.</p>';
+        return;
+      }
+
+      wishlistContainer.innerHTML = wishlist.map((item, index) => `
+        <div class="wishlist-item">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="wishlist-item-details">
+            <div style="font-size: 0.8rem; font-weight: 500;">${item.name}</div>
+            <div style="font-size: 0.8rem; color: var(--accent-pink); font-weight: 700; margin-top: 2px;">${formatPrice(item.price)}</div>
+          </div>
+          <button style="background: #000; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;" onclick="moveToCartFromWishlist(${index})">Add</button>
+          <button class="remove-btn" onclick="removeFromWishlist(${index})">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function removeFromWishlist(index) {
+      wishlist.splice(index, 1);
+      localStorage.setItem('carlos_wishlist', JSON.stringify(wishlist));
+      updateWishlistUI();
+      renderProducts();
+    }
+
+    function moveToCartFromWishlist(index) {
+      const item = wishlist[index];
+      const payload = { ...item, quantity: 1, size: item.category.toLowerCase() === 'technology' ? 'N/A' : 'S' };
+      
+      const existing = bin.find(i => i.id === payload.id && i.size === payload.size);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        bin.push(payload);
+      }
+      
+      updateBinUI();
+      removeFromWishlist(index);
+      closeWishlistDrawer();
+      openBinDrawer();
+    }
+
+    const wishlistDrawer = document.getElementById('wishlist-drawer');
+    document.getElementById('open-wishlist').addEventListener('click', () => {
+      wishlistDrawer.classList.add('open');
+      document.getElementById('bin-overlay').classList.add('open');
+    });
+
+    document.getElementById('close-wishlist').addEventListener('click', closeWishlistDrawer);
+
+    function closeWishlistDrawer() {
+      wishlistDrawer.classList.remove('open');
+      checkOverlayClose();
     }
 
     function openProductModal(id) {
@@ -1287,6 +1470,8 @@
       document.getElementById('modal-product-title').textContent = activeModalProduct.name;
       document.getElementById('modal-product-price').textContent = formatPrice(activeModalProduct.price);
       
+      updateModalWishlistBtnState();
+
       const sizeContainer = document.getElementById('modal-size-container');
       if (activeModalProduct.category.toLowerCase() === 'technology') {
         sizeContainer.style.display = 'none';
@@ -1317,6 +1502,19 @@
 
       document.getElementById('product-detail-modal').classList.add('active');
       document.getElementById('bin-overlay').classList.add('open');
+    }
+
+    function updateModalWishlistBtnState() {
+      const btn = document.getElementById('modal-wishlist-btn');
+      const isSaved = wishlist.some(i => i.id === activeModalProduct.id);
+      btn.textContent = isSaved ? '❤️ Saved' : '🤍 Save';
+    }
+
+    function toggleModalWishlist() {
+      if (activeModalProduct) {
+        toggleWishlist(activeModalProduct.id);
+        updateModalWishlistBtnState();
+      }
     }
 
     function adjustModalQty(amount) {
@@ -1367,7 +1565,7 @@
         } else if (lower.includes('dress') || lower.includes('top') || lower.includes('shirt')) {
           reply = "For tops and apparel, check out our latest arrivals on the home catalog!";
         } else if (lower.includes('price') || lower.includes('cheap') || lower.includes('sale')) {
-          reply = "Everything right now is up to 50% off with our MEGA SALE EVENT! You can also switch currencies to HTG using the top header.";
+          reply = "Everything right now is up to 50% off with our MEGA SALE EVENT! Use code CARLOS20 at checkout for an extra discount.";
         }
 
         chatBox.innerHTML += `<div class="ai-msg assistant">${escapeHtml(reply)}</div>`;
@@ -1664,6 +1862,48 @@
       updateBinUI();
     }
 
+    function calculateCartSubtotal() {
+      return bin.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    }
+
+    function getFinalCheckoutTotal() {
+      let subtotal = calculateCartSubtotal();
+      let total = subtotal - couponDiscountAmount;
+      return total < 0 ? 0 : total;
+    }
+
+    function applyCoupon() {
+      const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+      const feedback = document.getElementById('coupon-feedback');
+
+      if (!code) {
+        feedback.style.color = '#f43f5e';
+        feedback.textContent = "Please enter a coupon code.";
+        return;
+      }
+
+      const subtotal = calculateCartSubtotal();
+
+      if (code === 'CARLOS20') {
+        activeCoupon = 'CARLOS20';
+        couponDiscountAmount = subtotal * 0.20; // 20% off
+        feedback.style.color = '#166534';
+        feedback.textContent = "🎉 Coupon CARLOS20 applied (20% OFF)!";
+      } else if (code === 'FREESHIP') {
+        activeCoupon = 'FREESHIP';
+        couponDiscountAmount = 5.00; // $5 discount
+        feedback.style.color = '#166534';
+        feedback.textContent = "🎉 Coupon FREESHIP applied ($5.00 OFF)!";
+      } else {
+        activeCoupon = null;
+        couponDiscountAmount = 0;
+        feedback.style.color = '#f43f5e';
+        feedback.textContent = "❌ Invalid coupon code.";
+      }
+
+      document.getElementById('checkout-btn-total').textContent = formatPrice(getFinalCheckoutTotal());
+    }
+
     function updateBinUI() {
       const totalItemsCount = bin.reduce((sum, item) => sum + item.quantity, 0);
       document.getElementById('bin-count').textContent = totalItemsCount;
@@ -1692,9 +1932,46 @@
         </div>
       `).join('');
 
-      const total = bin.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const total = calculateCartSubtotal();
       document.getElementById('bin-total').textContent = formatPrice(total);
-      document.getElementById('checkout-btn-total').textContent = formatPrice(total);
+      document.getElementById('checkout-btn-total').textContent = formatPrice(getFinalCheckoutTotal());
+    }
+
+    function saveOrderToPaySeparately() {
+      if (bin.length === 0) {
+        alert("Your shopping cart is empty.");
+        return;
+      }
+
+      const totalAmount = getFinalCheckoutTotal();
+      const orderRef = 'ORD-' + Date.now().toString().slice(-6);
+
+      const savedOrders = JSON.parse(localStorage.getItem('carlos_saved_orders')) || [];
+      savedOrders.unshift({
+        ref: orderRef,
+        items: [...bin],
+        total: totalAmount,
+        coupon: activeCoupon,
+        date: new Date().toLocaleString()
+      });
+      localStorage.setItem('carlos_saved_orders', JSON.stringify(savedOrders));
+
+      document.getElementById('saved-order-ref').textContent = orderRef;
+      document.getElementById('saved-order-total').textContent = formatPrice(totalAmount);
+
+      closeBinDrawer();
+      document.getElementById('saved-order-modal').classList.add('active');
+      document.getElementById('bin-overlay').classList.add('open');
+
+      bin = [];
+      activeCoupon = null;
+      couponDiscountAmount = 0;
+      updateBinUI();
+    }
+
+    function closeSavedOrderModal() {
+      document.getElementById('saved-order-modal').classList.remove('active');
+      checkOverlayClose();
     }
 
     function switchPayment(method, element) {
@@ -1721,6 +1998,7 @@
       closeBinDrawer();
       document.getElementById('chk-name').value = loggedInUser.name;
       document.getElementById('chk-email').value = loggedInUser.email;
+      document.getElementById('checkout-btn-total').textContent = formatPrice(getFinalCheckoutTotal());
       document.getElementById('checkout-modal').classList.add('active');
       document.getElementById('bin-overlay').classList.add('open');
     }
@@ -1736,11 +2014,10 @@
       const email = document.getElementById('chk-email').value.trim();
       const address = document.getElementById('chk-address').value.trim();
 
-      const totalAmount = bin.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const totalAmount = getFinalCheckoutTotal();
       const itemsSummary = bin.map(item => item.category.toLowerCase() === 'technology' ? `${item.name} (x${item.quantity})` : `${item.name} [Size: ${item.size}] (x${item.quantity})`).join(', ');
       const orderId = 'ORD-' + Date.now().toString().slice(-6);
 
-      // --- MonCash Live Sandbox Integration Flow ---
       if (selectedPaymentMethod === 'moncash') {
         try {
           const { data, error } = await supabaseClient.functions.invoke('moncash-payment', {
@@ -1757,7 +2034,6 @@
 
           const tokenValue = data?.payment_token?.token || data?.payment_token;
           if (tokenValue) {
-            // Redirect user directly to Digicel's Sandbox payment gateway
             window.location.href = `https://sandbox.moncashbutton.digicelgroup.com/Moncash-business/Redirection/payment?token=${tokenValue}`;
             return;
           } else {
@@ -1772,7 +2048,6 @@
         }
       }
 
-      // --- Standard Local Processing for Visa ---
       const newPurchase = {
         order_id: orderId,
         name,
@@ -1793,6 +2068,8 @@
 
         alert(`🎉 Payment successful! Thank you for shopping with CARLOS.`);
         bin = [];
+        activeCoupon = null;
+        couponDiscountAmount = 0;
         updateBinUI();
         closeCheckoutModal();
       } catch (err) {
@@ -1820,10 +2097,12 @@
 
     function checkOverlayClose() {
       if (!binDrawer.classList.contains('open') && 
+          !wishlistDrawer.classList.contains('open') &&
           !document.getElementById('product-detail-modal').classList.contains('active') && 
           !document.getElementById('checkout-modal').classList.contains('active') && 
           !document.getElementById('account-modal').classList.contains('active') && 
           !document.getElementById('settings-modal').classList.contains('active') && 
+          !document.getElementById('saved-order-modal').classList.contains('active') &&
           !aiModal.classList.contains('active') &&
           !menuDrawer.classList.contains('open')) {
         binOverlay.classList.remove('open');
@@ -1832,11 +2111,13 @@
 
     binOverlay.addEventListener('click', () => {
       closeBinDrawer();
+      closeWishlistDrawer();
       closeMenuDrawer();
       closeModal();
       closeCheckoutModal();
       closeAccountModal();
       closeSettingsModal();
+      closeSavedOrderModal();
       closeAiModal();
       binOverlay.classList.remove('open');
     });
